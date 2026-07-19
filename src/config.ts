@@ -3,7 +3,7 @@ export const SITE = {
   tagline: 'Razlaga trgov skozi aktualne dogodke.',
   description:
     'Finančno-izobraževalna vsebina za slovensko občinstvo. Filtriramo informacije, razlagamo trge in geopolitiko. Brez hypea, brez finančnih nasvetov.',
-  url: 'https://engineeringinvestor.si',
+  url: 'https://engineering-investor.com',
   twitterHandle: '@JazJst',
   twitterUrl: 'https://x.com/JazJst',
 };
