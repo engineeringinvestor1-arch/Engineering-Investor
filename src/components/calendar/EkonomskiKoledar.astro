@@ -10,13 +10,30 @@
     </p>
   </div>
 
-  <div class="koledar__filters" id="koledar-filters" role="group" aria-label="Filtriraj dogodke">
-    <button class="filter-btn filter-btn--active" data-filter="vsi">Vsi dogodki</button>
-    <button class="filter-btn" data-filter="makro">Makro</button>
-    <button class="filter-btn" data-filter="zasluzki">Zaslužki</button>
+  <div class="koledar__toolbar">
+    <div class="koledar__filters" id="koledar-filters" role="group" aria-label="Filtriraj dogodke">
+      <button class="filter-btn filter-btn--active" data-filter="vsi">Vsi dogodki</button>
+      <button class="filter-btn" data-filter="makro">Makro</button>
+      <button class="filter-btn" data-filter="zasluzki">Zaslužki</button>
+    </div>
+
+    <div class="koledar__views" id="koledar-views" role="group" aria-label="Način prikaza">
+      <button class="filter-btn filter-btn--active" data-view="list">Seznam</button>
+      <button class="filter-btn" data-view="month">Koledar</button>
+    </div>
   </div>
 
   <div id="koledar-events"></div>
+
+  <div id="koledar-month" hidden>
+    <div class="cal-month-nav">
+      <button type="button" class="cal-month-nav__btn" id="cal-prev" aria-label="Prejšnji mesec">‹</button>
+      <span class="cal-month-nav__label" id="cal-month-label"></span>
+      <button type="button" class="cal-month-nav__btn" id="cal-next" aria-label="Naslednji mesec">›</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div id="cal-day-detail"></div>
+  </div>
 </div>
 
 <style is:global>
@@ -43,11 +60,20 @@
     line-height: 1.6;
   }
 
-  .koledar__filters {
+  .koledar__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .koledar__filters,
+  .koledar__views {
     display: flex;
     gap: var(--space-sm);
     flex-wrap: wrap;
-    margin-bottom: var(--space-xl);
   }
 
   .filter-btn {
@@ -290,6 +316,134 @@
     color: var(--color-text);
     font-weight: 600;
   }
+
+  .cal-month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
+  }
+
+  .cal-month-nav__label {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: capitalize;
+  }
+
+  .cal-month-nav__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: var(--text-lg);
+    line-height: 1;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .cal-month-nav__btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-hover);
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: var(--space-lg);
+  }
+
+  .cal-grid__weekday {
+    text-align: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+    padding-bottom: var(--space-sm);
+  }
+
+  .cal-day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-height: 3.25rem;
+    padding: 0.4rem 0.2rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    background: var(--color-surface);
+    cursor: default;
+    font-family: inherit;
+    color: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .cal-day-cell--muted {
+    background: transparent;
+    color: var(--color-text-subtle);
+  }
+
+  .cal-day-cell--has-events {
+    cursor: pointer;
+    border-color: var(--color-border);
+  }
+
+  .cal-day-cell--has-events:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-hover);
+  }
+
+  .cal-day-cell--today .cal-day-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: white;
+  }
+
+  .cal-day-cell--selected {
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-bg);
+  }
+
+  .cal-day-num {
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .cal-day-dots {
+    display: flex;
+    gap: 3px;
+  }
+
+  .cal-day-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .cal-day-dot--high { background: #dc2626; }
+  .cal-day-dot--medium { background: #b45309; }
+  .cal-day-dot--earnings { background: var(--color-accent); }
+
+  .cal-day-detail__hint {
+    text-align: center;
+    padding: var(--space-xl) 0;
+    color: var(--color-text-subtle);
+    font-size: var(--text-sm);
+  }
 </style>
 
 <script>
@@ -514,23 +668,40 @@
     `;
   }
 
-  function render(filter: 'vsi' | 'makro' | 'zasluzki') {
+  type Filter = 'vsi' | 'makro' | 'zasluzki';
+  type CombinedEvent =
+    | (MacroEvent & { type: 'makro' })
+    | (EarningsEvent & { type: 'zasluzki' });
+
+  function getFilteredEvents(filter: Filter): CombinedEvent[] {
+    const macro = (filter === 'zasluzki' ? [] : MACRO_EVENTS).map(e => ({ ...e, type: 'makro' as const }));
+    const earnings = (filter === 'makro' ? [] : EARNINGS).map(e => ({ ...e, type: 'zasluzki' as const }));
+    return [...macro, ...earnings].sort(
+      (a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime()
+    );
+  }
+
+  function renderRow(evt: CombinedEvent): string {
+    return evt.type === 'makro' ? renderMacroRow(evt) : renderEarningsRow(evt);
+  }
+
+  let currentFilter: Filter = 'vsi';
+  let currentView: 'list' | 'month' = 'list';
+  const today0 = new Date();
+  today0.setHours(0, 0, 0, 0);
+  let viewMonth = new Date(today0.getFullYear(), today0.getMonth(), 1);
+  let selectedDate: string | null = null;
+
+  function renderList(filter: Filter) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const endDate = new Date(today);
     endDate.setDate(today.getDate() + 90);
 
-    const macro = (filter === 'zasluzki' ? [] : MACRO_EVENTS)
-      .filter(e => { const d = parseDate(e.date); return d >= today && d <= endDate; })
-      .map(e => ({ ...e, type: 'makro' as const }));
-
-    const earnings = (filter === 'makro' ? [] : EARNINGS)
-      .filter(e => { const d = parseDate(e.date); return d >= today && d <= endDate; })
-      .map(e => ({ ...e, type: 'zasluzki' as const }));
-
-    const allEvents = [...macro, ...earnings].sort(
-      (a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime()
-    );
+    const allEvents = getFilteredEvents(filter).filter(e => {
+      const d = parseDate(e.date);
+      return d >= today && d <= endDate;
+    });
 
     const container = document.getElementById('koledar-events')!;
 
@@ -550,9 +721,98 @@
     container.innerHTML = groupedArr.map(([weekMon, events]) => `
       <div class="cal-week">
         <div class="cal-week__header">${weekLabel(weekMon)}</div>
-        ${events.map(evt => evt.type === 'makro' ? renderMacroRow(evt) : renderEarningsRow(evt)).join('')}
+        ${events.map(evt => renderRow(evt)).join('')}
       </div>
     `).join('');
+  }
+
+  function toDateKey(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function renderMonthGrid() {
+    const label = viewMonth.toLocaleDateString('sl-SI', { month: 'long', year: 'numeric' });
+    document.getElementById('cal-month-label')!.textContent = label;
+
+    const events = getFilteredEvents(currentFilter);
+    const eventsByDay = new Map<string, CombinedEvent[]>();
+    for (const evt of events) {
+      if (!eventsByDay.has(evt.date)) eventsByDay.set(evt.date, []);
+      eventsByDay.get(evt.date)!.push(evt);
+    }
+
+    const firstOfMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1);
+    const gridStart = new Date(firstOfMonth);
+    gridStart.setDate(firstOfMonth.getDate() - ((firstOfMonth.getDay() + 6) % 7));
+
+    const weekdayLabels = ['Pon', 'Tor', 'Sre', 'Čet', 'Pet', 'Sob', 'Ned'];
+    let html = weekdayLabels.map(w => `<div class="cal-grid__weekday">${w}</div>`).join('');
+
+    const cursor = new Date(gridStart);
+    for (let i = 0; i < 42; i++) {
+      const dateKey = toDateKey(cursor);
+      const inMonth = cursor.getMonth() === viewMonth.getMonth();
+      const isToday_ = dateKey === toDateKey(today0);
+      const isSelected = dateKey === selectedDate;
+      const dayEvents = eventsByDay.get(dateKey) || [];
+
+      const colors = new Set<string>();
+      for (const evt of dayEvents) {
+        if (evt.type === 'zasluzki') colors.add('earnings');
+        else colors.add(evt.importance === 'HIGH' ? 'high' : 'medium');
+      }
+      const dots = Array.from(colors).slice(0, 3)
+        .map(c => `<span class="cal-day-dot cal-day-dot--${c}"></span>`).join('');
+
+      const classes = [
+        'cal-day-cell',
+        !inMonth ? 'cal-day-cell--muted' : '',
+        isToday_ ? 'cal-day-cell--today' : '',
+        isSelected ? 'cal-day-cell--selected' : '',
+        dayEvents.length > 0 ? 'cal-day-cell--has-events' : '',
+      ].filter(Boolean).join(' ');
+
+      html += `
+        <button type="button" class="${classes}" data-date="${dateKey}" ${dayEvents.length === 0 ? 'disabled' : ''}>
+          <span class="cal-day-num">${cursor.getDate()}</span>
+          <span class="cal-day-dots">${dots}</span>
+        </button>
+      `;
+
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    document.getElementById('cal-grid')!.innerHTML = html;
+    renderDayDetail();
+  }
+
+  function renderDayDetail() {
+    const container = document.getElementById('cal-day-detail')!;
+    if (!selectedDate) {
+      container.innerHTML = '<p class="cal-day-detail__hint">Klikni na dan z dogodkom, da vidiš podrobnosti.</p>';
+      return;
+    }
+    const events = getFilteredEvents(currentFilter).filter(e => e.date === selectedDate);
+    if (events.length === 0) {
+      container.innerHTML = '<p class="cal-day-detail__hint">Klikni na dan z dogodkom, da vidiš podrobnosti.</p>';
+      return;
+    }
+    const label = parseDate(selectedDate).toLocaleDateString('sl-SI', { weekday: 'long', day: 'numeric', month: 'long' });
+    container.innerHTML = `
+      <div class="cal-week__header">${label}</div>
+      ${events.map(evt => renderRow(evt)).join('')}
+    `;
+  }
+
+  function setView(view: 'list' | 'month') {
+    currentView = view;
+    document.getElementById('koledar-events')!.hidden = view !== 'list';
+    document.getElementById('koledar-month')!.hidden = view !== 'month';
+    if (view === 'list') renderList(currentFilter);
+    else renderMonthGrid();
   }
 
   const filterBtns = document.querySelectorAll<HTMLButtonElement>('#koledar-filters .filter-btn');
@@ -560,19 +820,54 @@
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('filter-btn--active'));
       btn.classList.add('filter-btn--active');
-      render(btn.dataset.filter as 'vsi' | 'makro' | 'zasluzki');
+      currentFilter = btn.dataset.filter as Filter;
+      if (currentView === 'list') renderList(currentFilter);
+      else renderMonthGrid();
     });
   });
 
-  const eventsContainer = document.getElementById('koledar-events')!;
-  eventsContainer.addEventListener('click', (e) => {
-    const rowBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('.cal-row');
-    if (!rowBtn) return;
-    const item = rowBtn.closest('.cal-item');
-    if (!item) return;
-    const isOpen = item.classList.toggle('cal-item--open');
-    rowBtn.setAttribute('aria-expanded', String(isOpen));
+  const viewBtns = document.querySelectorAll<HTMLButtonElement>('#koledar-views .filter-btn');
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewBtns.forEach(b => b.classList.remove('filter-btn--active'));
+      btn.classList.add('filter-btn--active');
+      setView(btn.dataset.view as 'list' | 'month');
+    });
   });
 
-  render('vsi');
+  document.getElementById('cal-prev')!.addEventListener('click', () => {
+    viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1);
+    selectedDate = null;
+    renderMonthGrid();
+  });
+
+  document.getElementById('cal-next')!.addEventListener('click', () => {
+    viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1);
+    selectedDate = null;
+    renderMonthGrid();
+  });
+
+  document.getElementById('cal-grid')!.addEventListener('click', (e) => {
+    const cell = (e.target as HTMLElement).closest<HTMLButtonElement>('.cal-day-cell');
+    if (!cell || cell.disabled) return;
+    const date = cell.dataset.date!;
+    selectedDate = selectedDate === date ? null : date;
+    renderMonthGrid();
+  });
+
+  function attachExpandToggle(containerId: string) {
+    document.getElementById(containerId)!.addEventListener('click', (e) => {
+      const rowBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('.cal-row');
+      if (!rowBtn) return;
+      const item = rowBtn.closest('.cal-item');
+      if (!item) return;
+      const isOpen = item.classList.toggle('cal-item--open');
+      rowBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+  }
+
+  attachExpandToggle('koledar-events');
+  attachExpandToggle('cal-day-detail');
+
+  renderList('vsi');
 </script>
