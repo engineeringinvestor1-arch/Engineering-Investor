@@ -1,0 +1,52 @@
+---
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div class={`disclaimer ${compact ? 'disclaimer--compact' : ''}`} role="note">
+  <div class="disclaimer__icon" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+  </div>
+  <p class="disclaimer__text">
+    {compact
+      ? 'Vsebina ni finančni nasvet. Gre izključno za izobraževalne namene.'
+      : 'Vsebina na tej strani je namenjena izključno izobraževalnim namenom in ne predstavlja finančnega nasveta, priporočila za nakup ali prodajo finančnih instrumentov. Vsaka investicijska odločitev je vaša lastna odgovornost.'
+    }
+  </p>
+</div>
+
+<style>
+  .disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    background: var(--color-surface-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .disclaimer--compact {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .disclaimer__icon {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .disclaimer__text {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

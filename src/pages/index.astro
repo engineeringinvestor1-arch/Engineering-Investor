@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import LatestArticles from '../components/home/LatestArticles.astro';
+import Disclaimer from '../components/ui/Disclaimer.astro';
+---
+
+<BaseLayout>
+  <Hero />
+  <LatestArticles />
+
+  <div class="container" style="padding-top: var(--space-2xl); padding-bottom: var(--space-2xl);">
+    <Disclaimer />
+  </div>
+</BaseLayout>

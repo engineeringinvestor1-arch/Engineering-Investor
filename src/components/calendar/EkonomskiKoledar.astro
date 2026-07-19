@@ -1,0 +1,404 @@
+---
+---
+
+<div class="koledar">
+  <div class="koledar__header">
+    <h1 class="koledar__title">Ekonomski koledar</h1>
+    <p class="koledar__subtitle">
+      Ključni makroekonomski dogodki in zaslužki največjih podjetij — naslednjih 90 dni.
+      Časi so v CET/CEST. Datumi zaslužkov so okvirni.
+    </p>
+  </div>
+
+  <div class="koledar__filters" id="koledar-filters" role="group" aria-label="Filtriraj dogodke">
+    <button class="filter-btn filter-btn--active" data-filter="vsi">Vsi dogodki</button>
+    <button class="filter-btn" data-filter="makro">Makro</button>
+    <button class="filter-btn" data-filter="zasluzki">Zaslužki</button>
+  </div>
+
+  <div id="koledar-events"></div>
+</div>
+
+<style>
+  .koledar {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md) var(--space-3xl);
+  }
+
+  .koledar__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .koledar__title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .koledar__subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .koledar__filters {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-xl);
+  }
+
+  .filter-btn {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 0.375rem 1rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .filter-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-hover);
+  }
+
+  .filter-btn--active {
+    color: var(--color-accent);
+    background: var(--color-accent-bg);
+    border-color: var(--color-accent-border);
+    font-weight: 600;
+  }
+
+  .cal-week {
+    margin-bottom: var(--space-xl);
+  }
+
+  .cal-week__header {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-subtle);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 0.75rem;
+  }
+
+  .cal-row {
+    display: grid;
+    grid-template-columns: 7rem 1fr auto;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.4rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    transition: border-color 150ms ease;
+  }
+
+  .cal-row--today {
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-bg);
+  }
+
+  .cal-row--past {
+    opacity: 0.5;
+  }
+
+  .cal-date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cal-day {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .cal-row--today .cal-day {
+    color: var(--color-accent);
+  }
+
+  .cal-time {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .cal-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .cal-event-title {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+
+  .cal-meta {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .cal-hint {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .cal-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+  }
+
+  .cal-badge--high {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+  }
+
+  .cal-badge--medium {
+    background: rgba(217, 119, 6, 0.1);
+    color: #b45309;
+    border: 1px solid rgba(217, 119, 6, 0.25);
+  }
+
+  .cal-badge--earnings {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent-border);
+  }
+
+  .cal-badge--region {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    font-weight: 500;
+  }
+
+  .cal-badge--cat {
+    background: var(--color-surface-hover);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .cal-empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+</style>
+
+<script>
+  type MacroEvent = {
+    id: string; date: string; time?: string; title: string;
+    category: string; region: 'US' | 'EU'; importance: 'HIGH' | 'MEDIUM';
+    previous?: string; forecast?: string;
+  };
+  type EarningsEvent = {
+    id: string; date: string; ticker: string; name: string; when: string;
+  };
+
+  const MACRO_EVENTS: MacroEvent[] = [
+    // July 2026
+    { id: 'us-cpi-jul26',    date: '2026-07-14', time: '14:30', title: 'US CPI (jun 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH',   previous: '2.4%' },
+    { id: 'us-retail-jul26', date: '2026-07-16', time: '14:30', title: 'US maloprodaja (jun 2026)',   category: 'Poraba',         region: 'US', importance: 'MEDIUM' },
+    { id: 'eu-pmi-jul26',    date: '2026-07-22', time: '10:00', title: 'EU PMI Flash (jul 2026)',     category: 'PMI',            region: 'EU', importance: 'MEDIUM' },
+    { id: 'us-pmi-jul26',    date: '2026-07-23', time: '15:45', title: 'US PMI Flash (jul 2026)',     category: 'PMI',            region: 'US', importance: 'MEDIUM' },
+    { id: 'ecb-jul26',       date: '2026-07-23', time: '13:15', title: 'Seja ECB — obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
+    { id: 'us-gdp-q2-26',    date: '2026-07-29', time: '14:30', title: 'US GDP Q2 2026 (advance)',   category: 'GDP',            region: 'US', importance: 'HIGH',   previous: '1.4%', forecast: '2.1%' },
+    { id: 'fomc-jul26',      date: '2026-07-29', time: '20:00', title: 'Seja FOMC — obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
+    { id: 'eu-cpi-jul26',    date: '2026-07-30', time: '11:00', title: 'EU CPI Flash (jul 2026)',     category: 'Inflacija',      region: 'EU', importance: 'HIGH',   previous: '2.0%' },
+    // August 2026
+    { id: 'us-nfp-aug26',    date: '2026-08-07', time: '14:30', title: 'US NFP (jul 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
+    { id: 'us-cpi-aug26',    date: '2026-08-12', time: '14:30', title: 'US CPI (jul 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
+    { id: 'us-retail-aug26', date: '2026-08-14', time: '14:30', title: 'US maloprodaja (jul 2026)',  category: 'Poraba',         region: 'US', importance: 'MEDIUM' },
+    { id: 'eu-pmi-aug26',    date: '2026-08-24', time: '10:00', title: 'EU PMI Flash (avg 2026)',     category: 'PMI',            region: 'EU', importance: 'MEDIUM' },
+    { id: 'us-jackson26',    date: '2026-08-27', time: '16:00', title: 'Jackson Hole symposium (Fed)',category: 'Centralna banka',region: 'US', importance: 'HIGH' },
+    { id: 'us-gdp-q2r-26',   date: '2026-08-27', time: '14:30', title: 'US GDP Q2 2026 (revizija)', category: 'GDP',            region: 'US', importance: 'MEDIUM' },
+    { id: 'eu-cpi-aug26',    date: '2026-08-28', time: '11:00', title: 'EU CPI Flash (avg 2026)',     category: 'Inflacija',      region: 'EU', importance: 'HIGH' },
+    // September 2026
+    { id: 'us-nfp-sep26',    date: '2026-09-04', time: '14:30', title: 'US NFP (avg 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
+    { id: 'us-cpi-sep26',    date: '2026-09-10', time: '14:30', title: 'US CPI (avg 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
+    { id: 'ecb-sep26',       date: '2026-09-10', time: '13:15', title: 'Seja ECB — obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
+    { id: 'eu-pmi-sep26',    date: '2026-09-22', time: '10:00', title: 'EU PMI Flash (sep 2026)',     category: 'PMI',            region: 'EU', importance: 'MEDIUM' },
+    { id: 'fomc-sep26',      date: '2026-09-16', time: '20:00', title: 'Seja FOMC — obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
+    { id: 'eu-cpi-sep26',    date: '2026-09-30', time: '11:00', title: 'EU CPI Flash (sep 2026)',     category: 'Inflacija',      region: 'EU', importance: 'HIGH' },
+  ];
+
+  // Q2 2026 earnings season (approximate dates based on historical patterns)
+  const EARNINGS: EarningsEvent[] = [
+    { id: 'jpm-q2',   date: '2026-07-11', ticker: 'JPM',   name: 'JPMorgan Chase',      when: 'pred odprtjem' },
+    { id: 'wfc-q2',   date: '2026-07-11', ticker: 'WFC',   name: 'Wells Fargo',         when: 'pred odprtjem' },
+    { id: 'c-q2',     date: '2026-07-11', ticker: 'C',     name: 'Citigroup',           when: 'pred odprtjem' },
+    { id: 'gs-q2',    date: '2026-07-14', ticker: 'GS',    name: 'Goldman Sachs',       when: 'pred odprtjem' },
+    { id: 'bac-q2',   date: '2026-07-15', ticker: 'BAC',   name: 'Bank of America',     when: 'pred odprtjem' },
+    { id: 'ms-q2',    date: '2026-07-16', ticker: 'MS',    name: 'Morgan Stanley',      when: 'pred odprtjem' },
+    { id: 'nflx-q2',  date: '2026-07-16', ticker: 'NFLX',  name: 'Netflix',             when: 'po zaprtju' },
+    { id: 'tsla-q2',  date: '2026-07-23', ticker: 'TSLA',  name: 'Tesla',               when: 'po zaprtju' },
+    { id: 'googl-q2', date: '2026-07-29', ticker: 'GOOGL', name: 'Alphabet',            when: 'po zaprtju' },
+    { id: 'msft-q2',  date: '2026-07-29', ticker: 'MSFT',  name: 'Microsoft',           when: 'po zaprtju' },
+    { id: 'meta-q2',  date: '2026-07-30', ticker: 'META',  name: 'Meta Platforms',      when: 'po zaprtju' },
+    { id: 'aapl-q2',  date: '2026-07-31', ticker: 'AAPL',  name: 'Apple',               when: 'po zaprtju' },
+    { id: 'amzn-q2',  date: '2026-08-01', ticker: 'AMZN',  name: 'Amazon',              when: 'po zaprtju' },
+    { id: 'nvda-q2',  date: '2026-08-27', ticker: 'NVDA',  name: 'NVIDIA',              when: 'po zaprtju' },
+  ];
+
+  function parseDate(str: string): Date {
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  function weekKey(dateStr: string): string {
+    const d = parseDate(dateStr);
+    const mon = new Date(d);
+    mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    return mon.toISOString().slice(0, 10);
+  }
+
+  function weekLabel(mondayStr: string): string {
+    const start = parseDate(mondayStr);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    const fmtDay = (d: Date) => d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'short' });
+    return `${fmtDay(start)} – ${fmtDay(end)}`;
+  }
+
+  function dayLabel(dateStr: string): string {
+    return parseDate(dateStr).toLocaleDateString('sl-SI', { weekday: 'short', day: 'numeric', month: 'numeric' });
+  }
+
+  function isToday(dateStr: string): boolean {
+    const today = new Date();
+    const d = parseDate(dateStr);
+    return d.getFullYear() === today.getFullYear() &&
+      d.getMonth() === today.getMonth() &&
+      d.getDate() === today.getDate();
+  }
+
+  function isPast(dateStr: string): boolean {
+    return parseDate(dateStr) < new Date(new Date().setHours(0, 0, 0, 0));
+  }
+
+  function badge(text: string, variant: string): string {
+    return `<span class="cal-badge cal-badge--${variant}">${text}</span>`;
+  }
+
+  function renderMacroRow(evt: MacroEvent & { type: 'makro' }): string {
+    const today_ = isToday(evt.date);
+    const past = isPast(evt.date);
+    const regionBadge = badge(evt.region === 'US' ? '🇺🇸 US' : '🇪🇺 EU', 'region');
+    const catBadge = badge(evt.category, 'cat');
+    const forecastHint = evt.forecast ? `<span class="cal-hint">napoved: ${evt.forecast}</span>` : '';
+    const previousHint = evt.previous ? `<span class="cal-hint">prej: ${evt.previous}</span>` : '';
+    const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'SREDNJE', evt.importance === 'HIGH' ? 'high' : 'medium');
+
+    return `
+      <div class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}">
+        <div class="cal-date">
+          <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
+          ${evt.time ? `<span class="cal-time">${evt.time} CET</span>` : ''}
+        </div>
+        <div class="cal-main">
+          <span class="cal-event-title">${evt.title}</span>
+          <div class="cal-meta">${regionBadge}${catBadge}${forecastHint}${previousHint}</div>
+        </div>
+        <div>${importanceBadge}</div>
+      </div>
+    `;
+  }
+
+  function renderEarningsRow(evt: EarningsEvent & { type: 'zasluzki' }): string {
+    const today_ = isToday(evt.date);
+    const past = isPast(evt.date);
+    const usBadge = badge('🇺🇸 US', 'region');
+    const earningsBadge = badge('Zaslužki', 'earnings');
+
+    return `
+      <div class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}">
+        <div class="cal-date">
+          <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
+          <span class="cal-time">${evt.when}</span>
+        </div>
+        <div class="cal-main">
+          <span class="cal-event-title"><strong style="font-family: var(--font-mono); font-weight: 600;">${evt.ticker}</strong> ${evt.name} — Q2 2026</span>
+          <div class="cal-meta">${usBadge}${earningsBadge}<span class="cal-hint">okvirni datum</span></div>
+        </div>
+        <div></div>
+      </div>
+    `;
+  }
+
+  function render(filter: 'vsi' | 'makro' | 'zasluzki') {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + 90);
+
+    const macro = (filter === 'zasluzki' ? [] : MACRO_EVENTS)
+      .filter(e => { const d = parseDate(e.date); return d >= today && d <= endDate; })
+      .map(e => ({ ...e, type: 'makro' as const }));
+
+    const earnings = (filter === 'makro' ? [] : EARNINGS)
+      .filter(e => { const d = parseDate(e.date); return d >= today && d <= endDate; })
+      .map(e => ({ ...e, type: 'zasluzki' as const }));
+
+    const allEvents = [...macro, ...earnings].sort(
+      (a, b) => parseDate(a.date).getTime() - parseDate(b.date).getTime()
+    );
+
+    const container = document.getElementById('koledar-events')!;
+
+    if (allEvents.length === 0) {
+      container.innerHTML = '<div class="cal-empty">Ni prihajajočih dogodkov za izbrani filter.</div>';
+      return;
+    }
+
+    const grouped = new Map<string, typeof allEvents>();
+    for (const evt of allEvents) {
+      const key = weekKey(evt.date);
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key)!.push(evt);
+    }
+    const groupedArr = Array.from(grouped.entries()).sort(([a], [b]) => a.localeCompare(b));
+
+    container.innerHTML = groupedArr.map(([weekMon, events]) => `
+      <div class="cal-week">
+        <div class="cal-week__header">${weekLabel(weekMon)}</div>
+        ${events.map(evt => evt.type === 'makro' ? renderMacroRow(evt) : renderEarningsRow(evt)).join('')}
+      </div>
+    `).join('');
+  }
+
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('#koledar-filters .filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('filter-btn--active'));
+      btn.classList.add('filter-btn--active');
+      render(btn.dataset.filter as 'vsi' | 'makro' | 'zasluzki');
+    });
+  });
+
+  render('vsi');
+</script>

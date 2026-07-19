@@ -1,0 +1,90 @@
+---
+import { SITE } from '../../config';
+import Button from '../ui/Button.astro';
+import { url } from '../../utils/url';
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__content fade-in">
+
+      <!-- Headline -->
+      <h1 class="hero__title">
+        Razlaga trgov skozi<br />
+        <span class="hero__title-accent">aktualne dogodke</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hero__subtitle">
+        Filtriram globalno dogajanje in razlagam povezave med geopolitiko,
+        makroekonomijo in trgi na jasen in razumljiv način. Tedenske analize,
+        včasih tudi kaj vmes.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero__ctas">
+        <Button href={url('/analize')} size="lg">
+          Preberi analize
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </Button>
+        <Button href={SITE.twitterUrl} variant="ghost" size="lg" external={true}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          Spremljaj na X
+        </Button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--space-3xl) 0 var(--space-2xl);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero__inner {
+    max-width: 720px;
+  }
+
+  /* Title */
+  .hero__title {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero__title-accent {
+    color: var(--color-accent);
+  }
+
+  /* Subtitle */
+  .hero__subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: var(--space-xl);
+    max-width: 600px;
+  }
+
+  /* CTAs */
+  .hero__ctas {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    .hero {
+      padding: var(--space-2xl) 0 var(--space-xl);
+    }
+  }
+</style>

@@ -1,0 +1,195 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/articles/ArticleCard.astro';
+import { CATEGORIES } from '../../config';
+
+const allArticles = await getCollection('analize');
+const sorted = allArticles.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="Analize"
+  description="Poglobljene finančne analize in razlage aktualnih dogodkov. Makroekonomija, geopolitika, delnice, Bitcoin in trgi v slovenščini."
+>
+  <div class="analize-page">
+    <div class="container">
+
+      <!-- Page header -->
+      <header class="analize-page__header fade-in">
+        <h1 class="analize-page__title">Analize</h1>
+        <p class="analize-page__subtitle">
+          Poglobljene razlage aktualnih dogodkov in njihovega vpliva na finančne trge.
+          Brez hypea, brez finančnih nasvetov.
+        </p>
+
+        {sorted.length > 0 && (
+          <div class="analize-page__filters" id="category-filters" role="group" aria-label="Filtriraj po kategoriji">
+            <button class="filter-btn filter-btn--active" data-category="vse">Vse</button>
+            {CATEGORIES.map((cat) => (
+              <button class="filter-btn" data-category={cat}>
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {sorted.length > 0 ? (
+        <>
+          <div class="analize-page__grid" id="articles-grid">
+            {sorted.map((article, i) => (
+              <div
+                class="fade-in article-wrapper"
+                data-category={article.data.category}
+                style={`transition-delay: ${Math.min(i * 60, 300)}ms`}
+              >
+                <ArticleCard
+                  title={article.data.title}
+                  description={article.data.description}
+                  pubDate={article.data.pubDate}
+                  readingTime={article.data.readingTime}
+                  category={article.data.category}
+                  slug={article.id}
+                  featured={article.data.featured}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div class="analize-page__empty" id="empty-state" hidden>
+            <p>Ni analiz za izbrano kategorijo.</p>
+          </div>
+        </>
+      ) : (
+        <p class="analize-page__empty-static">Kmalu prve analize.</p>
+      )}
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .analize-page {
+    padding: var(--space-2xl) 0 var(--space-3xl);
+  }
+
+  .analize-page__header {
+    margin-bottom: var(--space-2xl);
+    max-width: 640px;
+  }
+
+  .analize-page__title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .analize-page__subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: var(--space-xl);
+  }
+
+  /* Filters */
+  .analize-page__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .filter-btn {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 0.375rem 1rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .filter-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-hover);
+  }
+
+  .filter-btn--active {
+    color: var(--color-accent);
+    background: var(--color-accent-bg);
+    border-color: var(--color-accent-border);
+  }
+
+  /* Grid */
+  .analize-page__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .article-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .article-wrapper > * {
+    flex: 1;
+  }
+
+  /* Empty */
+  .analize-page__empty,
+  .analize-page__empty-static {
+    text-align: center;
+    padding: var(--space-3xl) 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  @media (max-width: 1024px) {
+    .analize-page__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .analize-page__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const wrappers = document.querySelectorAll('.article-wrapper');
+  const emptyState = document.getElementById('empty-state');
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selected = btn.getAttribute('data-category');
+
+      // Update active button
+      filterBtns.forEach((b) => b.classList.remove('filter-btn--active'));
+      btn.classList.add('filter-btn--active');
+
+      // Filter articles
+      let visibleCount = 0;
+      wrappers.forEach((wrapper) => {
+        const cat = wrapper.getAttribute('data-category');
+        const show = selected === 'vse' || cat === selected;
+        wrapper.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+
+      // Empty state
+      if (emptyState) emptyState.hidden = visibleCount > 0;
+    });
+  });
+</script>

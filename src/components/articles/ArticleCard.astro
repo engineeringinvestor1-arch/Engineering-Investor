@@ -1,0 +1,151 @@
+---
+import Badge from '../ui/Badge.astro';
+import { url } from '../../utils/url';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  readingTime: number;
+  category: string;
+  slug: string;
+  featured?: boolean;
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  readingTime,
+  category,
+  slug,
+  featured = false,
+} = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('sl-SI', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(pubDate);
+---
+
+<article class={`article-card ${featured ? 'article-card--featured' : ''}`}>
+  <a href={url(`/analize/${slug}`)} class="article-card__link" aria-label={`Preberi: ${title}`}>
+    <div class="article-card__meta-top">
+      <Badge category={category} size="sm" />
+    </div>
+
+    <h3 class="article-card__title">{title}</h3>
+    <p class="article-card__description">{description}</p>
+
+    <div class="article-card__meta-bottom">
+      <time class="article-card__date" datetime={pubDate.toISOString()}>
+        {formattedDate}
+      </time>
+      <span class="article-card__meta-divider" aria-hidden="true">·</span>
+      <span class="article-card__reading-time">{readingTime} min branja</span>
+    </div>
+
+    <span class="article-card__cta" aria-hidden="true">
+      Preberi
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </span>
+  </a>
+</article>
+
+<style>
+  .article-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  }
+
+  .article-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--color-border-strong);
+  }
+
+  .article-card--featured {
+    border-color: var(--color-accent-border);
+    background: linear-gradient(to bottom right, var(--color-surface), var(--color-accent-bg));
+  }
+
+  .article-card__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-xl);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .article-card__meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .article-card__title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    transition: color var(--transition-fast);
+  }
+
+  .article-card:hover .article-card__title {
+    color: var(--color-accent);
+  }
+
+  .article-card__description {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .article-card__meta-bottom {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .article-card__date,
+  .article-card__reading-time {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .article-card__meta-divider {
+    color: var(--color-text-subtle);
+    font-size: var(--text-xs);
+  }
+
+  .article-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+    margin-top: auto;
+    transition: gap var(--transition-fast);
+  }
+
+  .article-card:hover .article-card__cta {
+    gap: 8px;
+  }
+</style>
