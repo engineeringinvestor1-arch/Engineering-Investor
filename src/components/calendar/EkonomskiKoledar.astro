@@ -91,6 +91,10 @@
     margin-bottom: 0.75rem;
   }
 
+  .cal-item {
+    margin-bottom: 0.4rem;
+  }
+
   .cal-row {
     display: grid;
     grid-template-columns: 7rem 1fr auto;
@@ -98,10 +102,32 @@
     gap: 0.75rem;
     padding: 0.75rem;
     border-radius: var(--radius-md);
-    margin-bottom: 0.4rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     transition: border-color 150ms ease;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .cal-item .cal-row {
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+  }
+
+  .cal-item--open .cal-row {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-color: transparent;
+  }
+
+  .cal-row:hover {
+    border-color: var(--color-border-strong);
   }
 
   .cal-row--today {
@@ -147,6 +173,24 @@
     font-weight: 500;
     color: var(--color-text);
     line-height: 1.4;
+  }
+
+  .cal-ticker {
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+
+  .cal-expand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-subtle);
+    transition: transform 150ms ease;
+    flex-shrink: 0;
+  }
+
+  .cal-item--open .cal-expand-icon {
+    transform: rotate(180deg);
   }
 
   .cal-meta {
@@ -208,6 +252,44 @@
     color: var(--color-text-muted);
     font-size: var(--text-sm);
   }
+
+  .cal-row__end {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cal-detail {
+    display: none;
+    padding: 0.75rem 0.9rem 0.9rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .cal-item--open .cal-detail {
+    display: block;
+  }
+
+  .cal-detail p {
+    margin: 0 0 0.5rem;
+  }
+
+  .cal-detail__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cal-detail__stats strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
 </style>
 
 <script>
@@ -218,7 +300,19 @@
   };
   type EarningsEvent = {
     id: string; date: string; ticker: string; name: string; when: string;
+    prevEps?: string; estEps?: string;
   };
+
+  const CATEGORY_INFO: Record<string, string> = {
+    'Inflacija': 'Meri spremembo cen (CPI – potrošniške cene) glede na leto/mesec prej. Višja inflacija od pričakovanj poveča verjetnost, da centralna banka obrestne mere obdrži višje dlje časa, kar navadno pritiska na delnice; nižja od pričakovanj deluje v obratno smer.',
+    'Poraba': 'Meri gibanje maloprodaje — kazalnik moči potrošnika, ki predstavlja večino gospodarske aktivnosti v ZDA. Presenečenje navzgor kaže na odporno gospodarstvo, navzdol na upočasnjevanje povpraševanja.',
+    'PMI': 'Indeks nabavnih menedžerjev meri razpoloženje podjetij v proizvodnji in storitvah. Vrednost nad 50 pomeni širitev gospodarske aktivnosti, pod 50 pa krčenje.',
+    'Centralna banka': 'Odločitev osrednje banke (Fed ali ECB) o obrestnih merah. Dvig ali jastrebji ton (napoved prihodnjih dvigov) navadno okrepi valuto in pritisne na delnice; znižanje ali golobji ton deluje v obratno smer.',
+    'GDP': 'Bruto domači proizvod meri skupno gospodarsko rast v četrtletju. Prva objava (advance) je zgodnja ocena, ki se kasneje revidira, ko so na voljo popolnejši podatki.',
+    'Trg dela': 'Poročilo o novih delovnih mestih (NFP) oz. prijavah brezposelnih. Močan trg dela je dobra novica za gospodarsko rast, a lahko pomeni tudi več pritiska na inflacijo, kar podaljša obdobje višjih obrestnih mer.',
+  };
+
+  const EARNINGS_INFO = 'Četrtletno poročilo o poslovanju podjetja. Trg primerja dejanske rezultate (dobiček na delnico, prihodki) s pričakovanji analitikov (konsenz) — odstopanje od konsenza pogosto premakne ceno delnice bolj kot sami absolutni rezultati.';
 
   const MACRO_EVENTS: MacroEvent[] = [
     // July 2026
@@ -287,13 +381,20 @@
     { id: 'bac-q2',   date: '2026-07-15', ticker: 'BAC',   name: 'Bank of America',     when: 'pred odprtjem' },
     { id: 'ms-q2',    date: '2026-07-16', ticker: 'MS',    name: 'Morgan Stanley',      when: 'pred odprtjem' },
     { id: 'nflx-q2',  date: '2026-07-16', ticker: 'NFLX',  name: 'Netflix',             when: 'po zaprtju' },
-    { id: 'tsla-q2',  date: '2026-07-23', ticker: 'TSLA',  name: 'Tesla',               when: 'po zaprtju' },
-    { id: 'googl-q2', date: '2026-07-29', ticker: 'GOOGL', name: 'Alphabet',            when: 'po zaprtju' },
-    { id: 'msft-q2',  date: '2026-07-29', ticker: 'MSFT',  name: 'Microsoft',           when: 'po zaprtju' },
-    { id: 'meta-q2',  date: '2026-07-30', ticker: 'META',  name: 'Meta Platforms',      when: 'po zaprtju' },
-    { id: 'aapl-q2',  date: '2026-07-31', ticker: 'AAPL',  name: 'Apple',               when: 'po zaprtju' },
-    { id: 'amzn-q2',  date: '2026-08-01', ticker: 'AMZN',  name: 'Amazon',              when: 'po zaprtju' },
-    { id: 'nvda-q2',  date: '2026-08-27', ticker: 'NVDA',  name: 'NVIDIA',              when: 'po zaprtju' },
+    { id: 'tsla-q2',  date: '2026-07-23', ticker: 'TSLA',  name: 'Tesla',               when: 'po zaprtju',
+      prevEps: '0,41 USD (ocena 0,36 USD)', estEps: '0,47–0,52 USD' },
+    { id: 'googl-q2', date: '2026-07-29', ticker: 'GOOGL', name: 'Alphabet',            when: 'po zaprtju',
+      prevEps: '5,11 USD (ocena 2,66 USD)', estEps: '~2,87 USD' },
+    { id: 'msft-q2',  date: '2026-07-29', ticker: 'MSFT',  name: 'Microsoft',           when: 'po zaprtju',
+      prevEps: '4,27 USD (ocena 4,07 USD), fiskalno Q3', estEps: '4,21–4,33 USD' },
+    { id: 'meta-q2',  date: '2026-07-30', ticker: 'META',  name: 'Meta Platforms',      when: 'po zaprtju',
+      prevEps: '7,31 USD prilagojeno (ocena 6,66–6,79 USD)', estEps: '~7,18 USD' },
+    { id: 'aapl-q2',  date: '2026-07-31', ticker: 'AAPL',  name: 'Apple',               when: 'po zaprtju',
+      prevEps: '2,01 USD (ocena 1,94 USD), fiskalno Q2', estEps: '~1,89 USD, fiskalno Q3' },
+    { id: 'amzn-q2',  date: '2026-08-01', ticker: 'AMZN',  name: 'Amazon',              when: 'po zaprtju',
+      prevEps: '2,78 USD (ocena 1,64 USD) — vključuje enkraten dobiček iz naložbe v Anthropic', estEps: '~1,82 USD' },
+    { id: 'nvda-q2',  date: '2026-08-27', ticker: 'NVDA',  name: 'NVIDIA',              when: 'po zaprtju',
+      prevEps: '1,87 USD nekje GAAP prilagojeno (ocena 1,76–1,78 USD), fiskalno Q1', estEps: '2,08–2,12 USD, fiskalno Q2' },
   ];
 
   function parseDate(str: string): Date {
@@ -332,8 +433,17 @@
     return parseDate(dateStr) < new Date(new Date().setHours(0, 0, 0, 0));
   }
 
-  function badge(text: string, variant: string): string {
-    return `<span class="cal-badge cal-badge--${variant}">${text}</span>`;
+  function badge(text: string, variant: string, extraClass = ''): string {
+    return `<span class="cal-badge cal-badge--${variant} ${extraClass}">${text}</span>`;
+  }
+
+  function expandIcon(): string {
+    return `<svg class="cal-expand-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>`;
+  }
+
+  function detailStat(label: string, value?: string): string {
+    if (!value) return '';
+    return `<div><strong>${label}:</strong> ${value}</div>`;
   }
 
   function renderMacroRow(evt: MacroEvent & { type: 'makro' }): string {
@@ -344,18 +454,28 @@
     const forecastHint = evt.forecast ? `<span class="cal-hint">napoved: ${evt.forecast}</span>` : '';
     const previousHint = evt.previous ? `<span class="cal-hint">prej: ${evt.previous}</span>` : '';
     const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'SREDNJE', evt.importance === 'HIGH' ? 'high' : 'medium');
+    const description = CATEGORY_INFO[evt.category] || '';
 
     return `
-      <div class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}">
-        <div class="cal-date">
-          <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
-          ${evt.time ? `<span class="cal-time">${evt.time} CET</span>` : ''}
+      <div class="cal-item" data-id="${evt.id}">
+        <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}" aria-expanded="false">
+          <div class="cal-date">
+            <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
+            ${evt.time ? `<span class="cal-time">${evt.time} CET</span>` : ''}
+          </div>
+          <div class="cal-main">
+            <span class="cal-event-title">${evt.title}</span>
+            <div class="cal-meta">${regionBadge}${catBadge}${forecastHint}${previousHint}</div>
+          </div>
+          <div class="cal-row__end">${importanceBadge}${expandIcon()}</div>
+        </button>
+        <div class="cal-detail">
+          ${description ? `<p>${description}</p>` : ''}
+          <div class="cal-detail__stats">
+            ${detailStat('Prejšnja vrednost', evt.previous)}
+            ${detailStat('Napoved', evt.forecast)}
+          </div>
         </div>
-        <div class="cal-main">
-          <span class="cal-event-title">${evt.title}</span>
-          <div class="cal-meta">${regionBadge}${catBadge}${forecastHint}${previousHint}</div>
-        </div>
-        <div>${importanceBadge}</div>
       </div>
     `;
   }
@@ -363,20 +483,33 @@
   function renderEarningsRow(evt: EarningsEvent & { type: 'zasluzki' }): string {
     const today_ = isToday(evt.date);
     const past = isPast(evt.date);
+    const tickerBadge = badge(evt.ticker, 'region', 'cal-ticker');
     const usBadge = badge('🇺🇸 US', 'region');
     const earningsBadge = badge('Zaslužki', 'earnings');
+    const hasStats = evt.prevEps || evt.estEps;
 
     return `
-      <div class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}">
-        <div class="cal-date">
-          <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
-          <span class="cal-time">${evt.when}</span>
+      <div class="cal-item" data-id="${evt.id}">
+        <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}" aria-expanded="false">
+          <div class="cal-date">
+            <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
+            <span class="cal-time">${evt.when}</span>
+          </div>
+          <div class="cal-main">
+            <span class="cal-event-title">${evt.name} — Q2 2026</span>
+            <div class="cal-meta">${tickerBadge}${usBadge}${earningsBadge}<span class="cal-hint">okvirni datum</span></div>
+          </div>
+          <div class="cal-row__end">${expandIcon()}</div>
+        </button>
+        <div class="cal-detail">
+          <p>${EARNINGS_INFO}</p>
+          ${hasStats ? `
+            <div class="cal-detail__stats">
+              ${detailStat('Prejšnje četrtletje (EPS)', evt.prevEps)}
+              ${detailStat('Napoved za to četrtletje (EPS, konsenz)', evt.estEps)}
+            </div>
+          ` : '<p class="cal-hint">Natančnejši podatki o dobičku bodo dodani bližje datumu objave.</p>'}
         </div>
-        <div class="cal-main">
-          <span class="cal-event-title"><strong style="font-family: var(--font-mono); font-weight: 600;">${evt.ticker}</strong> ${evt.name} — Q2 2026</span>
-          <div class="cal-meta">${usBadge}${earningsBadge}<span class="cal-hint">okvirni datum</span></div>
-        </div>
-        <div></div>
       </div>
     `;
   }
@@ -429,6 +562,16 @@
       btn.classList.add('filter-btn--active');
       render(btn.dataset.filter as 'vsi' | 'makro' | 'zasluzki');
     });
+  });
+
+  const eventsContainer = document.getElementById('koledar-events')!;
+  eventsContainer.addEventListener('click', (e) => {
+    const rowBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('.cal-row');
+    if (!rowBtn) return;
+    const item = rowBtn.closest('.cal-item');
+    if (!item) return;
+    const isOpen = item.classList.toggle('cal-item--open');
+    rowBtn.setAttribute('aria-expanded', String(isOpen));
   });
 
   render('vsi');
