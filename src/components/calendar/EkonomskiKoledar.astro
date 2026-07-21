@@ -272,6 +272,13 @@
     border: 1px solid var(--color-border);
   }
 
+  .cal-badge--actual {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    border: 1px solid rgba(5, 150, 105, 0.3);
+    font-weight: 600;
+  }
+
   .cal-empty {
     text-align: center;
     padding: 3rem;
@@ -447,14 +454,16 @@
 </style>
 
 <script>
+  import koledarData from '../../data/koledar-events.json';
+
   type MacroEvent = {
     id: string; date: string; time?: string; title: string;
     category: string; region: 'US' | 'EU'; importance: 'HIGH' | 'MEDIUM';
-    previous?: string; forecast?: string;
+    previous?: string; forecast?: string; actual?: string;
   };
   type EarningsEvent = {
     id: string; date: string; ticker: string; name: string; when: string;
-    prevEps?: string; estEps?: string;
+    prevEps?: string; estEps?: string; actualEps?: string; actualNote?: string;
   };
 
   const CATEGORY_INFO: Record<string, string> = {
@@ -468,88 +477,8 @@
 
   const EARNINGS_INFO = 'Četrtletno poročilo o poslovanju podjetja. Trg primerja dejanske rezultate (dobiček na delnico, prihodki) s pričakovanji analitikov (konsenz) - odstopanje od konsenza pogosto premakne ceno delnice bolj kot sami absolutni rezultati.';
 
-  const MACRO_EVENTS: MacroEvent[] = [
-    // July 2026
-    { id: 'us-cpi-jul26',    date: '2026-07-14', time: '14:30', title: 'US CPI (jun 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH',   previous: '2.4%' },
-    { id: 'us-retail-jul26', date: '2026-07-16', time: '14:30', title: 'US maloprodaja (jun 2026)',   category: 'Poraba',         region: 'US', importance: 'MEDIUM' },
-    { id: 'eu-pmi-jul26',    date: '2026-07-22', time: '10:00', title: 'EU PMI Flash (jul 2026)',     category: 'PMI',            region: 'EU', importance: 'MEDIUM' },
-    { id: 'us-pmi-jul26',    date: '2026-07-23', time: '15:45', title: 'US PMI Flash (jul 2026)',     category: 'PMI',            region: 'US', importance: 'MEDIUM' },
-    { id: 'ecb-jul26',       date: '2026-07-23', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'us-gdp-q2-26',    date: '2026-07-29', time: '14:30', title: 'US GDP Q2 2026 (advance)',   category: 'GDP',            region: 'US', importance: 'HIGH',   previous: '1.4%', forecast: '2.1%' },
-    { id: 'fomc-jul26',      date: '2026-07-29', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'eu-cpi-jul26',    date: '2026-07-30', time: '11:00', title: 'EU CPI Flash (jul 2026)',     category: 'Inflacija',      region: 'EU', importance: 'HIGH',   previous: '2.0%' },
-    // August 2026
-    { id: 'us-nfp-aug26',    date: '2026-08-07', time: '14:30', title: 'US NFP (jul 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
-    { id: 'us-cpi-aug26',    date: '2026-08-12', time: '14:30', title: 'US CPI (jul 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
-    { id: 'us-retail-aug26', date: '2026-08-14', time: '14:30', title: 'US maloprodaja (jul 2026)',  category: 'Poraba',         region: 'US', importance: 'MEDIUM' },
-    { id: 'eu-pmi-aug26',    date: '2026-08-24', time: '10:00', title: 'EU PMI Flash (avg 2026)',     category: 'PMI',            region: 'EU', importance: 'MEDIUM' },
-    { id: 'us-jackson26',    date: '2026-08-27', time: '16:00', title: 'Jackson Hole symposium (Fed)',category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'us-gdp-q2r-26',   date: '2026-08-27', time: '14:30', title: 'US GDP Q2 2026 (revizija)', category: 'GDP',            region: 'US', importance: 'MEDIUM' },
-    { id: 'eu-cpi-aug26',    date: '2026-08-28', time: '11:00', title: 'EU CPI Flash (avg 2026)',     category: 'Inflacija',      region: 'EU', importance: 'HIGH' },
-    // September 2026
-    { id: 'us-nfp-sep26',    date: '2026-09-04', time: '14:30', title: 'US NFP (avg 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
-    { id: 'us-cpi-sep26',    date: '2026-09-11', time: '14:30', title: 'US CPI (avg 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
-    { id: 'ecb-sep26',       date: '2026-09-10', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'eu-pmi-sep26',    date: '2026-09-22', time: '10:00', title: 'EU PMI Flash (sep 2026)',     category: 'PMI',            region: 'EU', importance: 'MEDIUM' },
-    { id: 'fomc-sep26',      date: '2026-09-16', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'eu-cpi-sep26',    date: '2026-09-30', time: '11:00', title: 'EU CPI Flash (sep 2026)',     category: 'Inflacija',      region: 'EU', importance: 'HIGH' },
-    // October 2026
-    { id: 'us-nfp-oct26',    date: '2026-10-02', time: '14:30', title: 'US NFP (sep 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
-    { id: 'us-cpi-oct26',    date: '2026-10-14', time: '14:30', title: 'US CPI (sep 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
-    { id: 'fomc-oct26',      date: '2026-10-28', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-oct26',       date: '2026-10-29', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    // November 2026
-    { id: 'us-nfp-nov26',    date: '2026-11-06', time: '14:30', title: 'US NFP (okt 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
-    { id: 'us-cpi-nov26',    date: '2026-11-10', time: '14:30', title: 'US CPI (okt 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
-    // December 2026
-    { id: 'us-nfp-dec26',    date: '2026-12-04', time: '14:30', title: 'US NFP (nov 2026)',           category: 'Trg dela',       region: 'US', importance: 'HIGH' },
-    { id: 'us-cpi-dec26',    date: '2026-12-10', time: '14:30', title: 'US CPI (nov 2026)',           category: 'Inflacija',      region: 'US', importance: 'HIGH' },
-    { id: 'fomc-dec26',      date: '2026-12-09', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-dec26',       date: '2026-12-17', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    // 2027 - samo FOMC in ECB (datumi centralnih bank so objavljeni leto ali več vnaprej;
-    // CPI/PPI/NFP urnik za 2027 bo objavljen kasneje v letu 2026, takrat dodaj še to)
-    { id: 'fomc-jan27',      date: '2027-01-27', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-feb27',       date: '2027-02-04', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-mar27',      date: '2027-03-17', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-mar27',       date: '2027-03-18', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-apr27',      date: '2027-04-28', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-apr27',       date: '2027-04-29', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-jun27',      date: '2027-06-09', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-jun27',       date: '2027-06-10', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-jul27',      date: '2027-07-28', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-jul27',       date: '2027-07-22', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-sep27',      date: '2027-09-15', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-sep27',       date: '2027-09-09', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-oct27',      date: '2027-10-27', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-oct27',       date: '2027-10-28', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-    { id: 'fomc-dec27',      date: '2027-12-08', time: '20:00', title: 'Seja FOMC - obrestne mere',  category: 'Centralna banka',region: 'US', importance: 'HIGH' },
-    { id: 'ecb-dec27',       date: '2027-12-16', time: '13:15', title: 'Seja ECB - obrestne mere',   category: 'Centralna banka',region: 'EU', importance: 'HIGH' },
-  ];
-
-  // Q2 2026 earnings season (approximate dates based on historical patterns)
-  const EARNINGS: EarningsEvent[] = [
-    { id: 'jpm-q2',   date: '2026-07-11', ticker: 'JPM',   name: 'JPMorgan Chase',      when: 'pred odprtjem' },
-    { id: 'wfc-q2',   date: '2026-07-11', ticker: 'WFC',   name: 'Wells Fargo',         when: 'pred odprtjem' },
-    { id: 'c-q2',     date: '2026-07-11', ticker: 'C',     name: 'Citigroup',           when: 'pred odprtjem' },
-    { id: 'gs-q2',    date: '2026-07-14', ticker: 'GS',    name: 'Goldman Sachs',       when: 'pred odprtjem' },
-    { id: 'bac-q2',   date: '2026-07-15', ticker: 'BAC',   name: 'Bank of America',     when: 'pred odprtjem' },
-    { id: 'ms-q2',    date: '2026-07-16', ticker: 'MS',    name: 'Morgan Stanley',      when: 'pred odprtjem' },
-    { id: 'nflx-q2',  date: '2026-07-16', ticker: 'NFLX',  name: 'Netflix',             when: 'po zaprtju' },
-    { id: 'tsla-q2',  date: '2026-07-23', ticker: 'TSLA',  name: 'Tesla',               when: 'po zaprtju',
-      prevEps: '0,41 USD (ocena 0,36 USD)', estEps: '0,47–0,52 USD' },
-    { id: 'googl-q2', date: '2026-07-29', ticker: 'GOOGL', name: 'Alphabet',            when: 'po zaprtju',
-      prevEps: '5,11 USD (ocena 2,66 USD)', estEps: '~2,87 USD' },
-    { id: 'msft-q2',  date: '2026-07-29', ticker: 'MSFT',  name: 'Microsoft',           when: 'po zaprtju',
-      prevEps: '4,27 USD (ocena 4,07 USD), fiskalno Q3', estEps: '4,21–4,33 USD' },
-    { id: 'meta-q2',  date: '2026-07-30', ticker: 'META',  name: 'Meta Platforms',      when: 'po zaprtju',
-      prevEps: '7,31 USD prilagojeno (ocena 6,66–6,79 USD)', estEps: '~7,18 USD' },
-    { id: 'aapl-q2',  date: '2026-07-31', ticker: 'AAPL',  name: 'Apple',               when: 'po zaprtju',
-      prevEps: '2,01 USD (ocena 1,94 USD), fiskalno Q2', estEps: '~1,89 USD, fiskalno Q3' },
-    { id: 'amzn-q2',  date: '2026-08-01', ticker: 'AMZN',  name: 'Amazon',              when: 'po zaprtju',
-      prevEps: '2,78 USD (ocena 1,64 USD) - vključuje enkraten dobiček iz naložbe v Anthropic', estEps: '~1,82 USD' },
-    { id: 'nvda-q2',  date: '2026-08-27', ticker: 'NVDA',  name: 'NVIDIA',              when: 'po zaprtju',
-      prevEps: '1,87 USD nekje GAAP prilagojeno (ocena 1,76–1,78 USD), fiskalno Q1', estEps: '2,08–2,12 USD, fiskalno Q2' },
-  ];
+  const MACRO_EVENTS: MacroEvent[] = koledarData.macroEvents as MacroEvent[];
+  const EARNINGS: EarningsEvent[] = koledarData.earnings as EarningsEvent[];
 
   function parseDate(str: string): Date {
     const [y, m, d] = str.split('-').map(Number);
@@ -608,6 +537,7 @@
     const forecastHint = evt.forecast ? `<span class="cal-hint">napoved: ${evt.forecast}</span>` : '';
     const previousHint = evt.previous ? `<span class="cal-hint">prej: ${evt.previous}</span>` : '';
     const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'SREDNJE', evt.importance === 'HIGH' ? 'high' : 'medium');
+    const actualBadge = evt.actual ? badge(`DEJANSKO: ${evt.actual}`, 'actual') : '';
     const description = CATEGORY_INFO[evt.category] || '';
 
     return `
@@ -619,7 +549,7 @@
           </div>
           <div class="cal-main">
             <span class="cal-event-title">${evt.title}</span>
-            <div class="cal-meta">${regionBadge}${catBadge}${forecastHint}${previousHint}</div>
+            <div class="cal-meta">${regionBadge}${catBadge}${actualBadge}${forecastHint}${previousHint}</div>
           </div>
           <div class="cal-row__end">${importanceBadge}${expandIcon()}</div>
         </button>
@@ -628,6 +558,7 @@
           <div class="cal-detail__stats">
             ${detailStat('Prejšnja vrednost', evt.previous)}
             ${detailStat('Napoved', evt.forecast)}
+            ${detailStat('Dejanski rezultat', evt.actual)}
           </div>
         </div>
       </div>
@@ -641,6 +572,10 @@
     const usBadge = badge('🇺🇸 US', 'region');
     const earningsBadge = badge('Zaslužki', 'earnings');
     const hasStats = evt.prevEps || evt.estEps;
+    const actualBadge = evt.actualEps ? badge(`DEJANSKO: ${evt.actualEps}`, 'actual') : '';
+    const dateHint = evt.actualEps
+      ? '<span class="cal-hint">poročano</span>'
+      : '<span class="cal-hint">okvirni datum</span>';
 
     return `
       <div class="cal-item" data-id="${evt.id}">
@@ -651,16 +586,18 @@
           </div>
           <div class="cal-main">
             <span class="cal-event-title">${evt.name} - Q2 2026</span>
-            <div class="cal-meta">${tickerBadge}${usBadge}${earningsBadge}<span class="cal-hint">okvirni datum</span></div>
+            <div class="cal-meta">${tickerBadge}${usBadge}${earningsBadge}${actualBadge}${dateHint}</div>
           </div>
           <div class="cal-row__end">${expandIcon()}</div>
         </button>
         <div class="cal-detail">
           <p>${EARNINGS_INFO}</p>
-          ${hasStats ? `
+          ${hasStats || evt.actualEps ? `
             <div class="cal-detail__stats">
               ${detailStat('Prejšnje četrtletje (EPS)', evt.prevEps)}
               ${detailStat('Napoved za to četrtletje (EPS, konsenz)', evt.estEps)}
+              ${detailStat('Dejanski EPS', evt.actualEps)}
+              ${detailStat('Opomba', evt.actualNote)}
             </div>
           ` : '<p class="cal-hint">Natančnejši podatki o dobičku bodo dodani bližje datumu objave.</p>'}
         </div>
