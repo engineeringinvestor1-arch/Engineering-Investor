@@ -22,7 +22,8 @@ jobs:
 
       - name: Research and update actual results
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
         run: node scripts/update-koledar-actuals.mjs
 
       - name: Commit changes if any
