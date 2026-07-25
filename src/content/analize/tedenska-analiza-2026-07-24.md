@@ -9,7 +9,7 @@ featured: true
 
 ## Ključne številke
 
-- **S&P 500:** tedensko nižje 0,54 %, na njemu ne vidimo hudega padca kot na Nasdaqu zaradi rotiranja kapitala v bolj defenzivne sektorje
+- **S&P 500:** tedensko nižje -0,54 %
 
 ![Uspešnost sektorjev S&P 500 v zadnjih 5 trgovalnih dneh](/images/articles/tedenska-analiza-2026-07-24/sektorska-uspesnost.png)
 
@@ -49,7 +49,7 @@ Prejšnji teden je bil signal vrednotenjski (trg je za nespremenjeno rast plače
 
 - Naslovni EPS je bil napihnjen z nedenarnim prevrednotenjem deleža v Anthropicu (vrednotenje s 380 mrd USD v Q1 na 965 mrd USD v Q2), zato ni primerljiv s konsenzom
 
-- Prosti denarni tok negativen. Delnica -7 % v četrtek, v dveh dneh s približno 374 na 320 USD
+- Prosti denarni tok negativen. Delnica -7 % v četrtek
 
 ![Rast prihodkov po segmentih Alphabeta v Q2 2026](/images/articles/tedenska-analiza-2026-07-24/alphabet-rast.png)
 
@@ -101,7 +101,7 @@ Točne datume in ure rezultatov potrdi pri virih podjetij, ker se koledarski vir
 
 ## Ključne ugotovitve
 
-- **Capex je razdelil trg.** Alphabet, Tesla in Intel so dvignili napovedi investicij, delnice pa so padle, medtem ko so azijski proizvajalci čipov rasli
+- **Capex je razdelil trg.** Alphabet, Tesla in Intel so dvignili napovedi investicij, delnice pa so padle
 
 - **Nafta je znova inflacijsko tveganje.** Dotik 100 USD dviguje donosnosti obveznic
 
