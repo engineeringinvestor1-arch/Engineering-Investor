@@ -22,7 +22,7 @@ jobs:
 
       - name: Research and update actual results
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/update-koledar-actuals.mjs
 
       - name: Commit changes if any

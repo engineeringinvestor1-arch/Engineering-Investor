@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 /**
  * Daily job: finds koledar events from the last few days that don't yet have
- * an "actual" result recorded, asks Claude (with live web search) to research
- * the real reported figures, and writes them back into koledar-events.json.
+ * an "actual" result recorded, asks Gemini (with Google Search grounding) to
+ * research the real reported figures, and writes them back into
+ * koledar-events.json.
+ *
+ * Uses GEMINI_API_KEY — the same free provider already used by the
+ * engineering-investor daily-briefing bot, so the same key works here too
+ * (or a new one is free and instant at https://aistudio.google.com/apikey).
  *
  * Safe by construction: this only ever fills in previously-empty `actual` /
  * `actualEps` fields on events whose date has already passed — it never
@@ -17,7 +22,10 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, '../src/data/koledar-events.json');
 const LOOKBACK_DAYS = 4; // covers weekends / a missed run without re-scanning ancient history
-const MODEL = 'claude-opus-4-8';
+const GEMINI_MODELS = (process.env.GEMINI_MODELS || 'gemini-2.5-flash,gemini-2.0-flash')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 function parseDateUTC(str) {
   const [y, m, d] = str.split('-').map(Number);
@@ -30,9 +38,9 @@ function todayUTC() {
 }
 
 async function main() {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    console.error('ANTHROPIC_API_KEY missing — skipping koledar actuals update.');
+    console.error('GEMINI_API_KEY missing — skipping koledar actuals update.');
     process.exit(0); // don't fail the workflow over a missing optional secret
   }
 
@@ -58,7 +66,7 @@ async function main() {
   console.log(`Koledar: researching ${pendingMacro.length} macro + ${pendingEarnings.length} earnings event(s)...`);
 
   const prompt = buildPrompt(pendingMacro, pendingEarnings);
-  const result = await callClaudeWithSearch(apiKey, prompt);
+  const result = await callGeminiWithSearch(apiKey, prompt);
 
   let parsed;
   try {
@@ -109,7 +117,7 @@ function buildPrompt(macro, earnings) {
     .map((e) => `- id: ${e.id} | podjetje: ${e.name} (${e.ticker}) | datum poročila: ${e.date}`)
     .join('\n');
 
-  return `Raziskuješ resnične, preverjene finančne podatke za slovenski ekonomski koledar. Za vsak spodnji dogodek s spletnim iskanjem poišči DEJANSKI, že objavljeni rezultat (ne napovedi, ne pričakovanja).
+  return `Raziskuješ resnične, preverjene finančne podatke za slovenski ekonomski koledar. Za vsak spodnji dogodek z Google iskanjem poišči DEJANSKI, že objavljeni rezultat (ne napovedi, ne pričakovanja).
 
 Zelo pomembno: poroč samo o vrednostih, ki jih lahko potrdiš z iskanjem. Če za dogodek ne najdeš zanesljivega objavljenega rezultata (npr. se še ni zgodil ali podatka ni), pusti njegovo vrednost na null — ne izmišljuj si številk.
 
@@ -120,7 +128,7 @@ Za makro dogodke (centralna banka, CPI, PPI, NFP, PMI, GDP ipd.) poišči dejans
 
 Za zaslužke podjetij poišči dejanski poročan EPS (dobiček na delnico) in kratko opombo o tem, ali je presegel ali zaostal za pričakovanji konsenza.
 
-Ko končaš z raziskovanjem, odgovori SAMO z JSON objektom v natanko tej obliki, brez kakršnegakoli drugega besedila pred ali po njem:
+Odgovori SAMO z JSON objektom v natanko tej obliki, brez kakršnegakoli drugega besedila pred ali po njem:
 
 {
   "macro": [{"id": "<id>", "actual": "<kratek opis v slovenščini ali null>"}],
@@ -128,42 +136,40 @@ Ko končaš z raziskovanjem, odgovori SAMO z JSON objektom v natanko tej obliki,
 }`;
 }
 
-async function callClaudeWithSearch(apiKey, prompt) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 8000,
-      thinking: { type: 'adaptive' },
-      output_config: { effort: 'high' },
-      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 15 }],
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+async function callGeminiWithSearch(apiKey, prompt) {
+  const body = {
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    tools: [{ google_search: {} }],
+    generationConfig: { temperature: 0.2, maxOutputTokens: 8000 },
+  };
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Claude API ${res.status}: ${text}`);
+  let lastErr;
+  for (const model of GEMINI_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error(`Gemini ${model} ${res.status}: ${await res.text()}`);
+
+      const json = await res.json();
+      const parts = json?.candidates?.[0]?.content?.parts ?? [];
+      const text = parts.map((p) => p.text || '').join('\n').trim();
+      if (!text) throw new Error('Empty Gemini output');
+      return text;
+    } catch (err) {
+      console.warn(`[gemini] ${model} failed: ${err.message}`);
+      lastErr = err;
+    }
   }
-
-  const json = await res.json();
-  const text = (json.content || [])
-    .filter((block) => block.type === 'text')
-    .map((block) => block.text)
-    .join('\n')
-    .trim();
-
-  if (!text) throw new Error('Empty response from Claude API');
-  return text;
+  throw new Error(`All Gemini models failed. Last: ${lastErr?.message}`);
 }
 
 function extractJson(text) {
-  const match = text.match(/\{[\s\S]*\}/);
+  const cleaned = text.replace(/```json|```/g, '');
+  const match = cleaned.match(/\{[\s\S]*\}/);
   if (!match) throw new Error('No JSON object found in response');
   return JSON.parse(match[0]);
 }
