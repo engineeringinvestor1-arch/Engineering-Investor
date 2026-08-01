@@ -1,0 +1,492 @@
+---
+---
+
+<div class="vd">
+  <div class="vd__header">
+    <h1 class="vd__title">Kalkulator vrednotenja delnic</h1>
+    <p class="vd__subtitle">
+      Oceni pošteno vrednost delnice s pomočjo zvezne različice Mauboussin/McKinsey formule
+      za ciljni P/E — na podlagi pričakovane rasti dobička, donosnosti na vloženi kapital (ROIC)
+      in stroška kapitala (WACC).
+    </p>
+  </div>
+
+  <section class="vd__assumptions">
+    <h2 class="vd__section-title">Skupne predpostavke</h2>
+    <div class="vd__assumptions-grid">
+      <label class="vd__field">
+        <span>FWD P/E S&amp;P 500</span>
+        <input type="number" id="a-sp-pe" value="16" step="0.1" />
+      </label>
+      <label class="vd__field">
+        <span>Povprečni ROIC S&amp;P 500 (%)</span>
+        <input type="number" id="a-sp-roic" value="16" step="0.1" />
+      </label>
+      <label class="vd__field">
+        <span>Prag Undervalued, upside ≥ (%)</span>
+        <input type="number" id="a-th-under" value="15" step="1" />
+      </label>
+      <label class="vd__field">
+        <span>Prag Overvalued, downside ≤ (%)</span>
+        <input type="number" id="a-th-over" value="-15" step="1" />
+      </label>
+      <label class="vd__field">
+        <span>Napovedno obdobje (let)</span>
+        <input type="number" id="a-years" value="15" step="1" min="1" />
+      </label>
+    </div>
+  </section>
+
+  <section id="vd-companies" class="vd__companies"></section>
+
+  <button type="button" id="vd-add" class="vd__add-btn">+ Dodaj podjetje</button>
+
+  <p class="vd__footnote">
+    Ciljni P/E = payout ratio (1 − rast/ROIC) × faktor rastoče anuitete + diskontirana terminalna vrednost, izračunano po WACC za izbrano napovedno obdobje.
+    Fer vrednost = trenutna cena × (ciljni P/E / trenutni P/E FWD).
+  </p>
+</div>
+
+<style is:global>
+  .vd {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md) var(--space-3xl);
+  }
+
+  .vd__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .vd__title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .vd__subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  .vd__section-title {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-md);
+  }
+
+  .vd__assumptions {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .vd__assumptions-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-md);
+  }
+
+  .vd__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .vd__field span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+
+  .vd__field input {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.65rem;
+    color: var(--color-text);
+    width: 100%;
+  }
+
+  .vd__field input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-bg);
+  }
+
+  .vd__companies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .vd-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+  }
+
+  .vd-card__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .vd-card__name {
+    flex: 1;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    color: var(--color-text);
+  }
+
+  .vd-card__name:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  .vd-card__remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+  }
+
+  .vd-card__remove:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-hover);
+  }
+
+  .vd-card__remove:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .vd-card__inputs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .vd-card__result {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .vd-kpi {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.9rem;
+  }
+
+  .vd-kpi__label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .vd-kpi__value {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+  }
+
+  .vd-kpi__hint {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    margin-top: 2px;
+  }
+
+  .vd-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: var(--radius-full);
+  }
+
+  .vd-badge--under {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    border: 1px solid rgba(5, 150, 105, 0.3);
+  }
+
+  .vd-badge--over {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+  }
+
+  .vd-badge--fair {
+    background: rgba(217, 119, 6, 0.1);
+    color: #b45309;
+    border: 1px solid rgba(217, 119, 6, 0.25);
+  }
+
+  .vd__add-btn {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+    background: transparent;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all var(--transition-fast);
+  }
+
+  .vd__add-btn:hover {
+    background: var(--color-accent-bg);
+    border-color: var(--color-accent-border);
+  }
+
+  .vd__footnote {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+    line-height: 1.6;
+    margin-top: var(--space-lg);
+  }
+
+  @media (max-width: 768px) {
+    .vd__assumptions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .vd-card__inputs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .vd-card__result {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<script>
+  interface Company {
+    id: string;
+    name: string;
+    pe: number | null;
+    roic: number | null;
+    growth: number | null;
+    wacc: number | null;
+    price: number | null;
+  }
+
+  interface Assumptions {
+    spPe: number;
+    spRoic: number;
+    thUnder: number;
+    thOver: number;
+    years: number;
+  }
+
+  let idCounter = 0;
+  function newCompany(partial: Partial<Company> = {}): Company {
+    idCounter += 1;
+    return {
+      id: `c${idCounter}`,
+      name: '',
+      pe: null,
+      roic: null,
+      growth: null,
+      wacc: null,
+      price: null,
+      ...partial,
+    };
+  }
+
+  let companies: Company[] = [
+    newCompany({ name: 'Microsoft (MSFT)', pe: 21.5, roic: 29, growth: 15, wacc: 8, price: 390 }),
+  ];
+
+  function getAssumptions(): Assumptions {
+    return {
+      spPe: Number((document.getElementById('a-sp-pe') as HTMLInputElement).value) || 16,
+      spRoic: Number((document.getElementById('a-sp-roic') as HTMLInputElement).value) / 100 || 0.16,
+      thUnder: Number((document.getElementById('a-th-under') as HTMLInputElement).value) / 100 || 0.15,
+      thOver: Number((document.getElementById('a-th-over') as HTMLInputElement).value) / 100 || -0.15,
+      years: Number((document.getElementById('a-years') as HTMLInputElement).value) || 15,
+    };
+  }
+
+  function fmtPct(v: number): string {
+    return `${(v * 100).toLocaleString('sl-SI', { maximumFractionDigits: 1 })} %`;
+  }
+
+  function fmtNum(v: number, decimals = 1): string {
+    return v.toLocaleString('sl-SI', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  // Mauboussin/McKinsey continuous target P/E formula — mirrors the source spreadsheet's
+  // N/O/P/Q/R/S helper columns (payout ratio x growing-annuity factor + discounted terminal value).
+  function computeTargetPE(growth: number, roic: number, wacc: number, years: number): number | null {
+    if (roic === 0 || wacc <= -1) return null;
+    const payout = 1 - growth / roic;
+    const growthFactor = (1 + growth) / (1 + wacc);
+    const annuity = Math.abs(growthFactor - 1) < 1e-7
+      ? years
+      : (growthFactor * (1 - Math.pow(growthFactor, years))) / (1 - growthFactor);
+    const explicitValue = payout * annuity;
+    const terminalRaw = Math.pow(1 + growth, years) / wacc;
+    const terminalValue = terminalRaw / Math.pow(1 + wacc, years);
+    const result = explicitValue + terminalValue;
+    return Number.isFinite(result) ? result : null;
+  }
+
+  function renderCompanyCard(c: Company, a: Assumptions): string {
+    const pe = c.pe;
+    const roic = c.roic !== null ? c.roic / 100 : null;
+    const growth = c.growth !== null ? c.growth / 100 : null;
+    const wacc = c.wacc !== null ? c.wacc / 100 : null;
+    const price = c.price;
+
+    let targetPe: number | null = null;
+    let fairValue: number | null = null;
+    let upside: number | null = null;
+    let peRemium: number | null = null;
+    let roicPremium: number | null = null;
+
+    if (roic !== null && growth !== null && wacc !== null) {
+      targetPe = computeTargetPE(growth, roic, wacc, a.years);
+    }
+    if (price !== null && targetPe !== null && pe) {
+      fairValue = price * (targetPe / pe);
+    }
+    if (price !== null && fairValue !== null) {
+      upside = fairValue / price - 1;
+    }
+    if (pe !== null) peRemium = pe / a.spPe - 1;
+    if (roic !== null) roicPremium = roic / a.spRoic - 1;
+
+    let badge = '';
+    if (upside !== null) {
+      if (upside >= a.thUnder) badge = '<span class="vd-badge vd-badge--under">Undervalued</span>';
+      else if (upside <= a.thOver) badge = '<span class="vd-badge vd-badge--over">Overvalued</span>';
+      else badge = '<span class="vd-badge vd-badge--fair">Fair Value</span>';
+    }
+
+    return `
+      <div class="vd-card" data-id="${c.id}">
+        <div class="vd-card__header">
+          <input type="text" class="vd-card__name" data-field="name" placeholder="Ime podjetja" value="${c.name.replace(/"/g, '&quot;')}" />
+          <button type="button" class="vd-card__remove" data-action="remove" title="Odstrani podjetje" ${companies.length <= 1 ? 'disabled' : ''}>×</button>
+        </div>
+        <div class="vd-card__inputs">
+          <label class="vd__field"><span>P/E (FWD)</span><input type="number" step="0.1" data-field="pe" value="${c.pe ?? ''}" placeholder="npr. 21.5" /></label>
+          <label class="vd__field"><span>ROIC (%)</span><input type="number" step="0.1" data-field="roic" value="${c.roic ?? ''}" placeholder="npr. 29" /></label>
+          <label class="vd__field"><span>Ocena rasti EPS (%)</span><input type="number" step="0.1" data-field="growth" value="${c.growth ?? ''}" placeholder="npr. 15" /></label>
+          <label class="vd__field"><span>WACC (%)</span><input type="number" step="0.1" data-field="wacc" value="${c.wacc ?? ''}" placeholder="npr. 8" /></label>
+          <label class="vd__field"><span>Trenutna cena</span><input type="number" step="0.01" data-field="price" value="${c.price ?? ''}" placeholder="npr. 390" /></label>
+        </div>
+        <div class="vd-card__result">
+          <div class="vd-kpi">
+            <div class="vd-kpi__label">Ciljni P/E</div>
+            <div class="vd-kpi__value">${targetPe !== null ? fmtNum(targetPe) + 'x' : '-'}</div>
+            <div class="vd-kpi__hint">${peRemium !== null ? `P/E premija: ${fmtPct(peRemium)}` : ''}</div>
+          </div>
+          <div class="vd-kpi">
+            <div class="vd-kpi__label">Fer vrednost</div>
+            <div class="vd-kpi__value">${fairValue !== null ? fmtNum(fairValue, 2) : '-'}</div>
+            <div class="vd-kpi__hint">${roicPremium !== null ? `ROIC premija: ${fmtPct(roicPremium)}` : ''}</div>
+          </div>
+          <div class="vd-kpi">
+            <div class="vd-kpi__label">Upside / Downside</div>
+            <div class="vd-kpi__value" style="${upside !== null ? `color:${upside >= 0 ? '#059669' : '#dc2626'}` : ''}">${upside !== null ? (upside >= 0 ? '+' : '') + fmtPct(upside) : '-'}</div>
+          </div>
+          <div class="vd-kpi">
+            <div class="vd-kpi__label">Ocena</div>
+            <div class="vd-kpi__value">${badge || '-'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function render() {
+    const a = getAssumptions();
+    const container = document.getElementById('vd-companies')!;
+    container.innerHTML = companies.map((c) => renderCompanyCard(c, a)).join('');
+  }
+
+  document.querySelectorAll('.vd__assumptions input').forEach((el) => {
+    el.addEventListener('input', render);
+  });
+
+  document.getElementById('vd-add')!.addEventListener('click', () => {
+    companies.push(newCompany());
+    render();
+  });
+
+  const companiesEl = document.getElementById('vd-companies')!;
+
+  companiesEl.addEventListener('input', (e) => {
+    const target = e.target as HTMLInputElement;
+    const card = target.closest<HTMLElement>('.vd-card');
+    if (!card) return;
+    const id = card.dataset.id;
+    const field = target.dataset.field as keyof Company | undefined;
+    if (!field || !id) return;
+
+    const company = companies.find((c) => c.id === id);
+    if (!company) return;
+
+    if (field === 'name') {
+      company.name = target.value;
+    } else {
+      const num = target.value === '' ? null : Number(target.value);
+      (company as any)[field] = num;
+    }
+    render();
+  });
+
+  companiesEl.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action="remove"]');
+    if (!btn) return;
+    const card = btn.closest<HTMLElement>('.vd-card');
+    if (!card) return;
+    const id = card.dataset.id;
+    if (companies.length <= 1) return;
+    companies = companies.filter((c) => c.id !== id);
+    render();
+  });
+
+  render();
+</script>
