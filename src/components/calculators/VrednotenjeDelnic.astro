@@ -11,28 +11,97 @@
     </p>
   </div>
 
+  <section class="vd__explainer">
+    <h2 class="vd__explainer-title">Kako deluje ta kalkulator</h2>
+    <p>
+      Osnovna ideja: podjetje si "zasluži" določen P/E glede na to, kako donosno (ROIC) in kako hitro
+      raste. Kalkulator izračuna, kakšen P/E bi bil upravičen glede na te dve stvari (<strong>ciljni P/E</strong>),
+      in ga primerja s P/E, ki ga trg trenutno plačuje. Če trg plačuje manj, kot bi bilo upravičeno, je
+      delnica po tem modelu poceni (Undervalued) — in obratno.
+    </p>
+
+    <h3>Kaj pomenijo posamezni vnosi</h3>
+    <ul>
+      <li><strong>P/E (FWD)</strong> — trenutna cena delnice deljena s pričakovanim dobičkom na delnico za naslednjih 12 mesecev. Najdeš ga na straneh kot Yahoo Finance, Stockanalysis.com ali v poročilih analitikov.</li>
+      <li><strong>ROIC (%)</strong> — donosnost na vloženi kapital (return on invested capital). Pove, koliko dobička podjetje ustvari na vsak evro/dolar, vložen v posel. Visok in stabilen ROIC je znak kakovostnega, konkurenčno zaščitenega podjetja.</li>
+      <li><strong>Ocena rasti EPS (%)</strong> — tvoja ocena, za koliko odstotkov letno bo rasel dobiček na delnico v prihodnjih letih. To je najbolj negotova številka v celotnem modelu — majhna sprememba tu precej spremeni rezultat.</li>
+      <li><strong>WACC (%)</strong> — tehtani povprečni strošek kapitala, poenostavljeno donosnost, ki jo vlagatelji zahtevajo za tveganje tega podjetja. Bolj tvegana/zadolžena podjetja imajo višji WACC.</li>
+      <li><strong>Trenutna cena</strong> — trenutna tržna cena delnice.</li>
+    </ul>
+
+    <h3>Od kod pride ciljni P/E</h3>
+    <p>
+      Formula (Mauboussin/McKinsey) razdeli vrednost podjetja na dva dela: (1) vrednost dobička, ki ga podjetje
+      že ustvarja in ga izplača delničarjem med napovednim obdobjem, ter (2) diskontirano vrednost tega, kar podjetje
+      "obdrži" na koncu tega obdobja. Ključno pravilo: <strong>čim višji je ROIC glede na rast</strong>, tem manj
+      kapitala podjetje potrebuje za financiranje rasti in tem višji P/E si "zasluži". Podjetje z visoko rastjo,
+      a nizkim ROIC (kot npr. Tesla v primeru spodaj), dejansko uniči vrednost, ker rast financira z
+      nizko-donosnim kapitalom — zato lahko formula za takšna podjetja vrne zelo nizek ali celo negativen ciljni P/E.
+    </p>
+
+    <h3>Kako brati rezultat</h3>
+    <p>
+      <strong>Fer vrednost</strong> je cena, ki bi jo delnica imela, če bi trg plačeval ciljni P/E namesto trenutnega.
+      <strong>Upside/Downside</strong> je razlika med fer vrednostjo in trenutno ceno. Oznaka <strong>Undervalued/Overvalued</strong>
+      se sproži, ko ta razlika preseže pragova, ki ju nastaviš zgoraj (privzeto ±15 %) — vmes je "Fair Value".
+    </p>
+
+    <h3>Kaj model ne zajame</h3>
+    <p>
+      Številke povedo samo pol zgodbe. Preden se zaneseš na rezultat, preveri še kakovostne dejavnike podjetja:
+    </p>
+    <ul>
+      <li><strong>Trajnost konkurenčne prednosti</strong> — ali ima podjetje prepoznavno blagovno znamko, cenovno moč in dosledno visok ROIC skozi čas, ne le v enem dobrem letu</li>
+      <li><strong>Prosti denarni tok</strong> — ali dobiček dejansko pretvarja v gotovino, ne le v računovodski izkaz</li>
+      <li><strong>Zadolženost</strong> — nizek dolg glede na EBITDA pomeni manj tveganja v slabših časih</li>
+      <li><strong>Ciklikavost</strong> — ali dobički rastejo dosledno ali nihajo z gospodarskim ciklom</li>
+      <li><strong>Ponavljajoči prihodki</strong> — ali stranke izdelek/storitev kupujejo znova in znova, ali gre za enkratni nakup</li>
+      <li><strong>Vračanje kapitala</strong> — ali podjetje izplačuje rastočo dividendo ali odkupuje lastne delnice</li>
+    </ul>
+
+    <p class="vd__explainer-warning">
+      Rezultat je zelo občutljiv na oceno rasti in WACC — obe sta subjektivni oceni, ne dejstvi. Model je
+      pripomoček za razmišljanje, ne napoved prihodnje cene, in ni finančni nasvet.
+    </p>
+  </section>
+
   <section class="vd__assumptions">
     <h2 class="vd__section-title">Skupne predpostavke</h2>
     <div class="vd__assumptions-grid">
       <label class="vd__field">
         <span>FWD P/E S&amp;P 500</span>
-        <input type="number" id="a-sp-pe" value="16" step="0.1" />
+        <div class="vd__field-row">
+          <input type="range" id="a-sp-pe-r" min="5" max="40" value="16" step="0.5" class="vd__slider" />
+          <input type="number" id="a-sp-pe" value="16" step="0.1" class="vd__number" />
+        </div>
       </label>
       <label class="vd__field">
         <span>Povprečni ROIC S&amp;P 500 (%)</span>
-        <input type="number" id="a-sp-roic" value="16" step="0.1" />
+        <div class="vd__field-row">
+          <input type="range" id="a-sp-roic-r" min="0" max="30" value="16" step="0.5" class="vd__slider" />
+          <input type="number" id="a-sp-roic" value="16" step="0.1" class="vd__number" />
+        </div>
       </label>
       <label class="vd__field">
         <span>Prag Undervalued, upside ≥ (%)</span>
-        <input type="number" id="a-th-under" value="15" step="1" />
+        <div class="vd__field-row">
+          <input type="range" id="a-th-under-r" min="0" max="50" value="15" step="1" class="vd__slider" />
+          <input type="number" id="a-th-under" value="15" step="1" class="vd__number" />
+        </div>
       </label>
       <label class="vd__field">
         <span>Prag Overvalued, downside ≤ (%)</span>
-        <input type="number" id="a-th-over" value="-15" step="1" />
+        <div class="vd__field-row">
+          <input type="range" id="a-th-over-r" min="-50" max="0" value="-15" step="1" class="vd__slider" />
+          <input type="number" id="a-th-over" value="-15" step="1" class="vd__number" />
+        </div>
       </label>
       <label class="vd__field">
         <span>Napovedno obdobje (let)</span>
-        <input type="number" id="a-years" value="15" step="1" min="1" />
+        <div class="vd__field-row">
+          <input type="range" id="a-years-r" min="1" max="30" value="15" step="1" class="vd__slider" />
+          <input type="number" id="a-years" value="15" step="1" min="1" class="vd__number" />
+        </div>
       </label>
     </div>
   </section>
@@ -56,6 +125,60 @@
 
   .vd__header {
     margin-bottom: var(--space-xl);
+  }
+
+  .vd__explainer {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    margin-bottom: var(--space-xl);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+
+  .vd__explainer-title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+  }
+
+  .vd__explainer h3 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .vd__explainer p {
+    margin-bottom: var(--space-md);
+  }
+
+  .vd__explainer ul {
+    list-style: disc;
+    padding-left: var(--space-xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .vd__explainer li {
+    margin-bottom: var(--space-sm);
+  }
+
+  .vd__explainer strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .vd__explainer-warning {
+    background: var(--color-highlight-bg);
+    border: 1px solid var(--color-highlight-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-top: var(--space-lg);
+    margin-bottom: 0;
   }
 
   .vd__title {
@@ -122,6 +245,65 @@
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px var(--color-accent-bg);
+  }
+
+  .vd__field-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .vd__field-row .vd__number {
+    width: 5.5rem;
+    flex-shrink: 0;
+  }
+
+  .vd__slider {
+    flex: 1;
+    min-width: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-border);
+    cursor: pointer;
+  }
+
+  .vd__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 2px solid var(--color-surface);
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
+  .vd__slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 2px solid var(--color-surface);
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
+  .vd__slider::-moz-range-track {
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-border);
+  }
+
+  @media (max-width: 640px) {
+    .vd__field-row {
+      flex-wrap: wrap;
+    }
+    .vd__field-row .vd__number {
+      width: 100%;
+    }
   }
 
   .vd__companies {
@@ -371,7 +553,16 @@
     return Number.isFinite(result) ? result : null;
   }
 
-  function renderCompanyCard(c: Company, a: Assumptions): string {
+  interface CompanyResult {
+    targetPe: number | null;
+    fairValue: number | null;
+    upside: number | null;
+    peRemium: number | null;
+    roicPremium: number | null;
+    badge: string;
+  }
+
+  function computeResult(c: Company, a: Assumptions): CompanyResult {
     const pe = c.pe;
     const roic = c.roic !== null ? c.roic / 100 : null;
     const growth = c.growth !== null ? c.growth / 100 : null;
@@ -403,6 +594,48 @@
       else badge = '<span class="vd-badge vd-badge--fair">Fair Value</span>';
     }
 
+    return { targetPe, fairValue, upside, peRemium, roicPremium, badge };
+  }
+
+  function renderResultHTML(r: CompanyResult): string {
+    return `
+      <div class="vd-kpi">
+        <div class="vd-kpi__label">Ciljni P/E</div>
+        <div class="vd-kpi__value">${r.targetPe !== null ? fmtNum(r.targetPe) + 'x' : '-'}</div>
+        <div class="vd-kpi__hint">${r.peRemium !== null ? `P/E premija: ${fmtPct(r.peRemium)}` : ''}</div>
+      </div>
+      <div class="vd-kpi">
+        <div class="vd-kpi__label">Fer vrednost</div>
+        <div class="vd-kpi__value">${r.fairValue !== null ? fmtNum(r.fairValue, 2) : '-'}</div>
+        <div class="vd-kpi__hint">${r.roicPremium !== null ? `ROIC premija: ${fmtPct(r.roicPremium)}` : ''}</div>
+      </div>
+      <div class="vd-kpi">
+        <div class="vd-kpi__label">Upside / Downside</div>
+        <div class="vd-kpi__value" style="${r.upside !== null ? `color:${r.upside >= 0 ? '#059669' : '#dc2626'}` : ''}">${r.upside !== null ? (r.upside >= 0 ? '+' : '') + fmtPct(r.upside) : '-'}</div>
+      </div>
+      <div class="vd-kpi">
+        <div class="vd-kpi__label">Ocena</div>
+        <div class="vd-kpi__value">${r.badge || '-'}</div>
+      </div>
+    `;
+  }
+
+  function sliderField(label: string, field: string, value: number | null, min: number, max: number, step: number, placeholder: string): string {
+    const v = value ?? '';
+    const sliderValue = value ?? (min + max) / 2;
+    return `
+      <label class="vd__field">
+        <span>${label}</span>
+        <div class="vd__field-row">
+          <input type="range" class="vd__slider" data-slider-for="${field}" min="${min}" max="${max}" step="${step}" value="${sliderValue}" />
+          <input type="number" class="vd__number" data-field="${field}" step="${step}" value="${v}" placeholder="${placeholder}" />
+        </div>
+      </label>
+    `;
+  }
+
+  function renderCompanyCard(c: Company, a: Assumptions): string {
+    const result = computeResult(c, a);
     return `
       <div class="vd-card" data-id="${c.id}">
         <div class="vd-card__header">
@@ -410,49 +643,59 @@
           <button type="button" class="vd-card__remove" data-action="remove" title="Odstrani podjetje" ${companies.length <= 1 ? 'disabled' : ''}>×</button>
         </div>
         <div class="vd-card__inputs">
-          <label class="vd__field"><span>P/E (FWD)</span><input type="number" step="0.1" data-field="pe" value="${c.pe ?? ''}" placeholder="npr. 21.5" /></label>
-          <label class="vd__field"><span>ROIC (%)</span><input type="number" step="0.1" data-field="roic" value="${c.roic ?? ''}" placeholder="npr. 29" /></label>
-          <label class="vd__field"><span>Ocena rasti EPS (%)</span><input type="number" step="0.1" data-field="growth" value="${c.growth ?? ''}" placeholder="npr. 15" /></label>
-          <label class="vd__field"><span>WACC (%)</span><input type="number" step="0.1" data-field="wacc" value="${c.wacc ?? ''}" placeholder="npr. 8" /></label>
-          <label class="vd__field"><span>Trenutna cena</span><input type="number" step="0.01" data-field="price" value="${c.price ?? ''}" placeholder="npr. 390" /></label>
+          ${sliderField('P/E (FWD)', 'pe', c.pe, 0, 60, 0.5, 'npr. 21.5')}
+          ${sliderField('ROIC (%)', 'roic', c.roic, 0, 50, 0.5, 'npr. 29')}
+          ${sliderField('Ocena rasti EPS (%)', 'growth', c.growth, -10, 40, 0.5, 'npr. 15')}
+          ${sliderField('WACC (%)', 'wacc', c.wacc, 3, 20, 0.25, 'npr. 8')}
+          ${sliderField('Trenutna cena', 'price', c.price, 0, 1000, 1, 'npr. 390')}
         </div>
-        <div class="vd-card__result">
-          <div class="vd-kpi">
-            <div class="vd-kpi__label">Ciljni P/E</div>
-            <div class="vd-kpi__value">${targetPe !== null ? fmtNum(targetPe) + 'x' : '-'}</div>
-            <div class="vd-kpi__hint">${peRemium !== null ? `P/E premija: ${fmtPct(peRemium)}` : ''}</div>
-          </div>
-          <div class="vd-kpi">
-            <div class="vd-kpi__label">Fer vrednost</div>
-            <div class="vd-kpi__value">${fairValue !== null ? fmtNum(fairValue, 2) : '-'}</div>
-            <div class="vd-kpi__hint">${roicPremium !== null ? `ROIC premija: ${fmtPct(roicPremium)}` : ''}</div>
-          </div>
-          <div class="vd-kpi">
-            <div class="vd-kpi__label">Upside / Downside</div>
-            <div class="vd-kpi__value" style="${upside !== null ? `color:${upside >= 0 ? '#059669' : '#dc2626'}` : ''}">${upside !== null ? (upside >= 0 ? '+' : '') + fmtPct(upside) : '-'}</div>
-          </div>
-          <div class="vd-kpi">
-            <div class="vd-kpi__label">Ocena</div>
-            <div class="vd-kpi__value">${badge || '-'}</div>
-          </div>
+        <div class="vd-card__result" id="vd-result-${c.id}">
+          ${renderResultHTML(result)}
         </div>
       </div>
     `;
   }
 
-  function render() {
+  function renderAll() {
     const a = getAssumptions();
     const container = document.getElementById('vd-companies')!;
     container.innerHTML = companies.map((c) => renderCompanyCard(c, a)).join('');
   }
 
+  function updateAllResults() {
+    const a = getAssumptions();
+    for (const c of companies) {
+      const el = document.getElementById(`vd-result-${c.id}`);
+      if (el) el.innerHTML = renderResultHTML(computeResult(c, a));
+    }
+  }
+
+  // Keep a slider and its paired number input in sync without rebuilding the DOM,
+  // so dragging a range input mid-gesture never loses pointer capture.
+  function syncPairs(root: ParentNode) {
+    root.querySelectorAll<HTMLInputElement>('.vd__field-row').forEach((row) => {
+      const slider = row.querySelector<HTMLInputElement>('.vd__slider');
+      const number = row.querySelector<HTMLInputElement>('.vd__number, input[type="number"]');
+      if (!slider || !number) return;
+      slider.addEventListener('input', () => {
+        number.value = slider.value;
+        number.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      number.addEventListener('input', () => {
+        if (number.value !== '') slider.value = number.value;
+      });
+    });
+  }
+
+  // Assumptions panel: sliders/numbers sync each other and recompute all results.
+  syncPairs(document.querySelector('.vd__assumptions')!);
   document.querySelectorAll('.vd__assumptions input').forEach((el) => {
-    el.addEventListener('input', render);
+    el.addEventListener('input', updateAllResults);
   });
 
   document.getElementById('vd-add')!.addEventListener('click', () => {
     companies.push(newCompany());
-    render();
+    renderAll();
   });
 
   const companiesEl = document.getElementById('vd-companies')!;
@@ -470,11 +713,14 @@
 
     if (field === 'name') {
       company.name = target.value;
-    } else {
-      const num = target.value === '' ? null : Number(target.value);
-      (company as any)[field] = num;
+      return; // name doesn't affect the calculation, no need to recompute
     }
-    render();
+
+    const num = target.value === '' ? null : Number(target.value);
+    (company as any)[field] = num;
+
+    const el = document.getElementById(`vd-result-${id}`);
+    if (el) el.innerHTML = renderResultHTML(computeResult(company, getAssumptions()));
   });
 
   companiesEl.addEventListener('click', (e) => {
@@ -485,8 +731,13 @@
     const id = card.dataset.id;
     if (companies.length <= 1) return;
     companies = companies.filter((c) => c.id !== id);
-    render();
+    renderAll();
   });
 
-  render();
+  renderAll();
+  syncPairs(companiesEl);
+
+  // New cards are added via renderAll(), which rebuilds the DOM — reattach slider sync each time.
+  const companiesObserver = new MutationObserver(() => syncPairs(companiesEl));
+  companiesObserver.observe(companiesEl, { childList: true });
 </script>
