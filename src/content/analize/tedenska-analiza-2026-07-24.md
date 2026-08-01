@@ -1,6 +1,6 @@
 ---
 title: "Tedenska analiza trga: 20. do 24. julij 2026"
-description: "Capex je razdelil trg — Alphabet, Tesla in Intel so dvignili napovedi investicij, delnice pa so kljub temu padle. Nafta se je za trenutek dotaknila 100 USD, ECB obrestne mere obdržala nespremenjene."
+description: "Capex je razdelil trg - Alphabet, Tesla in Intel so dvignili napovedi investicij, delnice pa so kljub temu padle. Nafta se je za trenutek dotaknila 100 USD, ECB obrestne mere obdržala nespremenjene."
 pubDate: 2026-07-24
 category: "Trgi"
 readingTime: 7

@@ -1,15 +1,15 @@
 /* ============================================================
-   ENGINEERING INVESTOR — Global Styles
+   ENGINEERING INVESTOR - Global Styles
    ============================================================ */
 
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ============================================================
-   CSS CUSTOM PROPERTIES — Light Mode (default)
+   CSS CUSTOM PROPERTIES - Light Mode (default)
    ============================================================ */
 :root {
-  /* Colors — warm paper palette (light mode) */
+  /* Colors - warm paper palette (light mode) */
   --color-bg: #F4F2EC;
   --color-surface: #FCFAF5;
   --color-surface-hover: #EBE9E1;
