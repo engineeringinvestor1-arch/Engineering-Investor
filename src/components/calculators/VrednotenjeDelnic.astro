@@ -69,39 +69,29 @@
     <h2 class="vd__section-title">Skupne predpostavke</h2>
     <div class="vd__assumptions-grid">
       <label class="vd__field">
-        <div class="vd__field-label-row">
-          <span>FWD P/E S&amp;P 500</span>
-          <input type="number" id="a-sp-pe" value="16" step="0.1" class="vd__number" />
-        </div>
+        <span class="vd__field-label">FWD P/E S&amp;P 500</span>
         <input type="range" id="a-sp-pe-r" min="5" max="40" value="16" step="0.5" class="vd__slider" />
+        <input type="number" id="a-sp-pe" value="16" step="0.1" class="vd__number" />
       </label>
       <label class="vd__field">
-        <div class="vd__field-label-row">
-          <span>Povprečni ROIC S&amp;P 500 (%)</span>
-          <input type="number" id="a-sp-roic" value="16" step="0.1" class="vd__number" />
-        </div>
+        <span class="vd__field-label">Povprečni ROIC S&amp;P 500 (%)</span>
         <input type="range" id="a-sp-roic-r" min="0" max="30" value="16" step="0.5" class="vd__slider" />
+        <input type="number" id="a-sp-roic" value="16" step="0.1" class="vd__number" />
       </label>
       <label class="vd__field">
-        <div class="vd__field-label-row">
-          <span>Prag Undervalued, upside ≥ (%)</span>
-          <input type="number" id="a-th-under" value="15" step="1" class="vd__number" />
-        </div>
+        <span class="vd__field-label">Prag Undervalued, upside ≥ (%)</span>
         <input type="range" id="a-th-under-r" min="0" max="50" value="15" step="1" class="vd__slider" />
+        <input type="number" id="a-th-under" value="15" step="1" class="vd__number" />
       </label>
       <label class="vd__field">
-        <div class="vd__field-label-row">
-          <span>Prag Overvalued, downside ≤ (%)</span>
-          <input type="number" id="a-th-over" value="-15" step="1" class="vd__number" />
-        </div>
+        <span class="vd__field-label">Prag Overvalued, downside ≤ (%)</span>
         <input type="range" id="a-th-over-r" min="-50" max="0" value="-15" step="1" class="vd__slider" />
+        <input type="number" id="a-th-over" value="-15" step="1" class="vd__number" />
       </label>
       <label class="vd__field">
-        <div class="vd__field-label-row">
-          <span>Napovedno obdobje (let)</span>
-          <input type="number" id="a-years" value="15" step="1" min="1" class="vd__number" />
-        </div>
+        <span class="vd__field-label">Napovedno obdobje (let)</span>
         <input type="range" id="a-years-r" min="1" max="30" value="15" step="1" class="vd__slider" />
+        <input type="number" id="a-years" value="15" step="1" min="1" class="vd__number" />
       </label>
     </div>
   </section>
@@ -213,95 +203,84 @@
   }
 
   .vd__assumptions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg) var(--space-xl);
-  }
-
-  .vd__field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-md);
   }
 
-  .vd__field span {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-    line-height: 1.3;
-  }
-
-  .vd__field input {
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: 0.5rem 0.65rem;
-    color: var(--color-text);
-    width: 100%;
-  }
-
-  .vd__field input:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px var(--color-accent-bg);
-  }
-
-  .vd__field-label-row {
-    display: flex;
+  /* One indicator per row: label | slider | number box */
+  .vd__field {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr) 5.5rem;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.6rem;
+    gap: var(--space-md);
   }
 
-  .vd__field-label-row span {
-    flex: 1;
+  .vd__field-label {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.4;
   }
 
   .vd__number {
-    width: 5.5rem;
-    flex-shrink: 0;
-    text-align: right;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
     font-weight: 600;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.6rem;
+    color: var(--color-text);
+    width: 100%;
+    text-align: right;
+  }
+
+  .vd__number:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-bg);
   }
 
   .vd__slider {
     width: 100%;
     -webkit-appearance: none;
     appearance: none;
-    height: 10px;
+    height: 6px;
     border-radius: var(--radius-full);
     background: var(--color-border);
     cursor: pointer;
     padding: 0;
+    margin: 0;
+    border: none;
   }
 
   .vd__slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--color-accent);
     cursor: pointer;
     border: 3px solid var(--color-surface);
-    box-shadow: 0 0 0 1.5px var(--color-accent), var(--shadow-md);
+    box-shadow: 0 0 0 1px var(--color-accent);
   }
 
   .vd__slider::-moz-range-thumb {
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--color-accent);
     cursor: pointer;
     border: 3px solid var(--color-surface);
-    box-shadow: 0 0 0 1.5px var(--color-accent), var(--shadow-md);
+    box-shadow: 0 0 0 1px var(--color-accent);
   }
 
   .vd__slider::-moz-range-track {
-    height: 10px;
+    height: 6px;
     border-radius: var(--radius-full);
     background: var(--color-border);
+    border: none;
   }
 
   .vd__slider:hover::-webkit-slider-thumb,
@@ -314,10 +293,17 @@
     background: var(--color-accent-hover);
   }
 
-  @media (max-width: 640px) {
-    .vd__assumptions-grid,
-    .vd-card__inputs {
-      grid-template-columns: 1fr !important;
+  .vd__slider:focus {
+    outline: none;
+  }
+
+  @media (max-width: 700px) {
+    .vd__field {
+      grid-template-columns: minmax(0, 1fr) 5rem;
+    }
+    .vd__field-label {
+      grid-column: 1 / -1;
+      font-size: var(--text-xs);
     }
   }
 
@@ -387,9 +373,9 @@
   }
 
   .vd-card__inputs {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
     margin-bottom: var(--space-lg);
   }
 
@@ -484,12 +470,6 @@
   }
 
   @media (max-width: 768px) {
-    .vd__assumptions-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .vd-card__inputs {
-      grid-template-columns: repeat(2, 1fr);
-    }
     .vd-card__result {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -640,11 +620,9 @@
     const sliderValue = value ?? (min + max) / 2;
     return `
       <label class="vd__field">
-        <div class="vd__field-label-row">
-          <span>${label}</span>
-          <input type="number" class="vd__number" data-field="${field}" step="${step}" value="${v}" placeholder="${placeholder}" />
-        </div>
+        <span class="vd__field-label">${label}</span>
         <input type="range" class="vd__slider" data-slider-for="${field}" min="${min}" max="${max}" step="${step}" value="${sliderValue}" />
+        <input type="number" class="vd__number" data-field="${field}" step="${step}" value="${v}" placeholder="${placeholder}" />
       </label>
     `;
   }
