@@ -87,7 +87,8 @@
       "title": "US NFP (jul 2026)",
       "category": "Trg dela",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "actual": "+57.000 novih delovnih mest"
     },
     {
       "id": "us-cpi-aug26",
