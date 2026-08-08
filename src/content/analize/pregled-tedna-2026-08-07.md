@@ -1,6 +1,5 @@
 ---
 title: "Pregled tedna: 3. do 7. avgust 2026"
-description: "Delnice so imele močan teden, a petkovo poročilo o zaposlovanju je pokazalo upad 23.000 delovnih mest in revizije za dodatnih 103.000 navzdol. Palantir +93 %, prvi rezultati SpaceX po IPO in nadaljevanje pogajanj o Hormuški ožini."
 pubDate: 2026-08-07
 category: "Trgi"
 readingTime: 9

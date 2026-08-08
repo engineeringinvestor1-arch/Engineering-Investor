@@ -5,7 +5,7 @@ const analize = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/analize' }),
   schema: z.object({
     title: z.string(),
-    description: z.string(),
+    description: z.string().optional(),
     pubDate: z.coerce.date(),
     category: z.enum(['Makro', 'Geopolitika', 'Trgi', 'Bitcoin', 'Delnice']),
     readingTime: z.number(),

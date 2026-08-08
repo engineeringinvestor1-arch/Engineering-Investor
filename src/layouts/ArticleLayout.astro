@@ -8,7 +8,7 @@ import { url } from '../utils/url';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   pubDate: Date;
   readingTime: number;
   category: string;
@@ -45,7 +45,7 @@ const formattedDate = new Intl.DateTimeFormat('sl-SI', {
           </div>
 
           <h1 class="article-header__title">{title}</h1>
-          <p class="article-header__description">{description}</p>
+          {description && <p class="article-header__description">{description}</p>}
 
           <div class="article-header__byline">
             <div class="article-header__author">

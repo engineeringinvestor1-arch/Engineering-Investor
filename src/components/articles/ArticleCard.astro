@@ -4,7 +4,7 @@ import { url } from '../../utils/url';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   pubDate: Date;
   readingTime: number;
   category: string;
@@ -36,7 +36,7 @@ const formattedDate = new Intl.DateTimeFormat('sl-SI', {
     </div>
 
     <h3 class="article-card__title">{title}</h3>
-    <p class="article-card__description">{description}</p>
+    {description && <p class="article-card__description">{description}</p>}
 
     <div class="article-card__meta-bottom">
       <time class="article-card__date" datetime={pubDate.toISOString()}>
