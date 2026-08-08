@@ -44,9 +44,44 @@ function fmtNum(v, decimals = 1) {
 /* FRED (US macro actuals)                                             */
 /* ------------------------------------------------------------------ */
 
-async function fredLatest(apiKey, seriesId, units) {
-  const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json&sort_order=desc&limit=1${units ? `&units=${units}` : ''}`;
-  const res = await fetch(url);
+const SL_MONTHS = {
+  jan: 1, feb: 2, mar: 3, apr: 4, maj: 5, jun: 6,
+  jul: 7, avg: 8, sep: 9, okt: 10, nov: 11, dec: 12,
+};
+
+/**
+ * The reference period an event is *about*, taken from its title, as the FRED
+ * observation date for that period (FRED stamps monthly and quarterly series
+ * with the first day of the period).
+ *
+ *   "US NFP (jul 2026)"        -> 2026-07-01
+ *   "US GDP Q2 2026 (advance)" -> 2026-04-01
+ *   "Seja FOMC - obrestne mere" -> null (a current level, not a period)
+ */
+function expectedPeriod(title) {
+  const m = title.match(/\((\w{3})\s+(\d{4})\)/);
+  if (m && SL_MONTHS[m[1].toLowerCase()]) {
+    return `${m[2]}-${String(SL_MONTHS[m[1].toLowerCase()]).padStart(2, '0')}-01`;
+  }
+  const q = title.match(/Q([1-4])\s+(\d{4})/);
+  if (q) {
+    const month = (Number(q[1]) - 1) * 3 + 1;
+    return `${q[2]}-${String(month).padStart(2, '0')}-01`;
+  }
+  return null;
+}
+
+async function fredLatest(apiKey, seriesId, { units, asOf } = {}) {
+  const params = [
+    `series_id=${seriesId}`,
+    `api_key=${apiKey}`,
+    'file_type=json',
+    'sort_order=desc',
+    'limit=1',
+  ];
+  if (units) params.push(`units=${units}`);
+  if (asOf) params.push(`observation_end=${asOf}`); // value as it stood on the event date
+  const res = await fetch(`https://api.stlouisfed.org/fred/series/observations?${params.join('&')}`);
   if (!res.ok) throw new Error(`FRED ${seriesId} ${res.status}: ${await res.text()}`);
   const json = await res.json();
   const obs = json.observations?.[0];
@@ -54,14 +89,31 @@ async function fredLatest(apiKey, seriesId, units) {
   return { value: Number(obs.value), date: obs.date };
 }
 
+/**
+ * Fetch a series and refuse the value unless it covers the period the event is
+ * about. Without this the job silently writes, say, June's payrolls under the
+ * July release, because FRED's newest observation lags the release date.
+ */
+async function fredForEvent(apiKey, seriesId, evt, units) {
+  const obs = await fredLatest(apiKey, seriesId, { units });
+  if (!obs) return null;
+  const want = expectedPeriod(evt.title);
+  if (want && obs.date !== want) {
+    console.log(`  skip ${evt.id}: FRED ima ${obs.date}, dogodek pa se nanaša na ${want}`);
+    return null;
+  }
+  return obs;
+}
+
 async function fetchMacroActual(apiKey, evt) {
   if (evt.region !== 'US') return null; // no free EU source configured
   const t = evt.title;
 
   if (evt.category === 'Centralna banka') {
+    // A policy rate is a level, not a period - read it as it stood on the day.
     const [lower, upper] = await Promise.all([
-      fredLatest(apiKey, 'DFEDTARL'),
-      fredLatest(apiKey, 'DFEDTARU'),
+      fredLatest(apiKey, 'DFEDTARL', { asOf: evt.date }),
+      fredLatest(apiKey, 'DFEDTARU', { asOf: evt.date }),
     ]);
     if (!lower || !upper) return null;
     return `Fed obrestna mera: ${fmtNum(lower.value, 2)}-${fmtNum(upper.value, 2)} %`;
@@ -69,26 +121,26 @@ async function fetchMacroActual(apiKey, evt) {
 
   if (evt.category === 'Inflacija') {
     const series = t.includes('PPI') ? 'PPIACO' : 'CPIAUCSL';
-    const obs = await fredLatest(apiKey, series, 'pc1');
+    const obs = await fredForEvent(apiKey, series, evt, 'pc1');
     if (!obs) return null;
     return `${t.includes('PPI') ? 'PPI' : 'CPI'} ${fmtNum(obs.value)} % letno`;
   }
 
   if (evt.category === 'Trg dela' && t.includes('NFP')) {
-    const obs = await fredLatest(apiKey, 'PAYEMS', 'chg');
+    const obs = await fredForEvent(apiKey, 'PAYEMS', evt, 'chg');
     if (!obs) return null;
     const jobs = Math.round(obs.value * 1000);
-    return `${jobs >= 0 ? '+' : ''}${jobs.toLocaleString('sl-SI')} novih delovnih mest`;
+    return `${jobs >= 0 ? '+' : ''}${jobs.toLocaleString('sl-SI')} delovnih mest`;
   }
 
   if (evt.category === 'GDP') {
-    const obs = await fredLatest(apiKey, 'A191RL1Q225SBEA');
+    const obs = await fredForEvent(apiKey, 'A191RL1Q225SBEA', evt);
     if (!obs) return null;
     return `${fmtNum(obs.value)} % (anualizirano)`;
   }
 
   if (evt.category === 'Poraba') {
-    const obs = await fredLatest(apiKey, 'RSAFS', 'pch');
+    const obs = await fredForEvent(apiKey, 'RSAFS', evt, 'pch');
     if (!obs) return null;
     return `${fmtNum(obs.value)} % mesečno`;
   }

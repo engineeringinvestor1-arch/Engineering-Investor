@@ -58,7 +58,7 @@
       "importance": "HIGH",
       "previous": "1.4%",
       "forecast": "2.1%",
-      "actual": "2,1 % (anualizirano)"
+      "actual": "1,5 % (anualizirano), pod pričakovanimi 1,8 %"
     },
     {
       "id": "fomc-jul26",
@@ -88,7 +88,7 @@
       "category": "Trg dela",
       "region": "US",
       "importance": "HIGH",
-      "actual": "+57.000 novih delovnih mest"
+      "actual": "-23.000 delovnih mest, revizije za maj in junij skupaj -103.000"
     },
     {
       "id": "us-cpi-aug26",
