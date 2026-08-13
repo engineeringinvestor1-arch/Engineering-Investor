@@ -146,7 +146,8 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "HIGH",
-      "previous": "3,5 % letno (junij)"
+      "previous": "3,5 % letno (junij)",
+      "actual": "CPI 3,3 % letno"
     },
     {
       "id": "us-ppi-aug26",
