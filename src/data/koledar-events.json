@@ -157,7 +157,8 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "MEDIUM",
-      "previous": "5,5 % letno (junij)"
+      "previous": "5,5 % letno (junij)",
+      "actual": "PPI 8,3 % letno"
     },
     {
       "id": "us-retail-aug26",
