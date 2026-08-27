@@ -187,7 +187,8 @@
       "title": "Jackson Hole symposium (Fed)",
       "category": "Centralna banka",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "actual": "Fed obrestna mera: 3,50-3,75 %"
     },
     {
       "id": "us-gdp-q2r-26",
@@ -197,7 +198,8 @@
       "category": "GDP",
       "region": "US",
       "importance": "MEDIUM",
-      "previous": "1,5 % (prva objava)"
+      "previous": "1,5 % (prva objava)",
+      "actual": "1,5 % (anualizirano)"
     },
     {
       "id": "eu-cpi-aug26",
@@ -658,7 +660,9 @@
       "name": "NVIDIA",
       "when": "po zaprtju",
       "prevEps": "1,87 USD prilagojeno (ocena 1,76-1,78 USD), fiskalno Q1",
-      "estEps": "2,08-2,12 USD, fiskalno Q2"
+      "estEps": "2,08-2,12 USD, fiskalno Q2",
+      "actualEps": "2,22 USD",
+      "actualNote": "presegel pričakovanja (ocena 2,13 USD)"
     }
   ]
 }
