@@ -217,7 +217,8 @@
       "title": "US NFP (avg 2026)",
       "category": "Trg dela",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "actual": "+162.000 delovnih mest"
     },
     {
       "id": "ecb-sep26",
