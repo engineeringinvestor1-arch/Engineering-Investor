@@ -236,7 +236,8 @@
       "title": "US PPI (avg 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "MEDIUM"
+      "importance": "MEDIUM",
+      "actual": "PPI 9,9 % letno"
     },
     {
       "id": "us-cpi-sep26",
