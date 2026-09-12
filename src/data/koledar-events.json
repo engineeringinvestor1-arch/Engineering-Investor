@@ -246,7 +246,8 @@
       "title": "US CPI (avg 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "actual": "CPI 3,4 % letno"
     },
     {
       "id": "fomc-sep26",
