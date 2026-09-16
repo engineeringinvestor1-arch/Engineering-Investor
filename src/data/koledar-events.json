@@ -256,7 +256,8 @@
       "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "actual": "Fed obrestna mera: 3,50-3,75 %"
     },
     {
       "id": "eu-pmi-sep26",
