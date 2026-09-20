@@ -713,7 +713,7 @@
       "date": "2026-10-13",
       "ticker": "JPM",
       "name": "JPMorgan Chase",
-      "when": "ura ni znana",
+      "when": "pred odprtjem",
       "quarter": 3,
       "year": 2026,
       "estEps": "5,89 USD"
@@ -723,7 +723,7 @@
       "date": "2026-10-13",
       "ticker": "JNJ",
       "name": "Johnson & Johnson",
-      "when": "ura ni znana",
+      "when": "pred odprtjem",
       "quarter": 3,
       "year": 2026,
       "estEps": "2,45 USD"
@@ -823,7 +823,7 @@
       "date": "2026-10-29",
       "ticker": "LLY",
       "name": "Eli Lilly",
-      "when": "ura ni znana",
+      "when": "pred odprtjem",
       "quarter": 3,
       "year": 2026,
       "estEps": "10,00 USD"
