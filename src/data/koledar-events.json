@@ -269,6 +269,16 @@
       "importance": "MEDIUM"
     },
     {
+      "id": "us-jolts-sep26",
+      "date": "2026-09-29",
+      "time": "16:00",
+      "title": "US JOLTS (avg 2026)",
+      "category": "Trg dela",
+      "region": "US",
+      "importance": "MEDIUM",
+      "previous": "7,27 mio prostih delovnih mest (jul 2026)"
+    },
+    {
       "id": "eu-cpi-sep26",
       "date": "2026-09-30",
       "time": "11:00",
@@ -276,6 +286,26 @@
       "category": "Inflacija",
       "region": "EU",
       "importance": "HIGH"
+    },
+    {
+      "id": "us-pce-sep26",
+      "date": "2026-09-30",
+      "time": "14:30",
+      "title": "US PCE (avg 2026)",
+      "category": "Inflacija",
+      "region": "US",
+      "importance": "HIGH",
+      "previous": "3,7 % medletno (jul 2026); jedrni 3,3 %"
+    },
+    {
+      "id": "us-gdp-sep26",
+      "date": "2026-09-30",
+      "time": "14:30",
+      "title": "US GDP Q2 2026 (tretja ocena)",
+      "category": "GDP",
+      "region": "US",
+      "importance": "HIGH",
+      "previous": "1,5 % letna stopnja rasti (Q2 2026)"
     },
     {
       "id": "us-nfp-oct26",
@@ -667,6 +697,186 @@
       "estEps": "2,08-2,12 USD, fiskalno Q2",
       "actualEps": "2,22 USD",
       "actualNote": "presegel pričakovanja (ocena 2,13 USD)"
+    },
+    {
+      "id": "mu-q4-26",
+      "date": "2026-09-30",
+      "ticker": "MU",
+      "name": "Micron",
+      "when": "po zaprtju",
+      "quarter": 4,
+      "year": 2026,
+      "estEps": "32,22 USD"
+    },
+    {
+      "id": "jpm-q3-26",
+      "date": "2026-10-13",
+      "ticker": "JPM",
+      "name": "JPMorgan Chase",
+      "when": "ura ni znana",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "5,89 USD"
+    },
+    {
+      "id": "jnj-q3-26",
+      "date": "2026-10-13",
+      "ticker": "JNJ",
+      "name": "Johnson & Johnson",
+      "when": "ura ni znana",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "2,45 USD"
+    },
+    {
+      "id": "tsla-q3-26",
+      "date": "2026-10-20",
+      "ticker": "TSLA",
+      "name": "Tesla",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "0,45 USD"
+    },
+    {
+      "id": "intc-q3-26",
+      "date": "2026-10-21",
+      "ticker": "INTC",
+      "name": "Intel",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "0,39 USD"
+    },
+    {
+      "id": "v-q4-26",
+      "date": "2026-10-26",
+      "ticker": "V",
+      "name": "Visa",
+      "when": "po zaprtju",
+      "quarter": 4,
+      "year": 2026,
+      "estEps": "3,50 USD"
+    },
+    {
+      "id": "msft-q1-27",
+      "date": "2026-10-27",
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "when": "ura ni znana",
+      "quarter": 1,
+      "year": 2027,
+      "estEps": "4,82 USD"
+    },
+    {
+      "id": "googl-q3-26",
+      "date": "2026-10-27",
+      "ticker": "GOOGL",
+      "name": "Alphabet",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "3,11 USD"
+    },
+    {
+      "id": "meta-q3-26",
+      "date": "2026-10-27",
+      "ticker": "META",
+      "name": "Meta Platforms",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "6,66 USD"
+    },
+    {
+      "id": "aapl-q4-26",
+      "date": "2026-10-28",
+      "ticker": "AAPL",
+      "name": "Apple",
+      "when": "po zaprtju",
+      "quarter": 4,
+      "year": 2026,
+      "estEps": "2,02 USD"
+    },
+    {
+      "id": "amzn-q3-26",
+      "date": "2026-10-28",
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "1,99 USD"
+    },
+    {
+      "id": "ma-q3-26",
+      "date": "2026-10-28",
+      "ticker": "MA",
+      "name": "Mastercard",
+      "when": "pred odprtjem",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "5,30 USD"
+    },
+    {
+      "id": "lly-q3-26",
+      "date": "2026-10-29",
+      "ticker": "LLY",
+      "name": "Eli Lilly",
+      "when": "ura ni znana",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "10,00 USD"
+    },
+    {
+      "id": "xom-q3-26",
+      "date": "2026-10-29",
+      "ticker": "XOM",
+      "name": "Exxon Mobil",
+      "when": "ura ni znana",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "3,59 USD"
+    },
+    {
+      "id": "abbv-q3-26",
+      "date": "2026-10-29",
+      "ticker": "ABBV",
+      "name": "AbbVie",
+      "when": "ura ni znana",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "3,92 USD"
+    },
+    {
+      "id": "amd-q3-26",
+      "date": "2026-11-02",
+      "ticker": "AMD",
+      "name": "AMD",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026,
+      "estEps": "1,95 USD"
+    },
+    {
+      "id": "nvda-q3-27",
+      "date": "2026-11-17",
+      "ticker": "NVDA",
+      "name": "Nvidia",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2027,
+      "estEps": "2,52 USD"
+    },
+    {
+      "id": "wmt-q3-27",
+      "date": "2026-11-19",
+      "ticker": "WMT",
+      "name": "Walmart",
+      "when": "ura ni znana",
+      "quarter": 3,
+      "year": 2027,
+      "estEps": "0,64 USD"
     }
   ]
 }

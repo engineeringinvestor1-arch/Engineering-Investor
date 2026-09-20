@@ -464,6 +464,7 @@
   type EarningsEvent = {
     id: string; date: string; ticker: string; name: string; when: string;
     prevEps?: string; estEps?: string; actualEps?: string; actualNote?: string;
+    quarter?: number; year?: number;
   };
 
   const CATEGORY_INFO: Record<string, string> = {
@@ -565,6 +566,16 @@
     `;
   }
 
+  // Oznaka četrtletja iz podatkov. Do 20. 9. 2026 je bilo tu na trdo zapisano "Q2 2026", zato je vsaka
+  // objava rezultatov kazala isto četrtletje; med vnosi so tudi Q1, Q3 in Q4. Leto izpišemo samo, kadar
+  // ga vir navede, ker se poslovno leto ne ujema vedno s koledarskim (Micron poroča Q4 2026 septembra 2026).
+  // Pri starejših vnosih brez polj ga preberemo iz oznake (jpm-q2), leta pa ne ugibamo iz datuma.
+  function quarterLabel(evt: EarningsEvent): string {
+    const quarter = evt.quarter ?? parseInt(evt.id.split('-q')[1], 10);
+    if (!Number.isFinite(quarter) || quarter < 1 || quarter > 4) return '';
+    return evt.year ? ` - Q${quarter} ${evt.year}` : ` - Q${quarter}`;
+  }
+
   function renderEarningsRow(evt: EarningsEvent & { type: 'zasluzki' }): string {
     const today_ = isToday(evt.date);
     const past = isPast(evt.date);
@@ -585,7 +596,7 @@
             <span class="cal-time">${evt.when}</span>
           </div>
           <div class="cal-main">
-            <span class="cal-event-title">${evt.name} - Q2 2026</span>
+            <span class="cal-event-title">${evt.name}${quarterLabel(evt)}</span>
             <div class="cal-meta">${tickerBadge}${usBadge}${earningsBadge}${actualBadge}${dateHint}</div>
           </div>
           <div class="cal-row__end">${expandIcon()}</div>
