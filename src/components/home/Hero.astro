@@ -14,12 +14,6 @@ import { url } from '../../utils/url';
         <span class="hero__title-accent">aktualne dogodke</span>
       </h1>
 
-      <!-- Subtitle -->
-      <p class="hero__subtitle">
-        Filtriram globalno dogajanje in razlagam povezave med geopolitiko,
-        makroekonomijo in trgi na jasen in razumljiv način.
-      </p>
-
       <!-- CTA Buttons -->
       <div class="hero__ctas">
         <Button href={url('/analize')} size="lg">
@@ -58,20 +52,12 @@ import { url } from '../../utils/url';
     line-height: 1.1;
     letter-spacing: -0.03em;
     color: var(--color-text);
-    margin-bottom: var(--space-lg);
+    /* Opis pod naslovom je avtor odstranil 21. 9. 2026; razmik do gumbov ostane, kot ga je imel opis. */
+    margin-bottom: var(--space-xl);
   }
 
   .hero__title-accent {
     color: var(--color-accent);
-  }
-
-  /* Subtitle */
-  .hero__subtitle {
-    font-size: var(--text-lg);
-    color: var(--color-text-muted);
-    line-height: 1.7;
-    margin-bottom: var(--space-xl);
-    max-width: 600px;
   }
 
   /* CTAs */
