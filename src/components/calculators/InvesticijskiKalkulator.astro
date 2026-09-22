@@ -1,0 +1,473 @@
+---
+// Investicijski kalkulator (avtor, 22. 9. 2026: "naredi vse tako, kot ima ta investment calculator",
+// calculator.net/investment-calculator.html, v evrih in v slogu strani).
+// Račun je v src/lib/investicijski.ts in je preverjen pri viru na štirih kombinacijah, do centa natančno.
+//
+// Barve treh delov (začetni znesek, vplačila, obresti) so preverjene s preizkuševalnikom za barvno
+// slepoto in kontrast na svetli in temni podlagi; ista trojica prestane v obeh temah.
+import '../../styles/kalkulator.css';
+import { POGOSTOSTI } from '../../lib/investicijski';
+
+const ZAVIHKI = [
+  { id: 'koncni', ime: 'Končni znesek' },
+  { id: 'vplacilo', ime: 'Redno vplačilo' },
+  { id: 'donos', ime: 'Donosnost' },
+  { id: 'zacetni', ime: 'Začetni znesek' },
+  { id: 'doba', ime: 'Doba' },
+];
+---
+
+<div class="ik">
+  <header class="ik__header">
+    <h1 class="ik__title">Investicijski kalkulator</h1>
+    <p class="ik__lead">
+      Koliko zraste privarčevani denar, koliko moraš vlagati za svoj cilj, kolikšno donosnost ali koliko časa
+      za to potrebuješ. Izberi, kaj naj kalkulator izračuna.
+    </p>
+  </header>
+
+  <div class="ik__tabs" role="tablist" aria-label="Kaj naj kalkulator izračuna">
+    {ZAVIHKI.map((z, i) => (
+      <button type="button" role="tab" class={`ik__tab${i === 0 ? ' ik__tab--on' : ''}`} data-tab={z.id} aria-selected={i === 0 ? 'true' : 'false'}>{z.ime}</button>
+    ))}
+  </div>
+
+  <div class="ik__grid">
+    <form class="ik__panel ik__inputs" id="ik-form" novalidate>
+      <label class="kd__field" data-polje="cilj" hidden>
+        <span class="kd__label">Cilj<small id="ik-cilj-opis">koliko želiš imeti ob koncu</small></span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-cilj" value="100000" autocomplete="off" /><span class="kd__unit">€</span></span>
+      </label>
+      <label class="kd__field" data-polje="zacetni">
+        <span class="kd__label">Začetni znesek</span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-zacetni" value="20000" autocomplete="off" /><span class="kd__unit">€</span></span>
+      </label>
+      <label class="kd__field" data-polje="leta">
+        <span class="kd__label">Doba</span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-leta" value="10" autocomplete="off" /><span class="kd__unit">let</span></span>
+      </label>
+      <label class="kd__field" data-polje="stopnja">
+        <span class="kd__label">Letna donosnost</span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-stopnja" value="6" autocomplete="off" /><span class="kd__unit">%</span></span>
+      </label>
+      <label class="kd__field">
+        <span class="kd__label">Obrestovanje<small>kako pogosto se donos pripiše</small></span>
+        <select class="kd__num ik__select" id="ik-pogostost">
+          {POGOSTOSTI.map((p) => <option value={p.id} selected={p.id === 'letno'}>{p.ime}</option>)}
+        </select>
+      </label>
+      <label class="kd__field" data-polje="prispevek">
+        <span class="kd__label">Redno vplačilo</span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-prispevek" value="500" autocomplete="off" /><span class="kd__unit">€</span></span>
+      </label>
+      <fieldset class="ik__radios">
+        <legend class="kd__label">Vplačam</legend>
+        <div class="ik__radio-row">
+          <label class="ik__radio"><input type="radio" name="ik-kdaj" value="zacetek" /> na začetku</label>
+          <label class="ik__radio"><input type="radio" name="ik-kdaj" value="konec" checked /> na koncu</label>
+        </div>
+        <div class="ik__radio-row">
+          <label class="ik__radio"><input type="radio" name="ik-ritem" value="mesecno" checked /> vsakega meseca</label>
+          <label class="ik__radio"><input type="radio" name="ik-ritem" value="letno" /> vsakega leta</label>
+        </div>
+      </fieldset>
+
+      <div class="ik__infl">
+        <label class="ik__check">
+          <input type="checkbox" id="ik-infl-on" />
+          <span class="kd__label">Upoštevaj inflacijo<small>izid preračunan v današnji denar</small></span>
+        </label>
+        <label class="kd__field" id="ik-infl-polje" hidden>
+          <span class="kd__label">Letna inflacija</span>
+          <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-infl" value="2" autocomplete="off" /><span class="kd__unit">%</span></span>
+        </label>
+      </div>
+    </form>
+
+    <section class="ik__panel ik__out" aria-live="polite" aria-label="Izid">
+      <p class="kd__h" id="ik-glavna-oznaka">Končni znesek</p>
+      <p class="ik__glavna" id="ik-glavna">–</p>
+      <p class="ik__opomba" id="ik-opomba"></p>
+      <ul class="ik__deli" id="ik-deli"></ul>
+      <div class="ik__donut" id="ik-donut"></div>
+    </section>
+  </div>
+
+  <section class="ik__panel ik__potek">
+    <div class="ik__potek-head">
+      <p class="kd__h" id="ik-potek-naslov">Rast po letih</p>
+      <div class="ik__preklop" role="group" aria-label="Prikaz tabele">
+        <button type="button" class="ik__mini ik__mini--on" data-tabela="leta">Po letih</button>
+        <button type="button" class="ik__mini" data-tabela="meseci">Po mesecih</button>
+      </div>
+    </div>
+    <div class="ik__chart" id="ik-stolpci"></div>
+    <ul class="ik__legenda" id="ik-legenda"></ul>
+    <div class="ik__tabela-ovoj"><table class="ik__tabela"><thead id="ik-glava"></thead><tbody id="ik-vrstice"></tbody></table></div>
+  </section>
+
+  <details class="kd__more">
+    <summary><span class="kd__sum-title">Kako kalkulator računa</span></summary>
+    <div class="kd__more-body kd__explain">
+      <ul>
+        <li><strong>Donosnost</strong> je nominalna letna. Pogostost obrestovanja pove, kolikokrat na leto se donos pripiše: pri 6 % in mesečnem obrestovanju je to 0,5 % na mesec, kar da 6,17 % na leto.</li>
+        <li><strong>Vplačila</strong> se prištejejo vsak mesec ali vsako leto, na začetku ali na koncu obdobja. Vplačilo na začetku je eno obdobje dlje obrestovano.</li>
+        <li><strong>Obresti</strong> so razlika med končnim zneskom ter začetnim zneskom in vsoto vplačil.</li>
+        <li>
+          <strong>Inflacija</strong> je izbirna. Če jo vklopiš, je vsak znesek deljen z rastjo cen do svojega
+          leta, izid pa pove kupno moč v današnjem denarju. Cilj takrat razumemo kot današnjo kupno moč,
+          redno vplačilo pa ostane vsak mesec enako in z inflacijo ne raste.
+        </li>
+      </ul>
+      <p>
+        Kalkulator ne upošteva <strong>davkov in provizij</strong> ter predpostavlja enakomeren donos, kar se
+        v resnici ne zgodi: trg niha, zaporedje dobrih in slabih let pa vpliva na izid, še posebej, kadar
+        sproti vlagaš ali dvigaš.
+      </p>
+      <p class="kd__note">Izobraževalni pripomoček, ne finančni nasvet.</p>
+    </div>
+  </details>
+</div>
+
+<style is:global>
+  .ik { max-width: 1040px; margin: 0 auto; padding: var(--space-xl) var(--space-md) var(--space-3xl); font-variant-numeric: tabular-nums;
+    --ik-start: var(--chart-start, #2a78d6); --ik-vlozki: var(--chart-vlozki, #0d9488); --ik-obresti: var(--chart-obresti, #c4531d); }
+  .ik__header { margin-bottom: var(--space-lg); max-width: 680px; }
+  .ik__title { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.02em; margin-bottom: var(--space-sm); }
+  .ik__lead { color: var(--color-text-muted); line-height: 1.6; }
+
+  .ik__tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: var(--space-md); }
+  .ik__tab { font: inherit; font-size: var(--text-sm); font-weight: 600; color: var(--color-text-muted); background: var(--color-surface);
+    border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: 0.45rem 0.95rem; cursor: pointer; transition: all var(--transition-fast, .15s); }
+  .ik__tab:hover { color: var(--color-text); border-color: var(--color-border-strong); }
+  .ik__tab--on, .ik__tab--on:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+  .ik__tab:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+  .ik__panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+  .ik__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: var(--space-lg); margin-bottom: var(--space-lg); align-items: start; }
+  @media (max-width: 860px) { .ik__grid { grid-template-columns: minmax(0, 1fr); } }
+  .ik__select { text-align: left; }
+  .ik__radios { border: 0; margin: var(--space-sm) 0 0; padding: 0; }
+  .ik__radios .kd__label { display: block; margin-bottom: 0.35rem; }
+  .ik__radio-row { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin-bottom: 0.3rem; }
+  .ik__radio { display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--text-sm); color: var(--color-text); cursor: pointer; }
+  .ik__radio input { accent-color: var(--color-accent); }
+
+  .ik__infl { margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--color-border); }
+  .ik__check { display: flex; align-items: flex-start; gap: 0.55rem; cursor: pointer; }
+  .ik__check input { accent-color: var(--color-accent); width: 1rem; height: 1rem; margin-top: 0.15rem; flex: none; }
+  .ik__check .kd__label { margin-bottom: 0; cursor: pointer; }
+  .ik__infl .kd__field { margin-top: var(--space-sm); }
+
+  .ik__glavna { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; color: var(--color-text); margin-bottom: 0.2rem; }
+  .ik__opomba { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; margin-bottom: var(--space-md); min-height: 1.2em; }
+  .ik__deli { list-style: none; padding: 0; margin: 0 0 var(--space-md); border-top: 1px solid var(--color-border-strong); }
+  .ik__del { display: grid; grid-template-columns: 0.7rem minmax(0, 1fr) auto; align-items: center; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); font-size: var(--text-sm); }
+  .ik__pika { width: 0.7rem; height: 0.7rem; border-radius: 3px; }
+  .ik__pika--izguba { background: repeating-linear-gradient(45deg, transparent 0 2px, color-mix(in srgb, var(--ik-obresti) 50%, transparent) 2px 4px); border: 1px solid var(--color-border-strong); }
+  .ik__del-ime { color: var(--color-text-muted); }
+  .ik__del-znesek { font-weight: 600; color: var(--color-text); }
+  .ik__del--skupaj .ik__del-ime, .ik__del--skupaj .ik__del-znesek { color: var(--color-text); font-weight: 700; }
+  .ik__donut { display: flex; justify-content: center; }
+  .ik__donut svg { max-width: 230px; height: auto; }
+
+  .ik__potek { margin-bottom: var(--space-lg); }
+  .ik__potek-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); margin-bottom: var(--space-sm); }
+  .ik__potek-head .kd__h { margin-bottom: 0; }
+  .ik__preklop { display: flex; gap: 0.3rem; }
+  .ik__mini { font: inherit; font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); background: transparent; border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: 0.25rem 0.7rem; cursor: pointer; }
+  .ik__mini--on { color: var(--color-text); border-color: var(--color-border-strong); background: var(--color-bg); }
+  .ik__chart { position: relative; width: 100%; min-height: 200px; margin-bottom: var(--space-md); }
+  .ik__chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .ik__chart text { font-family: var(--font-sans); }
+  .ik__legenda { list-style: none; display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; padding: 0; margin: 0 0 var(--space-md); font-size: var(--text-xs); color: var(--color-text-muted); }
+  .ik__legenda li { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .ik__tabela-ovoj { max-height: 22rem; overflow-y: auto; border-top: 1px solid var(--color-border-strong); }
+  .ik__tabela { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+  .ik__tabela th { position: sticky; top: 0; background: var(--color-surface); font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); text-align: right; padding: 0.5rem 0.5rem; border-bottom: 1px solid var(--color-border); }
+  .ik__tabela th:first-child, .ik__tabela td:first-child { text-align: left; padding-left: 0; }
+  .ik__tabela td { text-align: right; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--color-border); color: var(--color-text); white-space: nowrap; }
+  .ik__tabela td:last-child, .ik__tabela th:last-child { padding-right: 0; }
+  .ik__napaka { color: var(--color-text); font-size: var(--text-sm); }
+  @media (max-width: 420px) { .ik__tabela th, .ik__tabela td { padding-left: 0.25rem; padding-right: 0.25rem; font-size: var(--text-xs); } }
+</style>
+
+<script>
+  import { dobaBesedilo, izracunaj, napaka, POGOSTOSTI, poLetihIz, poMesecih, resiMesece, resiMeseceRealno, resiPrispevek, resiStopnjo, resiZacetni, vDanasnjemDenarju, type Izid, type Pogostost, type Vhod, type Vrstica } from '../../lib/investicijski';
+  import { evro, fmt, fmtPct, let_, letih, mesecev, parseStevilo } from '../../lib/stevilke';
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const val = (id: string) => parseStevilo(($(id) as HTMLInputElement).value);
+  const izbrano = (ime: string) => (document.querySelector(`input[name="${ime}"]:checked`) as HTMLInputElement)?.value;
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  type Zavihek = 'koncni' | 'vplacilo' | 'donos' | 'zacetni' | 'doba';
+  let zavihek: Zavihek = 'koncni';
+  let tabela: 'leta' | 'meseci' = 'leta';
+
+  // Polje, ki ga kalkulator išče, ni vidno; cilj je viden povsod razen pri iskanju končnega zneska.
+  const SKRIJ: Record<Zavihek, string[]> = {
+    koncni: ['cilj'], vplacilo: ['prispevek'], donos: ['stopnja'], zacetni: ['zacetni'], doba: ['leta'],
+  };
+
+  const DELI = [
+    { kljuc: 'zacetni', ime: 'Začetni znesek', barva: 'var(--ik-start)' },
+    { kljuc: 'vlozki', ime: 'Vplačila skupaj', barva: 'var(--ik-vlozki)' },
+    { kljuc: 'obresti', ime: 'Obresti', barva: 'var(--ik-obresti)' },
+  ] as const;
+
+  // Z vklopljeno inflacijo tretji del ni več "obresti", ampak donos nad rastjo cen (lahko je negativen).
+  let inflAktivna: number | null = null;
+  const imeDela = (d: { kljuc: string; ime: string }) => (d.kljuc === 'obresti' && inflAktivna !== null ? 'Donos nad inflacijo' : d.ime);
+
+  function nastaviVidnost() {
+    document.querySelectorAll<HTMLElement>('[data-polje]').forEach((el) => {
+      const polje = el.dataset.polje!;
+      const skrij = SKRIJ[zavihek].includes(polje) || (polje === 'cilj' && zavihek === 'koncni');
+      el.hidden = skrij;
+    });
+  }
+
+  // Inflacija je izbirna: null pomeni "ne upoštevaj", sicer delež (0,02 = 2 %).
+  function preberi(): { v: Vhod; cilj: number; infl: number | null } {
+    return {
+      infl: ($('ik-infl-on') as HTMLInputElement).checked ? val('ik-infl') / 100 : null,
+      v: {
+        zacetni: val('ik-zacetni'),
+        leta: val('ik-leta'),
+        stopnja: val('ik-stopnja') / 100,
+        pogostost: ($('ik-pogostost') as HTMLSelectElement).value as Pogostost,
+        prispevek: val('ik-prispevek'),
+        ritem: (izbrano('ik-ritem') ?? 'mesecno') as 'mesecno' | 'letno',
+        kdaj: (izbrano('ik-kdaj') ?? 'konec') as 'zacetek' | 'konec',
+      },
+      cilj: val('ik-cilj'),
+    };
+  }
+
+  // Poteka in izida ne računamo dvakrat: kadar je inflacija vklopljena, so vsi zneski preračunani
+  // v današnji denar, sicer ostanejo takšni, kot bodo na računu.
+  function razdelitev(v: Vhod, meseci: number, infl: number | null): { izid: Izid; mesecne: Vrstica[] } {
+    const mesecne = poMesecih(v, meseci);
+    if (infl === null) return { izid: izracunaj({ ...v, leta: meseci / 12 }), mesecne };
+    const r = vDanasnjemDenarju(mesecne, v.zacetni, infl);
+    return { izid: r.izid, mesecne: r.meseci };
+  }
+
+  // Vrne dopolnjen vhod (z izračunano manjkajočo vrednostjo), glavni odgovor in opombo.
+  function resi(v: Vhod, cilj: number, infl: number | null): { v: Vhod; meseci: number; oznaka: string; odgovor: string; opomba: string } | string {
+    const ritemBesedilo = v.ritem === 'mesecno' ? 'na mesec' : 'na leto';
+    const danes = infl === null ? '' : ' v današnjem denarju';
+    const zInflacijo = infl === null ? '' : ` in ${fmtPct(infl)} inflacije`;
+    if (infl !== null && (!Number.isFinite(infl) || infl <= -1)) return 'Inflacija mora biti večja od -100 %.';
+    if (zavihek === 'koncni') {
+      const napakaVnosa = napaka(v, null);
+      if (napakaVnosa) return napakaVnosa;
+      const meseci = Math.round(v.leta * 12);
+      return { v, meseci, oznaka: `Končni znesek${danes}`, odgovor: evro(razdelitev(v, meseci, infl).izid.koncni), opomba: `po ${letih(Math.round(v.leta))} pri ${fmtPct(v.stopnja)} letne donosnosti${zInflacijo}` };
+    }
+    const napakaVnosa = napaka(v, cilj);
+    if (napakaVnosa) return napakaVnosa;
+    // Cilj je vpisan v današnjem denarju, zato mora znesek na računu do konca dobe zrasti z rastjo cen.
+    const ciljNom = infl === null ? cilj : cilj * (1 + infl) ** v.leta;
+    const ciljBesedilo = `${evro(cilj)}${danes}`;
+    if (zavihek === 'vplacilo') {
+      const p = resiPrispevek(v, ciljNom);
+      if (!Number.isFinite(p)) return 'Tega cilja s temi vnosi ni mogoče doseči.';
+      if (p < 0) return `Cilj ${ciljBesedilo} dosežeš že brez rednih vplačil. Znižaj začetni znesek, dobo ali donosnost.`;
+      return { v: { ...v, prispevek: p }, meseci: Math.round(v.leta * 12), oznaka: `Potrebno vplačilo ${ritemBesedilo}`, odgovor: evro(p), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}` };
+    }
+    if (zavihek === 'zacetni') {
+      const z = resiZacetni(v, ciljNom);
+      if (!Number.isFinite(z)) return 'Tega cilja s temi vnosi ni mogoče doseči.';
+      if (z < 0) return `Cilj ${ciljBesedilo} dosežeš že z rednimi vplačili, brez začetnega zneska.`;
+      return { v: { ...v, zacetni: z }, meseci: Math.round(v.leta * 12), oznaka: 'Potreben začetni znesek', odgovor: evro(z), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}` };
+    }
+    if (zavihek === 'donos') {
+      const s = resiStopnjo(v, ciljNom);
+      if (!Number.isFinite(s)) return 'Tega cilja ni mogoče doseči niti pri zelo visoki donosnosti. Preveri vnose.';
+      return { v: { ...v, stopnja: s }, meseci: Math.round(v.leta * 12), oznaka: 'Potrebna letna donosnost', odgovor: fmtPct(s, 2), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}; obrestovanje ${POGOSTOSTI.find((p) => p.id === v.pogostost)?.ime}` };
+    }
+    // Pri dobi cilj z vsakim letom čakanja zraste, zato ga primerjamo s preračunanim stanjem.
+    const m = infl === null ? resiMesece(v, cilj) : resiMeseceRealno(v, cilj, infl);
+    if (!Number.isFinite(m)) return 'Cilja s temi vnosi ne dosežeš niti v 100 letih.';
+    return { v: { ...v, leta: m / 12 }, meseci: m, oznaka: 'Potrebna doba', odgovor: dobaBesedilo(m, let_, mesecev), opomba: `da dosežeš ${ciljBesedilo} pri ${fmtPct(v.stopnja)} letne donosnosti${zInflacijo}` };
+  }
+
+  function izrisi() {
+    nastaviVidnost();
+    document.querySelectorAll<HTMLInputElement>('#ik-form .kd__num').forEach((el) => {
+      if (el.tagName === 'INPUT') el.setAttribute('aria-invalid', String(Number.isNaN(parseStevilo(el.value))));
+    });
+    const { v, cilj, infl } = preberi();
+    inflAktivna = infl;
+    $('ik-infl-polje').hidden = infl === null;
+    $('ik-cilj-opis').textContent = infl === null ? 'koliko želiš imeti ob koncu' : 'koliko želiš imeti ob koncu, v današnjem denarju';
+    $('ik-potek-naslov').textContent = infl === null ? 'Rast po letih' : 'Rast po letih, v današnjem denarju';
+    const izid = resi(v, cilj, infl);
+    if (typeof izid === 'string') {
+      $('ik-glavna').innerHTML = `<span class="ik__napaka">${esc(izid)}</span>`;
+      $('ik-glavna-oznaka').textContent = 'Izid';
+      $('ik-opomba').textContent = '';
+      $('ik-deli').innerHTML = '';
+      $('ik-donut').innerHTML = '';
+      $('ik-stolpci').innerHTML = '';
+      $('ik-glava').innerHTML = '';
+      $('ik-vrstice').innerHTML = '';
+      return;
+    }
+    $('ik-glavna-oznaka').textContent = izid.oznaka;
+    $('ik-glavna').textContent = izid.odgovor;
+    $('ik-opomba').textContent = izid.opomba;
+
+    const { izid: r, mesecne } = razdelitev(izid.v, izid.meseci, infl);
+    const skupaj = r.koncni || 1;
+    // Enako število decimalk povsod v izidu: sicer je glavni znesek 117.054 €, vsota delov pa 117.053,68 €.
+    const dec = r.koncni >= 100000 ? 0 : 2;
+    const vrednosti = { zacetni: r.zacetni, vlozki: r.vlozki, obresti: r.obresti };
+    // Deleže izpišemo le, kadar so vsi deli pozitivni; sicer bi bilo "134 %" in "-34 %" videti kot napaka.
+    const delez = (znesek: number) => (r.obresti < 0 ? '' : ` <span class="ik__del-ime">${fmt((znesek / skupaj) * 100, 0)} %</span>`);
+    $('ik-deli').innerHTML = DELI.map((d) => `<li class="ik__del">
+        <span class="ik__pika" style="background:${d.barva}"></span>
+        <span class="ik__del-ime">${imeDela(d)}</span>
+        <span class="ik__del-znesek">${evro(vrednosti[d.kljuc], dec)}${delez(vrednosti[d.kljuc])}</span>
+      </li>`).join('') + `<li class="ik__del ik__del--skupaj"><span></span><span class="ik__del-ime">Skupaj</span><span class="ik__del-znesek">${evro(r.koncni, dec)}</span></li>`;
+
+    $('ik-legenda').innerHTML = DELI.map((d) => `<li><span class="ik__pika" style="background:${d.barva}"></span>${imeDela(d)}</li>`).join('')
+      + (r.obresti < 0 ? '<li><span class="ik__pika ik__pika--izguba"></span>izguba kupne moči</li>' : '');
+    kolobar(vrednosti, dec);
+    const letne = poLetihIz(mesecne);
+    stolpci(letne, r.zacetni, dec);
+    izpisiTabelo(tabela === 'leta' ? letne : mesecne, dec);
+  }
+
+  // ---------- krožni prikaz ----------
+
+  function kolobar(v: { zacetni: number; vlozki: number; obresti: number }, dec: number) {
+    const skupaj = v.zacetni + v.vlozki + v.obresti;
+    // Kolobar prikazuje deleže celote; če je kateri del negativen (inflacija pojé donos), ga ne izrišemo,
+    // ker bi seštevek delov zavajal. Zgodbo takrat pove stolpčni graf.
+    if (!(skupaj > 0) || v.obresti < 0) { $('ik-donut').innerHTML = ''; return; }
+    const R = 100, r = 62, C = 2 * Math.PI * R;
+    const deli = DELI.map((d) => ({ ...d, znesek: Math.max(0, v[d.kljuc]) })).filter((d) => d.znesek > 0);
+    let kot = -Math.PI / 2;
+    const loki = deli.map((d) => {
+      const delez = d.znesek / skupaj;
+      const konec = kot + delez * 2 * Math.PI;
+      const velik = delez > 0.5 ? 1 : 0;
+      const tocka = (a: number, rad: number) => `${(120 + rad * Math.cos(a)).toFixed(2)},${(120 + rad * Math.sin(a)).toFixed(2)}`;
+      // 2 px reže med deli v barvi podlage naredimo z obrobo iste barve kot ozadje.
+      const d1 = `M${tocka(kot, R)} A${R},${R} 0 ${velik} 1 ${tocka(konec, R)} L${tocka(konec, r)} A${r},${r} 0 ${velik} 0 ${tocka(kot, r)} Z`;
+      const sredina = (kot + konec) / 2;
+      const oznaka = delez >= 0.08
+        ? `<text x="${(120 + ((R + r) / 2) * Math.cos(sredina)).toFixed(1)}" y="${(120 + ((R + r) / 2) * Math.sin(sredina) + 4).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="700" style="fill:#fff">${fmt(delez * 100, 0)} %</text>`
+        : '';
+      kot = konec;
+      return `<path d="${d1}" style="fill:${d.barva};stroke:var(--color-surface)" stroke-width="2"><title>${imeDela(d)}: ${evro(d.znesek, dec)}</title></path>${oznaka}`;
+    });
+    $('ik-donut').innerHTML = `<svg viewBox="0 0 240 240" role="img" aria-label="Razdelitev končnega zneska na začetni znesek, vplačila in obresti">${loki.join('')}</svg>`;
+  }
+
+  // ---------- stolpčni graf ----------
+
+  function niceStep(span: number, target = 4) {
+    const raw = span / target;
+    const mag = 10 ** Math.floor(Math.log10(raw || 1));
+    const n = raw / mag;
+    return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * mag;
+  }
+
+  function stolpci(leta: { obdobje: number; vlozek: number; obresti: number; stanje: number }[], zacetni: number, dec: number) {
+    const box = $('ik-stolpci');
+    if (!box.clientWidth || !leta.length) { box.innerHTML = ''; return; }
+    const W = Math.max(280, box.clientWidth);
+    const H = W < 520 ? 200 : 260;
+    const m = { l: 56, r: 8, t: 12, b: 26 };
+    // Vplačano in stanje za vsako leto. Kadar inflacija pojé donos, je stanje nižje od vplačanega,
+    // zato vrh lestvice iščemo med obojim in ne le v zadnjem stanju.
+    let vlozkiSkupaj = 0;
+    const tocke = leta.map((l, i) => {
+      vlozkiSkupaj += i === 0 ? l.vlozek - zacetni : l.vlozek;
+      return { obdobje: l.obdobje, vplacano: zacetni + vlozkiSkupaj, stanje: l.stanje };
+    });
+    const vrh = Math.max(...tocke.map((t) => Math.max(t.stanje, t.vplacano)));
+    const step = niceStep(vrh);
+    const y1 = Math.ceil(vrh / step) * step;
+    const y = (v: number) => H - m.b - (v / (y1 || 1)) * (H - m.t - m.b);
+    const sirina = (W - m.l - m.r) / leta.length;
+    const bw = Math.max(2, Math.min(28, sirina * 0.72));
+
+    const mreza: string[] = [];
+    for (let v = 0; v <= y1 + step / 2; v += step) {
+      mreza.push(`<line x1="${m.l}" x2="${W - m.r}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--color-border)" stroke-width="1"/>`);
+      mreza.push(`<text x="${m.l - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" font-size="11" style="fill:var(--color-text-muted)">${v >= 1000 ? fmt(v / 1000, 0) + ' tis.' : fmt(v, 0)}</text>`);
+    }
+
+    const paliceHtml: string[] = [];
+    const osHtml: string[] = [];
+    const korak = leta.length <= 12 ? 1 : leta.length <= 30 ? 5 : 10;
+    tocke.forEach((t, i) => {
+      const x = m.l + i * sirina + (sirina - bw) / 2;
+      const kos = (od: number, doKam: number, barva: string) => {
+        const h = Math.max(0, y(od) - y(doKam) - 1); // 1 px reža med deli
+        return h > 0.5 ? `<rect x="${x.toFixed(1)}" y="${y(doKam).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" style="fill:${barva}"/>` : '';
+      };
+      // Barvni deli pokažejo denar, ki ga imaš; šrafura nad njimi to, kar je odnesla inflacija.
+      const doZacetni = Math.min(zacetni, t.stanje);
+      const doVplacano = Math.min(t.vplacano, t.stanje);
+      const donos = t.stanje - t.vplacano;
+      const segmenti = kos(0, doZacetni, 'var(--ik-start)') + kos(doZacetni, doVplacano, 'var(--ik-vlozki)')
+        + (donos > 0 ? kos(t.vplacano, t.stanje, 'var(--ik-obresti)') : kos(t.stanje, t.vplacano, 'url(#ik-srafura)'));
+      paliceHtml.push(`<g data-leto="${t.obdobje}">${segmenti}<rect x="${(m.l + i * sirina).toFixed(1)}" y="${m.t}" width="${sirina.toFixed(1)}" height="${H - m.t - m.b}" fill="transparent"><title>${let_(t.obdobje)}: ${evro(t.stanje, dec)} (vplačano ${evro(t.vplacano, dec)}, ${donos < 0 ? 'izguba' : 'donos'} ${evro(Math.abs(donos), dec)})</title></rect></g>`);
+      if (i === 0 || (i + 1) % korak === 0 || i === tocke.length - 1) {
+        osHtml.push(`<text x="${(m.l + i * sirina + sirina / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="11" style="fill:var(--color-text-muted)">${t.obdobje}</text>`);
+      }
+    });
+
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Rast po letih: začetni znesek, vplačila in obresti">
+      <defs><pattern id="ik-srafura" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="7" height="7" style="fill:var(--color-surface)"/>
+        <line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--ik-obresti)" stroke-width="3" opacity="0.5"/>
+      </pattern></defs>
+      ${mreza.join('')}${paliceHtml.join('')}${osHtml.join('')}
+      <text x="${m.l}" y="${H - 8}" font-size="11" style="fill:var(--color-text-muted)" text-anchor="start" opacity="0">leto</text>
+    </svg>`;
+  }
+
+  // ---------- tabela ----------
+
+  function izpisiTabelo(vrstice: { obdobje: number; vlozek: number; obresti: number; stanje: number }[], dec: number) {
+    const prvi = tabela === 'leta' ? 'Leto' : 'Mesec';
+    $('ik-glava').innerHTML = `<tr><th scope="col">${prvi}</th><th scope="col">Vplačila</th><th scope="col">Obresti</th><th scope="col">Stanje</th></tr>`;
+    $('ik-vrstice').innerHTML = vrstice.map((v) => `<tr><td>${v.obdobje}</td><td>${evro(v.vlozek, dec)}</td><td>${evro(v.obresti, dec)}</td><td>${evro(v.stanje, dec)}</td></tr>`).join('');
+  }
+
+  // ---------- dogodki ----------
+
+  $('ik-form').addEventListener('input', izrisi);
+  $('ik-form').addEventListener('change', izrisi);
+  $('ik-form').addEventListener('submit', (e) => e.preventDefault());
+
+  document.querySelectorAll<HTMLButtonElement>('.ik__tab').forEach((b) => b.addEventListener('click', () => {
+    zavihek = b.dataset.tab as Zavihek;
+    document.querySelectorAll('.ik__tab').forEach((x) => {
+      const on = x === b;
+      x.classList.toggle('ik__tab--on', on);
+      x.setAttribute('aria-selected', String(on));
+    });
+    izrisi();
+  }));
+
+  document.querySelectorAll<HTMLButtonElement>('.ik__mini').forEach((b) => b.addEventListener('click', () => {
+    tabela = b.dataset.tabela as 'leta' | 'meseci';
+    document.querySelectorAll('.ik__mini').forEach((x) => x.classList.toggle('ik__mini--on', x === b));
+    izrisi();
+  }));
+
+  let sirina = 0;
+  new ResizeObserver(() => {
+    const w = $('ik-stolpci').clientWidth;
+    if (w && Math.abs(w - sirina) > 4) { sirina = w; izrisi(); }
+  }).observe($('ik-stolpci'));
+  izrisi();
+</script>

@@ -11,7 +11,7 @@ export const SITE = {
 export const NAV_LINKS = [
   { label: 'Analize', href: '/analize' },
   { label: 'Koledar', href: '/koledar' },
-  { label: 'Kalkulator', href: '/kalkulator-vrednotenja' },
+  { label: 'Kalkulatorji', href: '/kalkulatorji' },
 ];
 
 export const CATEGORIES = [

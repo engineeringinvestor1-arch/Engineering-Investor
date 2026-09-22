@@ -1,0 +1,63 @@
+---
+// Kazalo kalkulatorjev (avtor, 22. 9. 2026): meni vodi sem, od tod pa na posamezen kalkulator.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const kalkulatorji = [
+  {
+    naslov: 'Investicijski kalkulator',
+    href: '/investicijski-kalkulator',
+    opis: 'Koliko zraste privarčevani denar z obrestnim obrestovanjem in rednimi vplačili. Izračuna tudi, koliko moraš vlagati, kolikšno donosnost ali koliko časa potrebuješ za svoj cilj.',
+    za: 'Za varčevanje in dolgoročno vlaganje',
+  },
+  {
+    naslov: 'Kalkulator pričakovanega donosa',
+    href: '/kalkulator-vrednotenja',
+    opis: 'Kakšen letni donos lahko pričakuješ od delnice po današnji ceni in koliko bi smel plačati za donos, ki ga želiš. S tremi scenariji in izračunom, kolikšno rast cena že predvideva.',
+    za: 'Za posamezno delnico',
+  },
+];
+---
+
+<BaseLayout
+  title="Kalkulatorji"
+  description="Investicijski kalkulator za varčevanje in kalkulator pričakovanega donosa za posamezno delnico."
+>
+  <div class="kal">
+    <header class="kal__header">
+      <h1 class="kal__title">Kalkulatorji</h1>
+      <p class="kal__lead">Pripomočka za razmislek, ne za napoved. Vsak izračun je toliko dober, kolikor so dobre predpostavke, ki jih vpišeš.</p>
+    </header>
+    <ul class="kal__seznam">
+      {kalkulatorji.map((k) => (
+        <li class="kal__kartica">
+          <a href={k.href} class="kal__povezava">
+            <span class="kal__za">{k.za}</span>
+            <span class="kal__naslov">{k.naslov}</span>
+            <span class="kal__opis">{k.opis}</span>
+            <span class="kal__vec">Odpri
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .kal { max-width: 900px; margin: 0 auto; padding: var(--space-xl) var(--space-md) var(--space-3xl); }
+  .kal__header { margin-bottom: var(--space-xl); max-width: 640px; }
+  .kal__title { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.02em; margin-bottom: var(--space-sm); }
+  .kal__lead { color: var(--color-text-muted); line-height: 1.6; }
+  .kal__seznam { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: var(--space-lg); }
+  .kal__povezava {
+    display: flex; flex-direction: column; gap: 0.4rem; height: 100%; text-decoration: none;
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+    padding: var(--space-lg); transition: border-color var(--transition-fast, .15s), transform var(--transition-fast, .15s);
+  }
+  .kal__povezava:hover { border-color: var(--color-accent-border); transform: translateY(-2px); }
+  .kal__za { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); }
+  .kal__naslov { font-size: var(--text-xl); font-weight: 700; color: var(--color-text); line-height: 1.25; }
+  .kal__opis { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; flex: 1; }
+  .kal__vec { display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--text-sm); font-weight: 600; color: var(--color-accent); margin-top: var(--space-sm); }
+</style>

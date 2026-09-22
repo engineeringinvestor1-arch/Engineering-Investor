@@ -1,0 +1,49 @@
+/* Skupni slogi obeh kalkulatorjev (22. 9. 2026). Prej so bili v komponenti kalkulatorja donosa,
+   zato jih investicijski kalkulator na svoji strani ni dobil in so vnosi ostali brez oblike. */
+
+  /* Polja: oznaka levo, vnos desno */
+  .kd__field { display: grid; grid-template-columns: minmax(0, 1fr) 7.5rem; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm); }
+  .kd__label { font-size: var(--text-sm); color: var(--color-text); line-height: 1.35; }
+  .kd__label small { display: block; font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 2px; }
+  .kd__label small strong { color: var(--color-text); font-weight: 600; }
+  .kd__num {
+    width: 100%; font-family: var(--font-sans); font-size: var(--text-sm); font-weight: 600; text-align: right;
+    font-variant-numeric: tabular-nums; color: var(--color-text); background: var(--color-bg);
+    border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.5rem 0.6rem;
+  }
+  .kd__num:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-bg); }
+  .kd__num[aria-invalid="true"] { border-color: var(--color-warning); }
+  .kd__with-unit { position: relative; display: block; }
+  .kd__with-unit .kd__num { padding-right: 2.4rem; }
+  .kd__unit { position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%); font-size: var(--text-xs); color: var(--color-text-muted); pointer-events: none; }
+  @media (max-width: 420px) { .kd__field { grid-template-columns: minmax(0, 1fr) 6.5rem; } }
+
+  /* Spustna dela */
+  .kd__more { margin-top: var(--space-lg); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+  .kd__more > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'naslov puscica' 'pod puscica'; column-gap: var(--space-md); padding: var(--space-md) var(--space-lg); }
+  .kd__more > summary::-webkit-details-marker { display: none; }
+  .kd__more > summary::after { content: ''; grid-area: puscica; align-self: center; width: 0.55rem; height: 0.55rem; border-right: 2px solid var(--color-text-muted); border-bottom: 2px solid var(--color-text-muted); transform: rotate(45deg); transition: transform var(--transition-fast, 0.15s); margin-right: 0.2rem; }
+  .kd__more[open] > summary::after { transform: rotate(-135deg); }
+  .kd__more > summary:hover .kd__sum-title { color: var(--color-accent); }
+  .kd__more > summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-lg); }
+  .kd__sum-title { grid-area: naslov; font-weight: 600; color: var(--color-text); }
+  .kd__sum-sub { grid-area: pod; font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 2px; }
+  .kd__more-body { padding: 0 var(--space-lg) var(--space-lg); }
+  .kd__adv .kd__panel { background: var(--color-bg); }
+  .kd__adv .kd__num { background: var(--color-surface); }
+  .kd__adv-lead { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.55; margin-bottom: var(--space-md); }
+  .kd__link { font: inherit; color: var(--color-accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+  .kd__explain { max-width: 720px; color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.7; }
+  .kd__explain ol, .kd__explain ul { padding-left: var(--space-lg); margin-bottom: var(--space-md); }
+  .kd__explain ol { list-style: decimal; } .kd__explain ul { list-style: disc; }
+  .kd__explain li { margin-bottom: 0.35rem; }
+  .kd__explain p { margin-bottom: var(--space-sm); }
+  .kd__explain strong { color: var(--color-text); font-weight: 600; }
+  .kd__note { margin-top: var(--space-lg); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+  /* Mala pisana oznaka razdelka; uporabljata jo oba kalkulatorja. */
+  .kd__h { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--space-md); padding: 0; }
+
+  /* Skrito polje mora izginiti tudi, ko ima razred mrežno postavitev (22. 9. 2026: "Cilj" je ostal viden). */
+  .kd__field[hidden] { display: none; }
