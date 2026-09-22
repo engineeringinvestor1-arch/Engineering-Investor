@@ -4,8 +4,8 @@ export const SITE = {
   description:
     'Finančno-izobraževalna vsebina za slovensko občinstvo. Filtriramo informacije, razlagamo trge in geopolitiko. Brez hypea, brez finančnih nasvetov.',
   url: 'https://engineering-investor.com',
-  twitterHandle: '@JazJst',
-  twitterUrl: 'https://x.com/JazJst',
+  twitterHandle: '@engineering_inv',
+  twitterUrl: 'https://x.com/engineering_inv',
 };
 
 export const NAV_LINKS = [

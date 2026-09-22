@@ -172,6 +172,7 @@ const ZAVIHKI = [
   .ik__donut svg { max-width: 230px; height: auto; }
 
   .ik__potek { margin-bottom: var(--space-lg); }
+  .ik__potek[hidden] { display: none; }
   .ik__potek-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); margin-bottom: var(--space-sm); }
   .ik__potek-head .kd__h { margin-bottom: 0; }
   .ik__preklop { display: flex; gap: 0.3rem; }
@@ -197,6 +198,7 @@ const ZAVIHKI = [
   import { evro, fmt, fmtPct, let_, letih, mesecev, parseStevilo } from '../../lib/stevilke';
 
   const $ = (id: string) => document.getElementById(id)!;
+  const potek = document.querySelector<HTMLElement>('.ik__potek')!;
   const val = (id: string) => parseStevilo(($(id) as HTMLInputElement).value);
   const izbrano = (ime: string) => (document.querySelector(`input[name="${ime}"]:checked`) as HTMLInputElement)?.value;
   const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -280,7 +282,7 @@ const ZAVIHKI = [
     if (zavihek === 'zacetni') {
       const z = resiZacetni(v, ciljNom);
       if (!Number.isFinite(z)) return 'Tega cilja s temi vnosi ni mogoče doseči.';
-      if (z < 0) return `Cilj ${ciljBesedilo} dosežeš že z rednimi vplačili, brez začetnega zneska.`;
+      if (z < 0) return `Cilj ${ciljBesedilo} dosežeš že z rednimi vplačili, brez začetnega zneska. Za izračun zvišaj cilj ali znižaj redno vplačilo, dobo oziroma donosnost.`;
       return { v: { ...v, zacetni: z }, meseci: Math.round(v.leta * 12), oznaka: 'Potreben začetni znesek', odgovor: evro(z), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}` };
     }
     if (zavihek === 'donos') {
@@ -312,10 +314,14 @@ const ZAVIHKI = [
       $('ik-deli').innerHTML = '';
       $('ik-donut').innerHTML = '';
       $('ik-stolpci').innerHTML = '';
+      $('ik-legenda').innerHTML = '';
       $('ik-glava').innerHTML = '';
       $('ik-vrstice').innerHTML = '';
+      // Brez izračuna ni česa risati: prazen okvir grafa z legendo je videti kot pokvarjena stran.
+      potek.hidden = true;
       return;
     }
+    potek.hidden = false;
     $('ik-glavna-oznaka').textContent = izid.oznaka;
     $('ik-glavna').textContent = izid.odgovor;
     $('ik-opomba').textContent = izid.opomba;
