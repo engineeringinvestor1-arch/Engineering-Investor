@@ -1,6 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#FCFAF5"/>
-  <rect x="0.5" y="0.5" width="31" height="31" rx="5.5" fill="none" stroke="#1A1A1A" stroke-opacity="0.14"/>
+  <style>
+    /* Ikona sledi temi brskalnika, enako kot znak na strani. */
+    :root { --plate: #FCFAF5; --ink: #2563EB; --edge: rgba(26, 26, 26, 0.14); }
+    @media (prefers-color-scheme: dark) {
+      :root { --plate: #181818; --ink: #3B82F6; --edge: rgba(255, 255, 255, 0.18); }
+    }
+  </style>
+  <rect width="32" height="32" rx="6" style="fill: var(--plate)"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="5.5" style="fill: none; stroke: var(--edge)"/>
   <text x="50%" y="52%" dominant-baseline="central" text-anchor="middle"
-    font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#2563EB">EI</text>
+    font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700" style="fill: var(--ink)">EI</text>
 </svg>
