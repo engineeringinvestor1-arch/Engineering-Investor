@@ -1,0 +1,545 @@
+---
+// Kalkulator pričakovanega donosa (avtor, 21. 9. 2026): nadomešča kalkulator vrednotenja.
+// 22. 9. 2026: "zdi se mi preveč zapleten" -> osnovni kalkulator (ena ocena, 5 let, kot Qualtrim/Carlson)
+// in napredni s tremi scenariji kot spustni del, ki ob odprtju prevzame številke iz osnovnega.
+// Račun je v src/lib/pricakovani-donos.ts. Primer ob odprtju je izmišljeno podjetje z okroglimi
+// številkami, da stran ne kaže zastarelih podatkov o resničnem podjetju brez vira.
+const scenariji = [
+  { ime: 'Slab', rast: 4, pe: 14 },
+  { ime: 'Osnovni', rast: 8, pe: 18 },
+  { ime: 'Dober', rast: 12, pe: 22 },
+];
+---
+
+<div class="kd">
+  <header class="kd__header">
+    <h1 class="kd__title">Kalkulator pričakovanega donosa</h1>
+    <p class="kd__lead">
+      Vpiši ceno, dobiček in svojo oceno rasti. Kalkulator pove, kakšen letni donos lahko pričakuješ
+      in koliko bi smel plačati za donos, ki ga želiš.
+    </p>
+  </header>
+
+  <section class="kd__panel kb" aria-label="Osnovni kalkulator">
+    <form class="kb__form" id="kb-form" novalidate>
+      <p class="kd__h">Podjetje in tvoja ocena</p>
+      <label class="kd__field">
+        <span class="kd__label">Cena delnice</span>
+        <input class="kd__num" type="text" inputmode="decimal" id="kb-cena" value="100" autocomplete="off" />
+      </label>
+      <label class="kd__field">
+        <span class="kd__label">Dobiček na delnico<small>zadnjih 12 mesecev (EPS TTM)</small></span>
+        <input class="kd__num" type="text" inputmode="decimal" id="kb-eps" value="5" autocomplete="off" />
+      </label>
+      <label class="kd__field">
+        <span class="kd__label">Rast dobička na leto<small>tvoja ocena za 5 let</small></span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="kb-rast" value="8" autocomplete="off" /><span class="kd__unit">%</span></span>
+      </label>
+      <label class="kd__field">
+        <span class="kd__label">P/E čez 5 let<small>današnji: <strong id="kb-pe-danes">–</strong></small></span>
+        <input class="kd__num" type="text" inputmode="decimal" id="kb-pe" value="18" autocomplete="off" />
+      </label>
+      <label class="kd__field">
+        <span class="kd__label">Želeni letni donos</span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="kb-donos" value="10" autocomplete="off" /><span class="kd__unit">%</span></span>
+      </label>
+    </form>
+
+    <div class="kb__out" aria-live="polite">
+      <p class="kd__h kb__out-h">Izid</p>
+      <div class="kb__kpis">
+        <div class="kb__kpi"><span class="kb__kpi-label">Pričakovani donos</span><span class="kb__kpi-value" id="kb-izid">–</span><span class="kb__kpi-hint">na leto</span></div>
+        <div class="kb__kpi"><span class="kb__kpi-label" id="kb-najvec-label">Najvišja cena za 10 %</span><span class="kb__kpi-value" id="kb-najvec">–</span><span class="kb__kpi-hint">danes</span></div>
+        <div class="kb__kpi"><span class="kb__kpi-label">Cena čez 5 let</span><span class="kb__kpi-value" id="kb-konec">–</span><span class="kb__kpi-hint">po tvoji oceni</span></div>
+      </div>
+      <p class="kb__verdict" id="kb-verdict"></p>
+      <div id="kb-warn"></div>
+      <div class="kd__chart kb__chart" id="kb-chart"></div>
+    </div>
+  </section>
+
+  <details class="kd__more kd__adv" id="kd-adv">
+    <summary>
+      <span class="kd__sum-title">Napredni kalkulator</span>
+      <span class="kd__sum-sub">Trije scenariji, poljubno obdobje, kolikšno rast predvideva cena in od kod pride donos</span>
+    </summary>
+    <div class="kd__more-body">
+      <p class="kd__adv-lead">
+        Ob odprtju prevzame številke iz osnovnega kalkulatorja. Slab in dober scenarij sta predlog iz tvoje ocene
+        (rast za polovico nižja ali višja, P/E za 20 % nižji ali višji); spremeni ju po svoje.
+        <button type="button" class="kd__link" id="kd-prevzemi">Prevzemi znova iz osnovnega</button>
+      </p>
+
+      <div class="kd__grid">
+        <form class="kd__panel kd__inputs" id="kd-form" novalidate>
+          <fieldset>
+            <legend class="kd__h">Podjetje danes</legend>
+            <label class="kd__field">
+              <span class="kd__label">Cena delnice</span>
+              <input class="kd__num" type="text" inputmode="decimal" id="kd-cena" value="100" autocomplete="off" />
+            </label>
+            <label class="kd__field">
+              <span class="kd__label">Dobiček na delnico<small>zadnjih 12 mesecev (EPS TTM), v isti valuti kot cena</small></span>
+              <input class="kd__num" type="text" inputmode="decimal" id="kd-eps" value="5" autocomplete="off" />
+            </label>
+            <p class="kd__derived">Današnji P/E: <strong id="kd-pe-danes">–</strong></p>
+          </fieldset>
+
+          <fieldset>
+            <legend class="kd__h">Tvoj cilj</legend>
+            <label class="kd__field">
+              <span class="kd__label">Želeni letni donos</span>
+              <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="kd-donos" value="10" autocomplete="off" /><span class="kd__unit">%</span></span>
+            </label>
+            <label class="kd__field">
+              <span class="kd__label">Obdobje</span>
+              <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="numeric" id="kd-leta" value="5" autocomplete="off" /><span class="kd__unit">let</span></span>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend class="kd__h">Scenariji</legend>
+            <div class="kd__scen">
+              <span></span>
+              {scenariji.map((s) => <span class="kd__scen-h">{s.ime}</span>)}
+              <span class="kd__scen-l">Rast dobička na leto (%)</span>
+              {scenariji.map((s, i) => (
+                <input class="kd__num" type="text" inputmode="decimal" data-s={i} data-k="rast" value={s.rast} aria-label={`${s.ime} scenarij: rast dobička na leto v odstotkih`} autocomplete="off" />
+              ))}
+              <span class="kd__scen-l">P/E ob koncu obdobja</span>
+              {scenariji.map((s, i) => (
+                <input class="kd__num" type="text" inputmode="decimal" data-s={i} data-k="pe" value={s.pe} aria-label={`${s.ime} scenarij: P/E ob koncu obdobja`} autocomplete="off" />
+              ))}
+            </div>
+            <p class="kd__hint">P/E ob koncu je največji vzvod v izračunu. Primerjaj ga z današnjim.</p>
+          </fieldset>
+        </form>
+
+        <section class="kd__panel kd__results" aria-live="polite" aria-label="Izid naprednega kalkulatorja">
+          <p class="kd__headline" id="kd-headline"></p>
+          <table class="kd__table">
+            <thead>
+              <tr>
+                <th scope="col">Scenarij</th>
+                <th scope="col" id="kd-th-cena">Cena čez 5 let</th>
+                <th scope="col">Letni donos</th>
+                <th scope="col" id="kd-th-najvec">Najvišja cena za 10 %</th>
+              </tr>
+            </thead>
+            <tbody id="kd-rows"></tbody>
+          </table>
+          <div id="kd-notes" class="kd__notes"></div>
+        </section>
+      </div>
+
+      <section class="kd__panel kd__chart-panel">
+        <h2 class="kd__h">Cena v treh scenarijih</h2>
+        <div class="kd__chart" id="kd-chart"></div>
+        <p class="kd__caption">
+          Pas kaže razpon med slabim in dobrim scenarijem. Pot med danes in koncem obdobja je ponazoritev
+          z enakomernim letnim donosom; kalkulator računa samo ceno na začetku in na koncu.
+        </p>
+      </section>
+    </div>
+  </details>
+
+  <details class="kd__more">
+    <summary>
+      <span class="kd__sum-title">Kako kalkulator računa in česa ne upošteva</span>
+    </summary>
+    <div class="kd__more-body kd__explain">
+      <ol>
+        <li><strong>Dobiček čez N let</strong> = današnji dobiček × (1 + rast)<sup>N</sup></li>
+        <li><strong>Cena čez N let</strong> = dobiček čez N let × P/E ob koncu obdobja</li>
+        <li><strong>Letni donos</strong> = (cena čez N let ÷ današnja cena)<sup>1/N</sup> − 1</li>
+        <li><strong>Najvišja cena za želeni donos</strong> = cena čez N let ÷ (1 + želeni donos)<sup>N</sup></li>
+      </ol>
+      <p>
+        Donos ima dva vira: rast dobička in spremembo P/E. Če je P/E ob koncu višji od današnjega, del donosa
+        pride iz tega, da bo trg za isti dobiček plačal več. Na to se zanašati je bolj tvegano kot na rast.
+      </p>
+      <p><strong>Česa ne upošteva:</strong></p>
+      <ul>
+        <li><strong>Dividend.</strong> Donos je samo sprememba cene.</li>
+        <li><strong>Da rast stane.</strong> Podjetje mora za rast vlagati. Visoka rast pri nizki donosnosti vloženega kapitala je vredna manj, kot kaže izračun.</li>
+        <li><strong>Enkratnih učinkov.</strong> Če je bil dobiček zadnjih 12 mesecev izjemen (enkratni prihodek, odpis, davčna postavka), je izhodišče napačno.</li>
+      </ul>
+    </div>
+  </details>
+
+  <p class="kd__note">
+    Izobraževalni pripomoček. Izid je toliko dober, kolikor so dobre tvoje predpostavke, in ni finančni nasvet.
+  </p>
+</div>
+
+<style is:global>
+  .kd {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md) var(--space-3xl);
+    font-variant-numeric: tabular-nums;
+  }
+  .kd__header { margin-bottom: var(--space-lg); max-width: 680px; }
+  .kd__title { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.02em; margin-bottom: var(--space-sm); }
+  .kd__lead { color: var(--color-text-muted); line-height: 1.6; }
+
+  .kd__panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); }
+  .kd__h { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--space-md); padding: 0; }
+
+  /* Polja: oznaka levo, vnos desno */
+  .kd__field { display: grid; grid-template-columns: minmax(0, 1fr) 7.5rem; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm); }
+  .kd__label { font-size: var(--text-sm); color: var(--color-text); line-height: 1.35; }
+  .kd__label small { display: block; font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 2px; }
+  .kd__label small strong { color: var(--color-text); font-weight: 600; }
+  .kd__num {
+    width: 100%; font-family: var(--font-sans); font-size: var(--text-sm); font-weight: 600; text-align: right;
+    font-variant-numeric: tabular-nums; color: var(--color-text); background: var(--color-bg);
+    border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.5rem 0.6rem;
+  }
+  .kd__num:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-bg); }
+  .kd__num[aria-invalid="true"] { border-color: var(--color-warning); }
+  .kd__with-unit { position: relative; display: block; }
+  .kd__with-unit .kd__num { padding-right: 2.4rem; }
+  .kd__unit { position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%); font-size: var(--text-xs); color: var(--color-text-muted); pointer-events: none; }
+  @media (max-width: 420px) { .kd__field { grid-template-columns: minmax(0, 1fr) 6.5rem; } }
+
+  /* Osnovni kalkulator */
+  .kb { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-xl); align-items: start; }
+  @media (max-width: 860px) { .kb { grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); } }
+  /* Izid v slogu tabele ključnih številk: tanke črte, brez okvirjev, velike številke, male pisane oznake. */
+  .kb__out-h { margin-bottom: 0.4rem; }
+  .kb__kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-bottom: var(--space-md); border-top: 1px solid var(--color-border-strong); border-bottom: 1px solid var(--color-border); }
+  .kb__kpi { display: flex; flex-direction: column; gap: 1px; padding: 0.7rem 0.9rem 0.75rem 0; border-right: 1px solid var(--color-border); }
+  .kb__kpi + .kb__kpi { padding-left: 0.9rem; }
+  .kb__kpi:last-child { border-right: 0; padding-right: 0; }
+  /* Dve vrstici prostora za oznako, da so številke v vseh treh stolpcih v isti višini. */
+  .kb__kpi-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); line-height: 1.3; min-height: 2.6em; }
+  .kb__kpi-value { font-size: var(--text-2xl); font-weight: 700; letter-spacing: -0.015em; color: var(--color-text); }
+  .kb__kpi-hint { font-size: var(--text-xs); color: var(--color-text-subtle); }
+  /* Na ozkem zaslonu vrstice: oznaka in pojasnilo levo, številka desno (sicer tretji podatek obvisi sam). */
+  @media (max-width: 520px) {
+    .kb__kpis { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .kb__kpi, .kb__kpi + .kb__kpi { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'label value' 'hint value'; align-items: center; column-gap: var(--space-md); padding: 0.55rem 0; border-right: 0; border-bottom: 1px solid var(--color-border); }
+    .kb__kpi:last-child { border-bottom: 0; }
+    .kb__kpi-label { grid-area: label; min-height: 0; }
+    .kb__kpi-hint { grid-area: hint; }
+    .kb__kpi-value { grid-area: value; font-size: var(--text-xl); }
+  }
+  .kb__verdict { font-size: var(--text-sm); line-height: 1.55; color: var(--color-text); margin-bottom: var(--space-sm); }
+  .kb__chart { margin-top: var(--space-sm); min-height: 220px; }
+
+  /* Spustna dela */
+  .kd__more { margin-top: var(--space-lg); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+  .kd__more > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'naslov puscica' 'pod puscica'; column-gap: var(--space-md); padding: var(--space-md) var(--space-lg); }
+  .kd__more > summary::-webkit-details-marker { display: none; }
+  .kd__more > summary::after { content: ''; grid-area: puscica; align-self: center; width: 0.55rem; height: 0.55rem; border-right: 2px solid var(--color-text-muted); border-bottom: 2px solid var(--color-text-muted); transform: rotate(45deg); transition: transform var(--transition-fast, 0.15s); margin-right: 0.2rem; }
+  .kd__more[open] > summary::after { transform: rotate(-135deg); }
+  .kd__more > summary:hover .kd__sum-title { color: var(--color-accent); }
+  .kd__more > summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: var(--radius-lg); }
+  .kd__sum-title { grid-area: naslov; font-weight: 600; color: var(--color-text); }
+  .kd__sum-sub { grid-area: pod; font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 2px; }
+  .kd__more-body { padding: 0 var(--space-lg) var(--space-lg); }
+  .kd__adv .kd__panel { background: var(--color-bg); }
+  .kd__adv .kd__num { background: var(--color-surface); }
+  .kd__adv-lead { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.55; margin-bottom: var(--space-md); }
+  .kd__link { font: inherit; color: var(--color-accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+  /* Napredni kalkulator */
+  .kd__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-lg); margin-bottom: var(--space-lg); }
+  @media (max-width: 860px) { .kd__grid { grid-template-columns: minmax(0, 1fr); } }
+  .kd__inputs fieldset { border: 0; margin: 0 0 var(--space-lg); padding: 0; min-width: 0; }
+  .kd__inputs fieldset:last-child { margin-bottom: 0; }
+  .kd__derived { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-sm); }
+  .kd__derived strong { color: var(--color-text); }
+  .kd__scen { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, 4.6rem); gap: var(--space-sm); align-items: center; }
+  .kd__scen-h { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); text-align: right; padding-right: 0.6rem; }
+  .kd__scen-l { font-size: var(--text-sm); color: var(--color-text); line-height: 1.35; }
+  .kd__hint { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-sm); }
+  @media (max-width: 420px) { .kd__scen { grid-template-columns: minmax(0, 1fr) repeat(3, 3.9rem); } }
+
+  .kd__headline { font-size: var(--text-lg); line-height: 1.5; color: var(--color-text); margin-bottom: var(--space-md); }
+  .kd__headline strong { font-weight: 700; }
+  .kd__table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin-bottom: var(--space-md); }
+  .kd__table th { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); text-align: right; padding: 0 0.5rem 0.5rem; border-bottom: 1px solid var(--color-border-strong); }
+  .kd__table th:first-child, .kd__table td:first-child { text-align: left; padding-left: 0; }
+  .kd__table td { text-align: right; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--color-border); color: var(--color-text); white-space: nowrap; }
+  .kd__table td:last-child, .kd__table th:last-child { padding-right: 0; }
+  .kd__table tr.kd__base td { font-weight: 600; }
+  @media (max-width: 420px) { .kd__table th, .kd__table td { padding-left: 0.3rem; padding-right: 0.3rem; } .kd__table th { letter-spacing: 0.02em; } }
+  .kd__notes { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .kd__insight, .kd__warn { font-size: var(--text-sm); line-height: 1.55; padding: 0.7rem 0.9rem; border-radius: var(--radius-md); }
+  .kd__insight { background: var(--color-accent-bg); border: 1px solid var(--color-accent-border); color: var(--color-text); }
+  .kd__warn { display: flex; gap: 0.6rem; background: var(--color-highlight-bg); border: 1px solid var(--color-highlight-border); color: var(--color-text); }
+  .kd__warn-icon { flex: none; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--color-warning); color: #fff; font-weight: 700; font-size: 0.75rem; display: inline-flex; align-items: center; justify-content: center; margin-top: 0.1rem; }
+  .kd__error { color: var(--color-text); font-size: var(--text-sm); }
+
+  .kd__chart { position: relative; width: 100%; min-height: 240px; }
+  .kd__chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .kd__chart text { font-family: var(--font-sans); }
+  .kd__tip {
+    position: absolute; pointer-events: none; background: var(--color-surface); border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm); padding: 0.45rem 0.6rem; font-size: var(--text-xs); line-height: 1.5; color: var(--color-text);
+    box-shadow: var(--shadow-md); white-space: nowrap; display: none; z-index: 2;
+  }
+  .kd__tip strong { display: block; margin-bottom: 0.15rem; }
+  .kd__tip span { display: flex; justify-content: space-between; gap: 1rem; }
+  .kd__caption { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-sm); line-height: 1.5; }
+
+  .kd__explain { max-width: 720px; color: var(--color-text-muted); font-size: var(--text-sm); line-height: 1.7; }
+  .kd__explain ol, .kd__explain ul { padding-left: var(--space-lg); margin-bottom: var(--space-md); }
+  .kd__explain ol { list-style: decimal; } .kd__explain ul { list-style: disc; }
+  .kd__explain li { margin-bottom: 0.35rem; }
+  .kd__explain p { margin-bottom: var(--space-sm); }
+  .kd__explain strong { color: var(--color-text); font-weight: 600; }
+  .kd__note { margin-top: var(--space-lg); font-size: var(--text-xs); color: var(--color-text-muted); }
+</style>
+
+<script>
+  import { fmt, fmtPct, fmtVnos, izracun, let_, napaka, pctVnos, pot, potrebnaRast, peDanes, type Scenarij } from '../../lib/pricakovani-donos';
+
+  const IMENA = ['Slab', 'Osnovni', 'Dober'];
+  const LETA_OSNOVNI = 5;
+  const $ = (id: string) => document.getElementById(id)!;
+  const val = (id: string) => parse(($(id) as HTMLInputElement).value);
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Sprejme "12,5", "12.5" in "1.234,5". Vejica je decimalna; če je ni, je pika decimalna.
+  function parse(raw: string): number {
+    const t = raw.trim().replace(/\s/g, '');
+    if (!t) return Number.NaN;
+    const n = t.includes(',') ? t.replace(/\./g, '').replace(',', '.') : t;
+    return /^[-+]?\d*\.?\d+$/.test(n) ? Number(n) : Number.NaN;
+  }
+
+  function oznaciNeveljavne(formId: string) {
+    document.querySelectorAll<HTMLInputElement>(`#${formId} .kd__num`).forEach((el) => {
+      el.setAttribute('aria-invalid', String(Number.isNaN(parse(el.value))));
+    });
+  }
+
+  const opozoriloPe = (pe: number, danes: number, leta: string) =>
+    `<p class="kd__warn"><span class="kd__warn-icon" aria-hidden="true">!</span><span><strong>P/E čez ${leta} (${fmtVnos(pe)}) je višji od današnjega (${fmt(danes, 1)}).</strong> Del donosa predvideva, da bo trg za isti dobiček plačal več kot danes, ne da bo podjetje zraslo.</span></p>`;
+
+  // ---------- osnovni kalkulator ----------
+
+  function izrisiOsnovni() {
+    oznaciNeveljavne('kb-form');
+    const p = { cena: val('kb-cena'), eps: val('kb-eps') };
+    const c = { donos: val('kb-donos') / 100, leta: LETA_OSNOVNI };
+    const s: Scenarij = { rast: val('kb-rast') / 100, pe: val('kb-pe') };
+    $('kb-pe-danes').textContent = p.cena > 0 && p.eps > 0 ? fmt(peDanes(p), 1) : '–';
+    const err = napaka(p, c, [s]);
+    if (err) {
+      ['kb-izid', 'kb-najvec', 'kb-konec'].forEach((id) => { $(id).textContent = '–'; });
+      $('kb-verdict').innerHTML = `<span class="kd__error">${esc(err)}</span>`;
+      $('kb-warn').innerHTML = '';
+      $('kb-chart').innerHTML = '';
+      return;
+    }
+    const r = izracun(p, c, s);
+    $('kb-izid').textContent = fmtPct(r.letniDonos, 1, true);
+    $('kb-najvec-label').textContent = `Najvišja cena za ${pctVnos(c.donos)}`;
+    $('kb-najvec').textContent = fmt(r.najvisjaCena);
+    $('kb-konec').textContent = fmt(r.cenaKonec);
+    $('kb-verdict').innerHTML = r.letniDonos >= c.donos
+      ? `Po tej oceni <strong>dosežeš svoj cilj ${pctVnos(c.donos)}</strong>: današnja cena ${fmt(p.cena)} je pod najvišjo ceno ${fmt(r.najvisjaCena)}.`
+      : `Po tej oceni <strong>ne dosežeš cilja ${pctVnos(c.donos)}</strong>: zanj bi smel plačati največ ${fmt(r.najvisjaCena)}, danes pa delnica stane ${fmt(p.cena)}.`;
+    $('kb-warn').innerHTML = s.pe > peDanes(p) ? opozoriloPe(s.pe, peDanes(p), let_(LETA_OSNOVNI)) : '';
+    graf('kb-chart', p, c, [{ ime: 'Cena', s }]);
+  }
+
+  // ---------- napredni kalkulator ----------
+
+  const adv = $('kd-adv') as HTMLDetailsElement;
+
+  function preberiNapredni() {
+    const scen: Scenarij[] = [0, 1, 2].map((i) => ({
+      rast: parse(document.querySelector<HTMLInputElement>(`[data-s="${i}"][data-k="rast"]`)!.value) / 100,
+      pe: parse(document.querySelector<HTMLInputElement>(`[data-s="${i}"][data-k="pe"]`)!.value),
+    }));
+    return { p: { cena: val('kd-cena'), eps: val('kd-eps') }, c: { donos: val('kd-donos') / 100, leta: val('kd-leta') }, scen };
+  }
+
+  // Iz osnovne ocene: slab in dober za polovico rasti nižje/višje (vsaj 2 točki), P/E za 20 % nižji/višji.
+  function prevzemi() {
+    const set = (el: HTMLInputElement | null, v: string) => { if (el) el.value = v; };
+    for (const k of ['cena', 'eps', 'donos']) set($(`kd-${k}`) as HTMLInputElement, ($(`kb-${k}`) as HTMLInputElement).value);
+    set($('kd-leta') as HTMLInputElement, String(LETA_OSNOVNI));
+    const rast = val('kb-rast'), pe = val('kb-pe');
+    if (!Number.isFinite(rast) || !Number.isFinite(pe)) return;
+    const r05 = (v: number) => Math.round(v * 2) / 2;
+    const razmik = Math.max(2, Math.abs(rast) / 2);
+    const vrednosti = [[r05(rast - razmik), Math.round(pe * 0.8)], [rast, pe], [r05(rast + razmik), Math.round(pe * 1.2)]];
+    vrednosti.forEach(([ra, p], i) => {
+      set(document.querySelector<HTMLInputElement>(`[data-s="${i}"][data-k="rast"]`), fmtVnos(ra));
+      set(document.querySelector<HTMLInputElement>(`[data-s="${i}"][data-k="pe"]`), fmtVnos(p));
+    });
+  }
+
+  function izrisiNapredni() {
+    if (!adv.open) return;
+    oznaciNeveljavne('kd-form');
+    const { p, c, scen } = preberiNapredni();
+    const err = napaka(p, c, scen);
+    $('kd-pe-danes').textContent = p.cena > 0 && p.eps > 0 ? fmt(peDanes(p), 1) : '–';
+    if (err) {
+      $('kd-headline').innerHTML = `<span class="kd__error">${esc(err)}</span>`;
+      $('kd-rows').innerHTML = '';
+      $('kd-notes').innerHTML = '';
+      $('kd-chart').innerHTML = '';
+      return;
+    }
+    const izidi = scen.map((s) => izracun(p, c, s));
+    const leta = let_(c.leta);
+    $('kd-th-cena').textContent = `Cena čez ${leta}`;
+    $('kd-th-najvec').textContent = `Najvišja cena za ${pctVnos(c.donos)}`;
+
+    const donosi = izidi.map((r) => r.letniDonos);
+    const lo = Math.min(...donosi), hi = Math.max(...donosi);
+    $('kd-headline').innerHTML = `Pri ceni <strong>${fmt(p.cena)}</strong> lahko po teh predpostavkah pričakuješ od <strong>${fmtPct(lo)}</strong> do <strong>${fmtPct(hi)}</strong> na leto; osnovni scenarij <strong>${fmtPct(izidi[1].letniDonos)}</strong>.`;
+
+    $('kd-rows').innerHTML = izidi.map((r, i) => `<tr class="${i === 1 ? 'kd__base' : ''}">
+      <td>${IMENA[i]}</td><td>${fmt(r.cenaKonec)}</td><td>${fmtPct(r.letniDonos, 1, true)}</td><td>${fmt(r.najvisjaCena)}</td></tr>`).join('');
+
+    // Obratni izračun, razčlenitev donosa in opozorilo o P/E ob koncu.
+    const base = scen[1], rb = izidi[1];
+    const potrebna = potrebnaRast(p, c, base.pe);
+    const notes: string[] = [];
+    notes.push(`<p class="kd__insight">Za <strong>${pctVnos(c.donos)}</strong> na leto bi moral dobiček rasti <strong>${fmtPct(potrebna)}</strong> na leto, če bo P/E čez ${leta} ${fmtVnos(base.pe)}. V osnovnem scenariju računaš z ${pctVnos(base.rast)}.</p>`);
+    const smer = rb.izPe >= 0 ? 'višjega' : 'nižjega';
+    notes.push(`<p class="kd__insight">Osnovni scenarij: ${fmtPct(rb.izRasti, 1, true)} na leto iz rasti dobička, ${fmtPct(rb.izPe, 1, true)} iz ${smer} P/E (${fmt(peDanes(p), 1)} danes, ${fmtVnos(base.pe)} ob koncu).</p>`);
+    const visji = scen.map((s, i) => ({ s, i })).filter(({ s }) => s.pe > peDanes(p));
+    if (visji.length) {
+      const kje = visji.map(({ s, i }) => `${IMENA[i].toLowerCase()} (${fmtVnos(s.pe)})`).join(', ');
+      notes.push(`<p class="kd__warn"><span class="kd__warn-icon" aria-hidden="true">!</span><span><strong>Višji P/E od današnjega</strong> v scenariju: ${kje}. Predvidevaš, da bo trg čez ${leta} za isti dobiček plačal več kot danes (${fmt(peDanes(p), 1)}). Ta del donosa ne pride iz rasti podjetja.</span></p>`);
+    }
+    $('kd-notes').innerHTML = notes.join('');
+
+    graf('kd-chart', p, c, scen.map((s, i) => ({ ime: IMENA[i], s })));
+  }
+
+  // ---------- graf ----------
+  // Ena serija (osnovni) ali tri (napredni: slab, osnovni, dober s pasom). En odtenek: identiteta je razpon.
+
+  function niceStep(span: number, target = 4) {
+    const raw = span / target;
+    const mag = 10 ** Math.floor(Math.log10(raw));
+    const n = raw / mag;
+    return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * mag;
+  }
+
+  function graf(boxId: string, p: { cena: number; eps: number }, c: { donos: number; leta: number }, serije: { ime: string; s: Scenarij }[]) {
+    const box = $(boxId);
+    if (!box.clientWidth) return;
+    const W = Math.max(280, box.clientWidth);
+    const H = W < 520 ? 220 : 260;
+    const pas = serije.length === 3;
+    const m = { l: 50, r: W < 520 ? 80 : 104, t: 14, b: 30 };
+    const poti = serije.map(({ s }) => pot(p, c, s));
+    const konci = poti.map((v) => v[c.leta]);
+    const vse = poti.flat();
+    const step = niceStep(Math.max(...vse) - Math.min(...vse) || p.cena);
+    const y0 = Math.floor(Math.min(...vse) / step) * step;
+    const y1 = Math.ceil(Math.max(...vse) / step) * step;
+    const x = (t: number) => m.l + (t / c.leta) * (W - m.l - m.r);
+    const y = (v: number) => H - m.b - ((v - y0) / (y1 - y0 || 1)) * (H - m.t - m.b);
+    const line = (vals: number[]) => vals.map((v, t) => `${t ? 'L' : 'M'}${x(t).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const dec = y1 >= 1000 ? 0 : step < 1 ? 2 : step < 10 ? 1 : 0;
+
+    const grid: string[] = [];
+    for (let v = y0; v <= y1 + step / 2; v += step) {
+      grid.push(`<line x1="${m.l}" x2="${W - m.r}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--color-border)" stroke-width="1"/>`);
+      grid.push(`<text x="${m.l - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" font-size="11" style="fill:var(--color-text-muted)">${fmt(v, dec)}</text>`);
+    }
+    const every = c.leta <= 10 ? 1 : 5;
+    const xt: string[] = [];
+    for (let t = 0; t <= c.leta; t++) {
+      if (t % every && t !== c.leta) continue;
+      const lbl = t === 0 ? 'danes' : t === c.leta ? let_(t) : String(t);
+      xt.push(`<text x="${x(t).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="11" style="fill:var(--color-text-muted)">${lbl}</text>`);
+    }
+
+    const glavna = pas ? 1 : 0;
+    let risba = '';
+    if (pas) {
+      const [slab, , dober] = poti;
+      const band = `${line(dober)} ${slab.map((v, t) => `L${x(c.leta - t).toFixed(1)},${y(slab[c.leta - t]).toFixed(1)}`).join(' ')} Z`;
+      const edge = 'style="stroke:var(--color-accent);opacity:.55" stroke-width="1.5" fill="none"';
+      risba += `<path d="${band}" style="fill:var(--color-accent);opacity:.10"/><path d="${line(slab)}" ${edge}/><path d="${line(dober)}" ${edge}/>`;
+    } else {
+      // Preliv pod edino črto, enako kot poteki v tabeli ključnih številk na strani.
+      const area = `${line(poti[0])} L${x(c.leta).toFixed(1)},${H - m.b} L${x(0).toFixed(1)},${H - m.b} Z`;
+      risba += `<defs><linearGradient id="${boxId}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--color-accent);stop-opacity:.20"/><stop offset="1" style="stop-color:var(--color-accent);stop-opacity:0"/></linearGradient></defs>`;
+      risba += `<path d="${area}" style="fill:url(#${boxId}-g)"/>`;
+    }
+    // Črtkana črta današnje cene: takoj se vidi, koliko nad njo (ali pod njo) se pot konča.
+    risba += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(p.cena).toFixed(1)}" y2="${y(p.cena).toFixed(1)}" style="stroke:var(--color-text-subtle)" stroke-width="1" stroke-dasharray="2 3"/>`;
+    risba += `<path d="${line(poti[glavna])}" style="stroke:var(--color-accent)" stroke-width="2.25" fill="none" stroke-linejoin="round"/>`;
+
+    const labels = konci.map((v, i) => ({ i, y: y(v), v })).sort((a, b) => a.y - b.y);
+    for (let k = 1; k < labels.length; k++) if (labels[k].y - labels[k - 1].y < 16) labels[k].y = labels[k - 1].y + 16;
+    const endLabels = labels.map((l) => `<text x="${(x(c.leta) + 10).toFixed(1)}" y="${(l.y + 4).toFixed(1)}" font-size="12" style="fill:var(--color-text-muted)">${pas ? `${serije[l.i].ime} ` : ''}<tspan font-weight="700" style="fill:var(--color-text)">${fmt(l.v, dec)}</tspan></text>`);
+
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${pas ? 'Cena delnice v treh scenarijih' : 'Cena delnice po tvoji oceni'} od danes do konca obdobja">
+      ${grid.join('')}${xt.join('')}${risba}
+      ${konci.map((v, i) => `<circle cx="${x(c.leta).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${i === glavna ? 4 : 3}" style="fill:var(--color-accent);stroke:var(--color-surface)" stroke-width="2"/>`).join('')}
+      <circle cx="${x(0).toFixed(1)}" cy="${y(p.cena).toFixed(1)}" r="4.5" style="fill:var(--color-text);stroke:var(--color-surface)" stroke-width="2"/>
+      ${endLabels.join('')}
+      <line class="kd-cross" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" style="stroke:var(--color-text-muted);display:none" stroke-width="1" stroke-dasharray="3 3"/>
+      <rect class="kd-hit" x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}" fill="transparent"/>
+    </svg><div class="kd__tip"></div>`;
+
+    const hit = box.querySelector<SVGRectElement>('.kd-hit')!;
+    const cross = box.querySelector<SVGLineElement>('.kd-cross')!;
+    const tip = box.querySelector<HTMLDivElement>('.kd__tip')!;
+    const svg = box.querySelector('svg')!;
+    const vrstni = pas ? [2, 1, 0] : [0];
+    const pokazi = (ev: PointerEvent) => {
+      const r = svg.getBoundingClientRect();
+      const px = ((ev.clientX - r.left) / r.width) * W;
+      const t = Math.max(0, Math.min(c.leta, Math.round(((px - m.l) / (W - m.l - m.r)) * c.leta)));
+      cross.setAttribute('x1', x(t).toFixed(1));
+      cross.setAttribute('x2', x(t).toFixed(1));
+      cross.style.display = '';
+      const naslov = t === 0 ? 'Danes' : `Čez ${let_(t)}`;
+      tip.innerHTML = `<strong>${naslov}</strong>${vrstni.map((i) => `<span>${serije[i].ime} <b>${fmt(poti[i][t], dec)}</b></span>`).join('')}`;
+      tip.style.display = 'block';
+      const left = (x(t) / W) * r.width;
+      tip.style.left = `${Math.min(left + 12, r.width - tip.offsetWidth - 4)}px`;
+      tip.style.top = `${m.t}px`;
+    };
+    hit.addEventListener('pointermove', pokazi);
+    hit.addEventListener('pointerdown', pokazi);
+    hit.addEventListener('pointerleave', () => { cross.style.display = 'none'; tip.style.display = 'none'; });
+  }
+
+  // ---------- dogodki ----------
+
+  let prevzeto = false;
+  $('kb-form').addEventListener('input', izrisiOsnovni);
+  $('kd-form').addEventListener('input', izrisiNapredni);
+  for (const id of ['kb-form', 'kd-form']) $(id).addEventListener('submit', (e) => e.preventDefault());
+  adv.addEventListener('toggle', () => {
+    if (!adv.open) return;
+    if (!prevzeto) { prevzemi(); prevzeto = true; }
+    izrisiNapredni();
+  });
+  $('kd-prevzemi').addEventListener('click', () => { prevzemi(); izrisiNapredni(); });
+
+  // Graf se izriše po dejanski širini, da je besedilo na telefonu berljivo; ob spremembi širine znova.
+  const sirine = new Map<string, number>();
+  new ResizeObserver((vnosi) => {
+    for (const v of vnosi) {
+      const id = (v.target as HTMLElement).id;
+      const w = (v.target as HTMLElement).clientWidth;
+      if (!w || Math.abs(w - (sirine.get(id) ?? 0)) <= 4) continue;
+      sirine.set(id, w);
+      if (id === 'kb-chart') izrisiOsnovni(); else izrisiNapredni();
+    }
+  }).observe($('kb-chart'));
+  new ResizeObserver(() => {
+    const w = $('kd-chart').clientWidth;
+    if (w && Math.abs(w - (sirine.get('kd-chart') ?? 0)) > 4) { sirine.set('kd-chart', w); izrisiNapredni(); }
+  }).observe($('kd-chart'));
+  izrisiOsnovni();
+</script>

@@ -1,11 +1,13 @@
 ---
+// Naslov strani ostane /kalkulator-vrednotenja, da delujejo obstoječe povezave in meni.
+// 22. 9. 2026: vsebino je prevzel kalkulator pričakovanega donosa (prej Mauboussin/McKinsey ciljni P/E).
 import BaseLayout from '../layouts/BaseLayout.astro';
-import VrednotenjeDelnic from '../components/calculators/VrednotenjeDelnic.astro';
+import PricakovaniDonos from '../components/calculators/PricakovaniDonos.astro';
 ---
 
 <BaseLayout
-  title="Kalkulator vrednotenja delnic"
-  description="Oceni pošteno vrednost delnice na podlagi P/E, ROIC, pričakovane rasti dobička in WACC - zvezna Mauboussin/McKinsey formula za ciljni P/E."
+  title="Kalkulator pričakovanega donosa"
+  description="Kakšen letni donos lahko pričakuješ po današnji ceni delnice in koliko bi smel plačati za želeni donos: rast dobička, P/E čez pet let in trije scenariji."
 >
-  <VrednotenjeDelnic />
+  <PricakovaniDonos />
 </BaseLayout>
