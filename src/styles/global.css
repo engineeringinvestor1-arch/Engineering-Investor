@@ -27,6 +27,13 @@
   --color-success: #059669;
   --color-warning: #D97706;
 
+  /* Znak EI: svetla ploskev z modrima crkama. Barve so namenoma stalne in se v temni temi
+     NE zamenjajo -- ce bi ploskev sledila temi, bi v temnem postala temna plosca z modrima
+     crkama, ki je pri 16 px (zavihek brskalnika) skoraj nevidna. Znak tako izgleda enako povsod. */
+  --brand-plate: #FCFAF5;
+  --brand-ink: #2563EB;
+  --brand-edge: rgba(26, 26, 26, 0.14);
+
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
