@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ei-chart" width="720" height="424" viewBox="0 0 720 424" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" role="img" aria-label="Prosti denarni tok Uberja po cetrtletjih">
+<style>
+  .ei-chart {
+    --ei-surface: var(--color-surface, #FCFAF5);
+    --ei-border: var(--color-border, #D8D3C5);
+    --ei-grid: var(--color-border, #E6E2D6);
+    --ei-ink: var(--color-text, #1A1A1A);
+    --ei-muted: var(--color-text-muted, #6B6B6B);
+    --ei-a: var(--chart-rise, #2a78d6);
+    --ei-b: var(--chart-vlozki, #0d9488);
+    --ei-c: var(--chart-obresti, #c4531d);
+    --ei-fall: var(--chart-fall, #e34948);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ei-chart {
+      --ei-surface: var(--color-surface, #181818);
+      --ei-border: var(--color-border, #2A2A2A);
+      --ei-grid: var(--color-border, #232323);
+      --ei-ink: var(--color-text, #F0F0EE);
+      --ei-muted: var(--color-text-muted, #888888);
+    }
+  }
+</style>
+<rect x="0.5" y="0.5" width="719" height="423" rx="10" style="fill:var(--ei-surface);stroke:var(--ei-border)"/>
+<text x="24" y="38" font-size="19" style="fill:var(--ei-ink)" font-weight="600">Uber: prosti denarni tok po četrtletjih</text>
+<text x="24" y="62" font-size="13.5" style="fill:var(--ei-muted)">V milijardah USD. Zadnjih dvanajst mesecev skupaj 10,12 mrd USD</text><line x1="52" x2="696" y1="346.0" y2="346.0" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="350.0" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">0</text><line x1="52" x2="696" y1="282.5" y2="282.5" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="286.5" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">1</text><line x1="52" x2="696" y1="219.0" y2="219.0" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="223.0" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">2</text><line x1="52" x2="696" y1="155.5" y2="155.5" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="159.5" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">3</text><line x1="52" x2="696" y1="92.0" y2="92.0" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="96.0" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">4</text><rect x="72.1" y="212.1" width="40.3" height="133.9" rx="3" style="fill:var(--ei-a)"/>
+      <text x="92.3" y="205.1" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,11</text>
+      <text x="92.3" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2024 Q3</text><rect x="152.6" y="237.7" width="40.3" height="108.3" rx="3" style="fill:var(--ei-a)"/>
+      <text x="172.8" y="230.7" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">1,71</text>
+      <text x="172.8" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2024 Q4</text><rect x="233.1" y="203.1" width="40.3" height="142.9" rx="3" style="fill:var(--ei-a)"/>
+      <text x="253.3" y="196.1" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,25</text>
+      <text x="253.3" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q1</text><rect x="313.6" y="188.8" width="40.3" height="157.2" rx="3" style="fill:var(--ei-a)"/>
+      <text x="333.8" y="181.8" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,48</text>
+      <text x="333.8" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q2</text><rect x="394.1" y="204.4" width="40.3" height="141.6" rx="3" style="fill:var(--ei-a)"/>
+      <text x="414.3" y="197.4" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,23</text>
+      <text x="414.3" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q3</text><rect x="474.6" y="167.7" width="40.3" height="178.3" rx="3" style="fill:var(--ei-a)"/>
+      <text x="494.8" y="160.7" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,81</text>
+      <text x="494.8" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q4</text><rect x="555.1" y="200.8" width="40.3" height="145.2" rx="3" style="fill:var(--ei-a)"/>
+      <text x="575.3" y="193.8" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,29</text>
+      <text x="575.3" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2026 Q1</text><rect x="635.6" y="168.7" width="40.3" height="177.3" rx="3" style="fill:var(--ei-a)"/>
+      <text x="655.8" y="161.7" font-size="11" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">2,79</text>
+      <text x="655.8" y="366" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2026 Q2</text><text x="24" y="390" font-size="11.5" style="fill:var(--ei-muted)">Prosti denarni tok = denar iz poslovanja minus nakupi opreme.</text><text x="24" y="408" font-size="11.5" style="fill:var(--ei-muted)">Vir: SEC, XBRL companyfacts (10-K in 10-Q), zajeto 23. 9. 2026.</text></svg>

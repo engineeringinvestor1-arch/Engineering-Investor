@@ -337,6 +337,12 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* Graf ima svoj okvir in ozadje, zato ne potrebuje obrobe kot slika, potrebuje pa zrak.
+   Brez tega se besedilo zacne tik pod grafom (avtor, 23. 9. 2026). */
+.prose figure.chart {
+  margin: var(--space-xl) 0;
+}
+
 /* Highlight box za ključne ugotovitve */
 .highlight-box {
   background: var(--color-highlight-bg);

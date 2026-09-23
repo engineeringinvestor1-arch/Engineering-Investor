@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ei-chart" width="720" height="440" viewBox="0 0 720 440" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" role="img" aria-label="Primerjava poslovnega in cistega izida Uberja po cetrtletjih">
+<style>
+  .ei-chart {
+    --ei-surface: var(--color-surface, #FCFAF5);
+    --ei-border: var(--color-border, #D8D3C5);
+    --ei-grid: var(--color-border, #E6E2D6);
+    --ei-ink: var(--color-text, #1A1A1A);
+    --ei-muted: var(--color-text-muted, #6B6B6B);
+    --ei-a: var(--chart-rise, #2a78d6);
+    --ei-b: var(--chart-vlozki, #0d9488);
+    --ei-c: var(--chart-obresti, #c4531d);
+    --ei-fall: var(--chart-fall, #e34948);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ei-chart {
+      --ei-surface: var(--color-surface, #181818);
+      --ei-border: var(--color-border, #2A2A2A);
+      --ei-grid: var(--color-border, #232323);
+      --ei-ink: var(--color-text, #F0F0EE);
+      --ei-muted: var(--color-text-muted, #888888);
+    }
+  }
+</style>
+<rect x="0.5" y="0.5" width="719" height="439" rx="10" style="fill:var(--ei-surface);stroke:var(--ei-border)"/>
+<text x="24" y="38" font-size="19" style="fill:var(--ei-ink)" font-weight="600">Zakaj čisti dobiček pri Uberju zavaja</text>
+<text x="24" y="62" font-size="13.5" style="fill:var(--ei-muted)">V milijardah USD. Poslovni izid je stabilen, čisti izid niha z davki in prevrednotenji naložb</text><rect x="24" y="77" width="11" height="11" rx="2.5" style="fill:var(--ei-b)"/><text x="41" y="86" font-size="12.5" style="fill:var(--ei-muted)">Poslovni izid</text><rect x="199" y="77" width="11" height="11" rx="2.5" style="fill:var(--ei-c)"/><text x="216" y="86" font-size="12.5" style="fill:var(--ei-muted)">Čisti izid</text><line x1="62" x2="696" y1="366.0" y2="366.0" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="52" y="370.0" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">0</text><line x1="62" x2="696" y1="301.5" y2="301.5" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="52" y="305.5" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">2</text><line x1="62" x2="696" y1="237.0" y2="237.0" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="52" y="241.0" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">4</text><line x1="62" x2="696" y1="172.5" y2="172.5" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="52" y="176.5" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">6</text><line x1="62" x2="696" y1="108.0" y2="108.0" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="52" y="112.0" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">8</text><rect x="75.3" y="331.8" width="25.4" height="34.2" rx="3" style="fill:var(--ei-b)"/><rect x="102.6" y="281.8" width="25.4" height="84.2" rx="3" style="fill:var(--ei-c)"/><text x="115.3" y="274.8" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">2,6</text>
+      <text x="101.6" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2024 Q3</text><rect x="154.5" y="341.2" width="25.4" height="24.8" rx="3" style="fill:var(--ei-b)"/><rect x="181.9" y="144.0" width="25.4" height="222.0" rx="3" style="fill:var(--ei-c)"/><text x="194.6" y="137.0" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">6,9</text>
+      <text x="180.9" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2024 Q4</text><rect x="233.8" y="326.4" width="25.4" height="39.6" rx="3" style="fill:var(--ei-b)"/><rect x="261.1" y="308.7" width="25.4" height="57.3" rx="3" style="fill:var(--ei-c)"/><text x="273.8" y="301.7" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">1,8</text>
+      <text x="260.1" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q1</text><rect x="313.0" y="319.2" width="25.4" height="46.8" rx="3" style="fill:var(--ei-b)"/><rect x="340.4" y="322.3" width="25.4" height="43.7" rx="3" style="fill:var(--ei-c)"/><text x="353.1" y="315.3" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">1,4</text>
+      <text x="339.4" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q2</text><rect x="392.3" y="330.1" width="25.4" height="35.9" rx="3" style="fill:var(--ei-b)"/><rect x="419.6" y="152.3" width="25.4" height="213.7" rx="3" style="fill:var(--ei-c)"/><text x="432.3" y="145.3" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">6,6</text>
+      <text x="418.6" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q3</text><rect x="471.5" y="308.8" width="25.4" height="57.2" rx="3" style="fill:var(--ei-b)"/><rect x="498.9" y="356.5" width="25.4" height="9.5" rx="3" style="fill:var(--ei-c)"/><text x="511.6" y="349.5" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">0,3</text>
+      <text x="497.9" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025 Q4</text><rect x="550.8" y="304.0" width="25.4" height="62.0" rx="3" style="fill:var(--ei-b)"/><rect x="578.1" y="357.5" width="25.4" height="8.5" rx="3" style="fill:var(--ei-c)"/><text x="590.8" y="350.5" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">0,3</text>
+      <text x="577.1" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2026 Q1</text><rect x="630.0" y="305.0" width="25.4" height="61.0" rx="3" style="fill:var(--ei-b)"/><rect x="657.4" y="288.8" width="25.4" height="77.2" rx="3" style="fill:var(--ei-c)"/><text x="670.1" y="281.8" font-size="10.5" text-anchor="middle" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">2,4</text>
+      <text x="656.4" y="386" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2026 Q2</text><line x1="194.6" y1="122.0" x2="194.6" y2="132.0" style="stroke:var(--ei-muted)" stroke-width="1"/>
+      <text x="194.6" y="116.0" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">davčno vračilo</text><line x1="432.3" y1="130.3" x2="432.3" y2="140.3" style="stroke:var(--ei-muted)" stroke-width="1"/>
+      <text x="432.3" y="124.3" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">davčno vračilo</text><text x="24" y="404" font-size="11.5" style="fill:var(--ei-muted)">Davčno vračilo namesto stroška: 2024 Q4: -6,00, 2025 Q3: -4,05 mrd USD. V Q2 2026 je 1,6 mrd prevrednotenja naložb.</text><text x="24" y="424" font-size="11.5" style="fill:var(--ei-muted)">Vir: SEC, XBRL companyfacts; sporočilo o rezultatih Q2 2026 (5. 8. 2026).</text></svg>
