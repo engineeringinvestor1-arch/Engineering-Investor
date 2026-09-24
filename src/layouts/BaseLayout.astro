@@ -50,6 +50,9 @@ const canonicalURL = new URL(Astro.url.pathname, SITE.url);
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- Vir RSS: brez te vrstice bralnik ne najde vira, če bralec prilepi samo naslov strani. -->
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: analize`} href="/rss.xml" />
+
     <!-- Theme: prevent flash -->
     <script is:inline>
       (function () {
