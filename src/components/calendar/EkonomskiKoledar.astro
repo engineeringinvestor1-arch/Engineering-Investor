@@ -15,7 +15,7 @@
     <div class="koledar__filters" id="koledar-filters" role="group" aria-label="Filtriraj dogodke">
       <button class="filter-btn filter-btn--active" data-filter="vsi">Vsi dogodki</button>
       <button class="filter-btn" data-filter="makro">Makro</button>
-      <button class="filter-btn" data-filter="zasluzki">Zaslužki</button>
+      <button class="filter-btn" data-filter="zasluzki">Rezultati</button>
     </div>
 
     <div class="koledar__views" id="koledar-views" role="group" aria-label="Način prikaza">
@@ -582,7 +582,7 @@
     const past = isPast(evt.date);
     const tickerBadge = badge(evt.ticker, 'region', 'cal-ticker');
     const usBadge = badge('🇺🇸 US', 'region');
-    const earningsBadge = badge('Zaslužki', 'earnings');
+    const earningsBadge = badge('Rezultati', 'earnings');
     const hasStats = evt.prevEps || evt.estEps;
     const actualBadge = evt.actualEps ? badge(`DEJANSKO: ${evt.actualEps}`, 'actual') : '';
     // Od 26. 9. 2026 se vpišejo samo datumi, ki jih je podjetje razpisalo, zato "okvirni datum" ne drži več.
