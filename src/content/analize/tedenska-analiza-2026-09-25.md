@@ -87,9 +87,9 @@ V četrtek in petek je pozornost preusmerjena na Micron pred objavo poslovnih re
 | Dan | Dogodek | Prejšnja vrednost | Zakaj je pomembno |
 |---|---|---|---|
 | torek, 29. 9., 16.00 | US JOLTS (avg 2026) | 7,27 mio prostih delovnih mest (jul 2026) | Povpraševanje po delavcih, zgodnji znak za gibanje zaposlovanja. |
-| sreda, 30. 9., 11.00 | EU CPI Flash (sep 2026) | - | Prva ocena inflacije v evrskem območju. |
 | sreda, 30. 9., 14.30 | US PCE (avg 2026) | 3,7 % medletno (jul 2026); jedrni 3,3 % | Merilo inflacije, ki ga Fed uporablja za svoj cilj. |
 | sreda, 30. 9., 14.30 | US GDP Q2 2026 (tretja ocena) | 1,5 % letna stopnja rasti (Q2 2026) | Rast gospodarstva v četrtletju. |
+| petek, 2. 10., 11.00 | EU CPI Flash (sep 2026) | - | Prva ocena inflacije v evrskem območju. |
 | petek, 2. 10., 14.30 | US NFP (sep 2026) | +162 tisoč delovnih mest (avg 2026); brezposelnost 4,1 % | Zaposlovanje in brezposelnost, eden od dveh ciljev Feda. |
 
 **Rezultati podjetij**
@@ -98,7 +98,7 @@ V četrtek in petek je pozornost preusmerjena na Micron pred objavo poslovnih re
 |---|---|---|---|
 | sreda, 30. 9., po zaprtju | Micron (MU) | 32,32 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 1,8 %. |
 
-*Ure so po slovenskem času. Od 5. 10. 2026 so med gospodarskimi podatki navedeni samo dogodki visoke pomembnosti. Viri: [koledar objav FRED](https://fred.stlouisfed.org/releases/calendar), [prejšnje vrednosti: FRED](https://fred.stlouisfed.org/), [rezultati podjetij: Finnhub](https://finnhub.io/), [sestava S&P 500: State Street](https://www.ssga.com/us/en/intermediary/library-content/products/fund-data/etfs/us/holdings-daily-us-en-spy.xlsx).*
+*Ure so po slovenskem času. Od 5. 10. 2026 so med gospodarskimi podatki navedeni samo dogodki visoke pomembnosti. Viri: [koledar objav FRED](https://fred.stlouisfed.org/releases/calendar), [prejšnje vrednosti: FRED](https://fred.stlouisfed.org/), [koledar objav Eurostat](https://ec.europa.eu/eurostat/news/release-calendar), [rezultati podjetij: Finnhub](https://finnhub.io/), [sestava S&P 500: State Street](https://www.ssga.com/us/en/intermediary/library-content/products/fund-data/etfs/us/holdings-daily-us-en-spy.xlsx).*
 
 ---
 

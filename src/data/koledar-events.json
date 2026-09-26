@@ -19,7 +19,7 @@
       "title": "US PPI (jun 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "previous": "6,0 % letno",
       "forecast": "6,2 % letno",
       "actual": "-0,3 % mesečno (pričakovano 0,0 %), 5,5 % letno; jedrni 0,2 % mesečno, 4,7 % letno"
@@ -31,28 +31,9 @@
       "title": "US maloprodaja (jun 2026)",
       "category": "Poraba",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "forecast": "+0,2 % mesečno",
       "actual": "+0,2 % mesečno; brez bencinskih servisov +0,7 %, kontrolna skupina +0,5 %"
-    },
-    {
-      "id": "eu-pmi-jul26",
-      "date": "2026-07-24",
-      "time": "10:00",
-      "title": "EU PMI Flash (jul 2026)",
-      "category": "PMI",
-      "region": "EU",
-      "importance": "MEDIUM"
-    },
-    {
-      "id": "us-pmi-jul26",
-      "date": "2026-07-24",
-      "time": "15:45",
-      "title": "US PMI Flash (jul 2026)",
-      "category": "PMI",
-      "region": "US",
-      "importance": "MEDIUM",
-      "actual": "Poslovna aktivnost je rasla najhitreje v osmih mesecih"
     },
     {
       "id": "ecb-jul26",
@@ -61,9 +42,28 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH",
+      "importance": "LOW",
       "previous": "2,25 %",
       "actual": "Depozitna mera nespremenjena pri 2,25 %, odločitev soglasna"
+    },
+    {
+      "id": "eu-pmi-jul26",
+      "date": "2026-07-24",
+      "time": "10:00",
+      "title": "EU PMI Flash (jul 2026)",
+      "category": "PMI",
+      "region": "EU",
+      "importance": "LOW"
+    },
+    {
+      "id": "us-pmi-jul26",
+      "date": "2026-07-24",
+      "time": "15:45",
+      "title": "US PMI Flash (jul 2026)",
+      "category": "PMI",
+      "region": "US",
+      "importance": "LOW",
+      "actual": "Poslovna aktivnost je rasla najhitreje v osmih mesecih"
     },
     {
       "id": "us-gdp-q2-26",
@@ -72,7 +72,7 @@
       "title": "US GDP Q2 2026 (advance)",
       "category": "GDP",
       "region": "US",
-      "importance": "HIGH",
+      "importance": "LOW",
       "forecast": "1,8 %",
       "actual": "1,5 % (anualizirano), pod pričakovanji; potrošnja je bila svetla točka"
     },
@@ -88,23 +88,23 @@
       "actual": "Nespremenjene pri 3,50-3,75 %, glasovanje 9:3 (trije za dvig)"
     },
     {
-      "id": "us-pce-jul26",
-      "date": "2026-07-30",
-      "time": "14:30",
-      "title": "US PCE (jun 2026)",
-      "category": "Inflacija",
-      "region": "US",
-      "importance": "HIGH",
-      "actual": "Skupni 3,7 % letno, jedrni 3,3 % letno; jedrni +0,1 % mesečno (pričakovano +0,2 %)"
-    },
-    {
       "id": "eu-cpi-jul26",
       "date": "2026-07-30",
       "time": "11:00",
       "title": "EU CPI Flash (jul 2026)",
       "category": "Inflacija",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
+    },
+    {
+      "id": "us-pce-jul26",
+      "date": "2026-07-30",
+      "time": "14:30",
+      "title": "US PCE (jun 2026)",
+      "category": "Inflacija",
+      "region": "US",
+      "importance": "LOW",
+      "actual": "Skupni 3,7 % letno, jedrni 3,3 % letno; jedrni +0,1 % mesečno (pričakovano +0,2 %)"
     },
     {
       "id": "us-ism-aug26",
@@ -113,7 +113,7 @@
       "title": "US ISM predelovalne dejavnosti (jul 2026)",
       "category": "PMI",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "actual": "Zaposlovanje 52,8 (najvišje od avgusta 2022), proizvodnja 58,5, cene 71,1"
     },
     {
@@ -123,7 +123,7 @@
       "title": "US ADP zaposlovanje (jul 2026)",
       "category": "Trg dela",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "forecast": "+75.000",
       "actual": "+44.000, pod pričakovanji; junij revidiran navzdol na 95.000"
     },
@@ -156,7 +156,7 @@
       "title": "US PPI (jul 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "previous": "5,5 % letno (junij)",
       "actual": "PPI 8,3 % letno"
     },
@@ -167,7 +167,7 @@
       "title": "US maloprodaja (jul 2026)",
       "category": "Poraba",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "previous": "+0,2 % mesečno (junij)",
       "actual": "−0,6 % mesečno"
     },
@@ -178,17 +178,7 @@
       "title": "EU PMI Flash (avg 2026)",
       "category": "PMI",
       "region": "EU",
-      "importance": "MEDIUM"
-    },
-    {
-      "id": "us-jackson26",
-      "date": "2026-08-27",
-      "time": "16:00",
-      "title": "Jackson Hole symposium (Fed)",
-      "category": "Centralna banka",
-      "region": "US",
-      "importance": "HIGH",
-      "actual": "Fed obrestna mera: 3,50-3,75 %"
+      "importance": "LOW"
     },
     {
       "id": "us-gdp-q2r-26",
@@ -197,9 +187,19 @@
       "title": "US GDP Q2 2026 (revizija)",
       "category": "GDP",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "previous": "1,5 % (prva objava)",
       "actual": "1,5 % (anualizirano)"
+    },
+    {
+      "id": "us-jackson26",
+      "date": "2026-08-27",
+      "time": "16:00",
+      "title": "Jackson Hole symposium (Fed)",
+      "category": "Centralna banka",
+      "region": "US",
+      "importance": "LOW",
+      "actual": "Fed obrestna mera: 3,50-3,75 %"
     },
     {
       "id": "eu-cpi-aug26",
@@ -208,7 +208,7 @@
       "title": "EU CPI Flash (avg 2026)",
       "category": "Inflacija",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     },
     {
       "id": "us-nfp-sep26",
@@ -227,7 +227,7 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     },
     {
       "id": "us-ppi-sep26",
@@ -236,7 +236,7 @@
       "title": "US PPI (avg 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "MEDIUM",
+      "importance": "LOW",
       "actual": "PPI 9,9 % letno"
     },
     {
@@ -266,26 +266,7 @@
       "title": "EU PMI Flash (sep 2026)",
       "category": "PMI",
       "region": "EU",
-      "importance": "MEDIUM"
-    },
-    {
-      "id": "us-jolts-sep26",
-      "date": "2026-09-29",
-      "time": "16:00",
-      "title": "US JOLTS (avg 2026)",
-      "category": "Trg dela",
-      "region": "US",
-      "importance": "MEDIUM",
-      "previous": "7,27 mio prostih delovnih mest (jul 2026)"
-    },
-    {
-      "id": "eu-cpi-sep26",
-      "date": "2026-09-30",
-      "time": "11:00",
-      "title": "EU CPI Flash (sep 2026)",
-      "category": "Inflacija",
-      "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     },
     {
       "id": "us-pce-sep26",
@@ -294,18 +275,26 @@
       "title": "US PCE (avg 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "HIGH",
+      "importance": "LOW",
       "previous": "3,7 % medletno (jul 2026); jedrni 3,3 %"
     },
     {
-      "id": "us-gdp-sep26",
-      "date": "2026-09-30",
-      "time": "14:30",
-      "title": "US GDP Q2 2026 (tretja ocena)",
-      "category": "GDP",
+      "id": "us-ism-oct26",
+      "date": "2026-10-01",
+      "title": "US ISM predelovalne dejavnosti (sep 2026)",
+      "time": "16:00",
+      "category": "PMI",
       "region": "US",
-      "importance": "HIGH",
-      "previous": "1,5 % letna stopnja rasti (Q2 2026)"
+      "importance": "LOW"
+    },
+    {
+      "id": "eu-cpi-sep26",
+      "date": "2026-10-02",
+      "time": "11:00",
+      "title": "EU CPI Flash (sep 2026)",
+      "category": "Inflacija",
+      "region": "EU",
+      "importance": "LOW"
     },
     {
       "id": "us-nfp-oct26",
@@ -326,15 +315,6 @@
       "importance": "HIGH"
     },
     {
-      "id": "us-ppi-oct26",
-      "date": "2026-10-15",
-      "time": "14:30",
-      "title": "US PPI (sep 2026)",
-      "category": "Inflacija",
-      "region": "US",
-      "importance": "MEDIUM"
-    },
-    {
       "id": "fomc-oct26",
       "date": "2026-10-28",
       "time": "20:00",
@@ -350,7 +330,16 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
+    },
+    {
+      "id": "us-ism-nov26",
+      "date": "2026-11-02",
+      "title": "US ISM predelovalne dejavnosti (okt 2026)",
+      "time": "16:00",
+      "category": "PMI",
+      "region": "US",
+      "importance": "LOW"
     },
     {
       "id": "us-nfp-nov26",
@@ -371,22 +360,22 @@
       "importance": "HIGH"
     },
     {
-      "id": "us-ppi-nov26",
-      "date": "2026-11-13",
-      "time": "14:30",
-      "title": "US PPI (okt 2026)",
-      "category": "Inflacija",
-      "region": "US",
-      "importance": "MEDIUM"
-    },
-    {
       "id": "us-pce-nov26",
       "date": "2026-11-25",
       "time": "14:30",
       "title": "US PCE (okt 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "LOW"
+    },
+    {
+      "id": "us-ism-dec26",
+      "date": "2026-12-01",
+      "title": "US ISM predelovalne dejavnosti (nov 2026)",
+      "time": "16:00",
+      "category": "PMI",
+      "region": "US",
+      "importance": "LOW"
     },
     {
       "id": "us-nfp-dec26",
@@ -416,28 +405,19 @@
       "importance": "HIGH"
     },
     {
-      "id": "us-ppi-dec26",
-      "date": "2026-12-15",
-      "time": "14:30",
-      "title": "US PPI (nov 2026)",
-      "category": "Inflacija",
-      "region": "US",
-      "importance": "MEDIUM"
-    },
-    {
       "id": "ecb-dec26",
       "date": "2026-12-17",
       "time": "14:15",
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     },
     {
       "id": "fomc-jan27",
       "date": "2027-01-27",
       "time": "20:00",
-      "title": "Seja FOMC - obrestne mere (okvirno)",
+      "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",
       "importance": "HIGH"
@@ -449,13 +429,13 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     },
     {
       "id": "fomc-mar27",
       "date": "2027-03-17",
       "time": "20:00",
-      "title": "Seja FOMC - obrestne mere (okvirno)",
+      "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",
       "importance": "HIGH"
@@ -467,13 +447,13 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     },
     {
       "id": "fomc-apr27",
       "date": "2027-04-28",
       "time": "20:00",
-      "title": "Seja FOMC - obrestne mere (okvirno)",
+      "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",
       "importance": "HIGH"
@@ -485,7 +465,7 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "HIGH"
+      "importance": "LOW"
     }
   ],
   "earnings": [
@@ -729,96 +709,6 @@
       "estEps": "2,45 USD"
     },
     {
-      "id": "tsla-q3-26",
-      "date": "2026-10-20",
-      "ticker": "TSLA",
-      "name": "Tesla",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "0,45 USD"
-    },
-    {
-      "id": "intc-q3-26",
-      "date": "2026-10-21",
-      "ticker": "INTC",
-      "name": "Intel",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "0,39 USD"
-    },
-    {
-      "id": "v-q4-26",
-      "date": "2026-10-26",
-      "ticker": "V",
-      "name": "Visa",
-      "when": "po zaprtju",
-      "quarter": 4,
-      "year": 2026,
-      "estEps": "3,50 USD"
-    },
-    {
-      "id": "msft-q1-27",
-      "date": "2026-10-27",
-      "ticker": "MSFT",
-      "name": "Microsoft",
-      "when": "ura ni znana",
-      "quarter": 1,
-      "year": 2027,
-      "estEps": "4,82 USD"
-    },
-    {
-      "id": "googl-q3-26",
-      "date": "2026-10-27",
-      "ticker": "GOOGL",
-      "name": "Alphabet",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "3,11 USD"
-    },
-    {
-      "id": "meta-q3-26",
-      "date": "2026-10-27",
-      "ticker": "META",
-      "name": "Meta Platforms",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "6,66 USD"
-    },
-    {
-      "id": "aapl-q4-26",
-      "date": "2026-10-28",
-      "ticker": "AAPL",
-      "name": "Apple",
-      "when": "po zaprtju",
-      "quarter": 4,
-      "year": 2026,
-      "estEps": "2,02 USD"
-    },
-    {
-      "id": "amzn-q3-26",
-      "date": "2026-10-28",
-      "ticker": "AMZN",
-      "name": "Amazon",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "1,99 USD"
-    },
-    {
-      "id": "ma-q3-26",
-      "date": "2026-10-28",
-      "ticker": "MA",
-      "name": "Mastercard",
-      "when": "pred odprtjem",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "5,30 USD"
-    },
-    {
       "id": "lly-q3-26",
       "date": "2026-10-29",
       "ticker": "LLY",
@@ -829,51 +719,11 @@
       "estEps": "10,00 USD"
     },
     {
-      "id": "xom-q3-26",
-      "date": "2026-10-29",
-      "ticker": "XOM",
-      "name": "Exxon Mobil",
-      "when": "ura ni znana",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "3,59 USD"
-    },
-    {
-      "id": "abbv-q3-26",
-      "date": "2026-10-29",
-      "ticker": "ABBV",
-      "name": "AbbVie",
-      "when": "ura ni znana",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "3,92 USD"
-    },
-    {
-      "id": "amd-q3-26",
-      "date": "2026-11-02",
-      "ticker": "AMD",
-      "name": "AMD",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026,
-      "estEps": "1,95 USD"
-    },
-    {
-      "id": "nvda-q3-27",
-      "date": "2026-11-17",
-      "ticker": "NVDA",
-      "name": "Nvidia",
-      "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2027,
-      "estEps": "2,52 USD"
-    },
-    {
       "id": "wmt-q3-27",
       "date": "2026-11-19",
       "ticker": "WMT",
       "name": "Walmart",
-      "when": "ura ni znana",
+      "when": "pred odprtjem",
       "quarter": 3,
       "year": 2027,
       "estEps": "0,64 USD"

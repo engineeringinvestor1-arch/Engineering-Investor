@@ -5,8 +5,9 @@
   <div class="koledar__header">
     <h1 class="koledar__title">Ekonomski koledar</h1>
     <p class="koledar__subtitle">
-      Ključni makroekonomski dogodki in zaslužki največjih podjetij - naslednjih 90 dni.
-      Časi so v CET/CEST. Datumi zaslužkov so okvirni.
+      Objave, ki redno premaknejo trg, in rezultati največjih podjetij. Časi so v CET/CEST.
+      V koledarju so samo datumi, ki jih je razpisal vir: Fed, ECB, ameriški statistični uradi,
+      Eurostat, ISM in podjetja sama. Dokler datum ni razpisan, dogodka tu ni.
     </p>
   </div>
 
@@ -458,7 +459,7 @@
 
   type MacroEvent = {
     id: string; date: string; time?: string; title: string;
-    category: string; region: 'US' | 'EU'; importance: 'HIGH' | 'MEDIUM';
+    category: string; region: 'US' | 'EU'; importance: 'HIGH' | 'LOW';
     previous?: string; forecast?: string; actual?: string;
   };
   type EarningsEvent = {
@@ -537,7 +538,7 @@
     const catBadge = badge(evt.category, 'cat');
     const forecastHint = evt.forecast ? `<span class="cal-hint">napoved: ${evt.forecast}</span>` : '';
     const previousHint = evt.previous ? `<span class="cal-hint">prej: ${evt.previous}</span>` : '';
-    const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'SREDNJE', evt.importance === 'HIGH' ? 'high' : 'medium');
+    const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'NIZKO', evt.importance === 'HIGH' ? 'high' : 'medium');
     const actualBadge = evt.actual ? badge(`DEJANSKO: ${evt.actual}`, 'actual') : '';
     const description = CATEGORY_INFO[evt.category] || '';
 
@@ -584,9 +585,10 @@
     const earningsBadge = badge('Zaslužki', 'earnings');
     const hasStats = evt.prevEps || evt.estEps;
     const actualBadge = evt.actualEps ? badge(`DEJANSKO: ${evt.actualEps}`, 'actual') : '';
+    // Od 26. 9. 2026 se vpišejo samo datumi, ki jih je podjetje razpisalo, zato "okvirni datum" ne drži več.
     const dateHint = evt.actualEps
       ? '<span class="cal-hint">poročano</span>'
-      : '<span class="cal-hint">okvirni datum</span>';
+      : '<span class="cal-hint">razpisano pri podjetju</span>';
 
     return `
       <div class="cal-item" data-id="${evt.id}">
