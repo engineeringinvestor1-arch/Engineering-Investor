@@ -276,7 +276,8 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "LOW",
-      "previous": "3,7 % medletno (jul 2026); jedrni 3,3 %"
+      "previous": "3,7 % medletno (jul 2026); jedrni 3,3 %",
+      "actual": "CPI 3,4 % letno"
     },
     {
       "id": "us-ism-oct26",
