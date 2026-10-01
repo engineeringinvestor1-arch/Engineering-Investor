@@ -687,7 +687,9 @@
       "when": "po zaprtju",
       "quarter": 4,
       "year": 2026,
-      "estEps": "32,22 USD"
+      "estEps": "32,22 USD",
+      "actualEps": "33,42 USD",
+      "actualNote": "presegel pričakovanja (ocena 32,56 USD)"
     },
     {
       "id": "jpm-q3-26",
