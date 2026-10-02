@@ -506,6 +506,15 @@
     return parseDate(dateStr).toLocaleDateString('sl-SI', { weekday: 'short', day: 'numeric', month: 'numeric' });
   }
 
+  // Časovni pas tistega dne po našem času: poleti CEST, pozimi CET. Do 2. 10. 2026 je pisalo vedno "CET",
+  // tudi poleti, čeprav so bile ure v poletnem času.
+  function zoneLabel(dateStr: string): string {
+    const part = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Ljubljana', timeZoneName: 'short' })
+      .formatToParts(new Date(`${dateStr}T12:00:00Z`))
+      .find((p) => p.type === 'timeZoneName');
+    return part?.value === 'CEST' ? 'CEST' : 'CET';
+  }
+
   function isToday(dateStr: string): boolean {
     const today = new Date();
     const d = parseDate(dateStr);
@@ -547,7 +556,7 @@
         <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}" aria-expanded="false">
           <div class="cal-date">
             <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
-            ${evt.time ? `<span class="cal-time">${evt.time} CET</span>` : ''}
+            ${evt.time ? `<span class="cal-time">${evt.time} ${zoneLabel(evt.date)}</span>` : ''}
           </div>
           <div class="cal-main">
             <span class="cal-event-title">${evt.title}</span>

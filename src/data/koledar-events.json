@@ -147,7 +147,7 @@
       "region": "US",
       "importance": "HIGH",
       "previous": "3,5 % letno (junij)",
-      "actual": "CPI 3,3 % letno"
+      "actual": "CPI 3,4 % medletno; jedrna 2,5 %"
     },
     {
       "id": "us-ppi-aug26",
@@ -158,7 +158,7 @@
       "region": "US",
       "importance": "LOW",
       "previous": "5,5 % letno (junij)",
-      "actual": "PPI 8,3 % letno"
+      "actual": "PPI 4,7 % medletno"
     },
     {
       "id": "us-retail-aug26",
@@ -237,7 +237,7 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "LOW",
-      "actual": "PPI 9,9 % letno"
+      "actual": "PPI 5,4 % medletno"
     },
     {
       "id": "us-cpi-sep26",
@@ -247,7 +247,7 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "HIGH",
-      "actual": "CPI 3,4 % letno"
+      "actual": "CPI 3,4 % medletno; jedrna 2,4 %"
     },
     {
       "id": "fomc-sep26",
@@ -257,7 +257,7 @@
       "category": "Centralna banka",
       "region": "US",
       "importance": "HIGH",
-      "actual": "Fed obrestna mera: 3,50-3,75 %"
+      "actual": "Fed obrestna mera: 3,75-4,00 %"
     },
     {
       "id": "eu-pmi-sep26",
@@ -276,8 +276,8 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "LOW",
-      "previous": "3,7 % medletno (jul 2026); jedrni 3,3 %",
-      "actual": "CPI 3,4 % letno"
+      "previous": "3,4 % medletno (jul 2026, po reviziji BEA 30. 9.); jedrni 3,0 %",
+      "actual": "PCE 3,4 % medletno; jedrni 3,0 %"
     },
     {
       "id": "us-ism-oct26",
@@ -313,16 +313,47 @@
       "title": "US CPI (sep 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "previous": "3,4 % medletno (avg 2026); jedrna 2,4 %"
+    },
+    {
+      "id": "us-retail-oct26",
+      "date": "2026-10-15",
+      "time": "14:30",
+      "title": "US maloprodaja (sep 2026)",
+      "category": "Poraba",
+      "region": "US",
+      "importance": "LOW",
+      "previous": "+1,1 % mesečno (avg 2026)"
     },
     {
       "id": "fomc-oct26",
       "date": "2026-10-28",
-      "time": "20:00",
+      "time": "19:00",
       "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",
       "importance": "HIGH"
+    },
+    {
+      "id": "us-gdp-oct26",
+      "date": "2026-10-29",
+      "time": "13:30",
+      "title": "US GDP Q3 2026 (prva ocena)",
+      "category": "GDP",
+      "region": "US",
+      "importance": "LOW",
+      "previous": "2,2 % letna stopnja rasti (Q2 2026)"
+    },
+    {
+      "id": "us-pce-oct26",
+      "date": "2026-10-29",
+      "time": "13:30",
+      "title": "US PCE (sep 2026)",
+      "category": "Inflacija",
+      "region": "US",
+      "importance": "LOW",
+      "previous": "3,4 % medletno (avg 2026); jedrni 3,0 %"
     },
     {
       "id": "ecb-oct26",
@@ -435,7 +466,7 @@
     {
       "id": "fomc-mar27",
       "date": "2027-03-17",
-      "time": "20:00",
+      "time": "19:00",
       "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",

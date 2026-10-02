@@ -5,7 +5,9 @@
  * sources — no AI, no web search, no hallucination risk:
  *
  *   - FRED (Federal Reserve Economic Data, stlouisfed.org) for US macro
- *     releases: CPI, PPI, NFP, retail sales, GDP, Fed funds rate.
+ *     releases: CPI, PPI, PCE, NFP, retail sales, GDP, Fed funds rate.
+ *     Each must use the series behind the official headline figure; the
+ *     run happens a day or so after the release, so it records the first print.
  *   - Finnhub for actual reported EPS on the earnings calendar.
  *
  * EU events (ECB, EU CPI/PMI) and ISM PMI aren't on either free source, so
@@ -110,20 +112,45 @@ async function fetchMacroActual(apiKey, evt) {
   const t = evt.title;
 
   if (evt.category === 'Centralna banka') {
-    // A policy rate is a level, not a period - read it as it stood on the day.
+    if (!t.includes('FOMC')) return null; // e.g. Jackson Hole: a speech, not a rate decision
+    // A policy rate is a level, not a period. A decision announced on the meeting day takes effect
+    // the next day, so read the range as it stood the day after the meeting. Until 2 Oct 2026 this read
+    // the meeting day and recorded the old range: the 16 Sep 2026 hike showed 3,50-3,75 % instead of 3,75-4,00 %.
+    const dayAfter = new Date(parseDateUTC(evt.date) + 86_400_000).toISOString().slice(0, 10);
+    if (parseDateUTC(dayAfter) > todayUTC()) return null; // the new range is not on FRED yet
     const [lower, upper] = await Promise.all([
-      fredLatest(apiKey, 'DFEDTARL', { asOf: evt.date }),
-      fredLatest(apiKey, 'DFEDTARU', { asOf: evt.date }),
+      fredLatest(apiKey, 'DFEDTARL', { asOf: dayAfter }),
+      fredLatest(apiKey, 'DFEDTARU', { asOf: dayAfter }),
     ]);
-    if (!lower || !upper) return null;
+    if (!lower || !upper || lower.date !== dayAfter || upper.date !== dayAfter) return null;
     return `Fed obrestna mera: ${fmtNum(lower.value, 2)}-${fmtNum(upper.value, 2)} %`;
   }
 
   if (evt.category === 'Inflacija') {
-    const series = t.includes('PPI') ? 'PPIACO' : 'CPIAUCSL';
-    const obs = await fredForEvent(apiKey, series, evt, 'pc1');
-    if (!obs) return null;
-    return `${t.includes('PPI') ? 'PPI' : 'CPI'} ${fmtNum(obs.value)} % letno`;
+    // Each inflation measure from its own series. Until 2 Oct 2026 everything that was not PPI got CPI,
+    // so the PCE release of 30 Sep 2026 showed "CPI 3,4 % letno".
+    if (t.includes('PCE')) {
+      const obs = await fredForEvent(apiKey, 'PCEPI', evt, 'pc1');
+      if (!obs) return null;
+      const core = await fredForEvent(apiKey, 'PCEPILFE', evt, 'pc1');
+      return `PCE ${fmtNum(obs.value)} % medletno${core ? `; jedrni ${fmtNum(core.value)} %` : ''}`;
+    }
+    // The headline year-over-year figures BLS publishes (and investing.com shows) are computed from the
+    // indexes before seasonal adjustment. Until 2 Oct 2026 CPI came from the seasonally adjusted CPIAUCSL
+    // (July 2026: 3,3 % here, 3,4 % at BLS) and PPI from PPIACO, the old all-commodities index rather than
+    // final demand (August 2026: 9,9 % here, 5,4 % at BLS).
+    if (t.includes('PPI')) {
+      const obs = await fredForEvent(apiKey, 'PPIFID', evt, 'pc1');
+      if (!obs) return null;
+      return `PPI ${fmtNum(obs.value)} % medletno`;
+    }
+    if (t.includes('CPI')) {
+      const obs = await fredForEvent(apiKey, 'CPIAUCNS', evt, 'pc1');
+      if (!obs) return null;
+      const core = await fredForEvent(apiKey, 'CPILFENS', evt, 'pc1');
+      return `CPI ${fmtNum(obs.value)} % medletno${core ? `; jedrna ${fmtNum(core.value)} %` : ''}`;
+    }
+    return null; // unknown inflation measure: leave for manual entry rather than guess
   }
 
   if (evt.category === 'Trg dela' && t.includes('NFP')) {
