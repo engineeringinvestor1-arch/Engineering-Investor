@@ -10,23 +10,31 @@
  *     run happens a day or so after the release, so it records the first print.
  *   - Finnhub for actual reported EPS on the earnings calendar.
  *
+ * Since 2 Oct 2026 it also writes the consensus forecast ("napoved") for events
+ * in the next two weeks, from Nasdaq's economic calendar checked against Forex
+ * Factory (scripts/koledar/pricakovanja.mjs). The author asked for this to be
+ * published automatically: "robot naj avtomatsko vpisuje pričakovanja".
+ *
  * EU events (ECB, EU CPI/PMI) and ISM PMI aren't on either free source, so
  * they're left for manual entry — the UI already handles a missing `actual`
  * gracefully.
  *
- * Safe by construction: this only ever fills in previously-empty `actual` /
- * `actualEps` fields on events whose date has already passed — it never
- * touches dates, titles, or forecasts, and every change lands in a normal git
- * commit that can be reviewed or reverted like any other.
+ * Safe by construction: it fills in previously-empty `actual` / `actualEps`
+ * fields on events whose date has already passed, and refreshes `forecast`
+ * only on future events that have no result yet. It never touches dates,
+ * titles or times, and every change lands in a normal git commit that can be
+ * reviewed or reverted like any other.
  */
 
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fetchForexFactory, fetchNasdaqDay, forecastFor, ruleFor } from './koledar/pricakovanja.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, '../src/data/koledar-events.json');
 const LOOKBACK_DAYS = 4; // covers weekends / a missed run without re-scanning ancient history
+const FORECAST_DAYS = 14; // the calendar looks two weeks ahead; consensus appears a few days before a release
 
 function parseDateUTC(str) {
   const [y, m, d] = str.split('-').map(Number);
@@ -203,15 +211,67 @@ async function fetchEarningsActual(apiKey, evt, cutoffDate) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Pričakovanja (consensus forecasts)                                   */
+/* ------------------------------------------------------------------ */
+
+async function updateForecasts(data, today) {
+  const end = today + FORECAST_DAYS * 86_400_000;
+  const events = data.macroEvents.filter((e) => {
+    const t = parseDateUTC(e.date);
+    return t >= today && t <= end && !e.actual && ruleFor(e);
+  });
+  if (events.length === 0) {
+    console.log(`Pričakovanja: v naslednjih ${FORECAST_DAYS} dneh ni dogodkov, za katere jih znamo poiskati.`);
+    return 0;
+  }
+
+  let ffItems = null;
+  try {
+    ffItems = await fetchForexFactory();
+  } catch (err) {
+    console.warn(`  Forex Factory ni dosegljiv: ${err.message}`);
+  }
+  const days = new Map();
+  const nasdaqDay = (date) => {
+    if (!days.has(date)) {
+      days.set(date, fetchNasdaqDay(date).catch((err) => {
+        console.warn(`  Nasdaq ${date} ni dosegljiv: ${err.message}`);
+        return null;
+      }));
+    }
+    return days.get(date);
+  };
+
+  let changed = 0;
+  for (const evt of events) {
+    // Nasdaq returns the previous day's events for a date, so both days are read and the event must be in
+    // exactly one. If either read failed, Nasdaq is left out for this event rather than half-trusted.
+    const next = new Date(parseDateUTC(evt.date) + 86_400_000).toISOString().slice(0, 10);
+    const both = await Promise.all([nasdaqDay(evt.date), nasdaqDay(next)]);
+    const nasdaqResponses = both.every(Boolean) ? both : [];
+    const out = forecastFor(evt, { nasdaqResponses, ffItems });
+    if (!out.text) {
+      console.log(`  napoved: ${evt.id} brez (${out.problem})`);
+      continue;
+    }
+    const rest = out.skipped.length ? `; brez dela: ${out.skipped.join('; ')}` : '';
+    if (evt.forecast === out.text) {
+      console.log(`  napoved: ${evt.id} nespremenjena, ${out.text} [${out.sources.join(' + ')}${rest}]`);
+      continue;
+    }
+    console.log(`  napoved: ${evt.id} ${evt.forecast ?? 'brez'} -> ${out.text} [${out.sources.join(' + ')}${rest}]`);
+    evt.forecast = out.text;
+    evt.forecastSource = out.sources.join(', ');
+    changed++;
+  }
+  return changed;
+}
+
+/* ------------------------------------------------------------------ */
 
 async function main() {
   const fredKey = process.env.FRED_API_KEY;
   const finnhubKey = process.env.FINNHUB_API_KEY;
-  if (!fredKey && !finnhubKey) {
-    console.error('FRED_API_KEY and FINNHUB_API_KEY both missing — skipping koledar actuals update.');
-    process.exit(0); // don't fail the workflow over missing optional secrets
-  }
-
   const raw = await readFile(DATA_PATH, 'utf-8');
   const data = JSON.parse(raw);
 
@@ -225,12 +285,10 @@ async function main() {
   const pendingMacro = data.macroEvents.filter((e) => inWindow(e.date) && !e.actual);
   const pendingEarnings = data.earnings.filter((e) => inWindow(e.date) && !e.actualEps);
 
-  if (pendingMacro.length === 0 && pendingEarnings.length === 0) {
-    console.log('Koledar: no recent events pending actual results. Nothing to do.');
-    return;
-  }
-
   let changed = 0;
+  if (pendingMacro.length === 0 && pendingEarnings.length === 0) {
+    console.log('Koledar: no recent events pending actual results.');
+  }
 
   if (fredKey) {
     for (const evt of pendingMacro) {
@@ -245,8 +303,8 @@ async function main() {
         console.warn(`  macro:    ${evt.id} failed: ${err.message}`);
       }
     }
-  } else {
-    console.log('FRED_API_KEY missing — skipping macro events.');
+  } else if (pendingMacro.length) {
+    console.log('FRED_API_KEY missing, skipping macro events.');
   }
 
   if (finnhubKey) {
@@ -263,12 +321,14 @@ async function main() {
         console.warn(`  earnings: ${evt.id} failed: ${err.message}`);
       }
     }
-  } else {
-    console.log('FINNHUB_API_KEY missing — skipping earnings events.');
+  } else if (pendingEarnings.length) {
+    console.log('FINNHUB_API_KEY missing, skipping earnings events.');
   }
 
+  changed += await updateForecasts(data, today);
+
   if (changed === 0) {
-    console.log('Koledar: no verifiable actual results available yet. Nothing to do.');
+    console.log('Koledar: nothing new to write.');
     return;
   }
 

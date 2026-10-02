@@ -468,8 +468,33 @@
     quarter?: number; year?: number;
   };
 
+  // Opis za vsako vrsto dogodka (avtor, 2. 10. 2026: "napiši opise"). Do takrat je imela vsaka kategorija
+  // en opis, zato je pri PCE in evropski inflaciji pisalo o CPI, pri ISM pa "proizvodnja in storitve".
+  // Ključ je začetek oznake dogodka (us-cpi-oct26 -> us-cpi). Kategorija ostane rezerva za nove vrste.
+  const EVENT_INFO: Record<string, string> = {
+    'us-cpi': 'Indeks cen življenjskih potrebščin (CPI), ki ga objavlja ameriški statistični urad za delo (BLS). Pove, za koliko so se v enem letu podražile dobrine in storitve, ki jih kupujejo gospodinjstva. Jedrna inflacija izpusti hrano in energijo, katerih cene močno nihajo, zato bolje kaže trend. Višja inflacija od pričakovanj zmanjša možnost, da Fed zniža obrestne mere, zato navadno dvigne donosnost obveznic in pritisne na delnice.',
+    'us-pce': 'Indeks cen osebne potrošnje (PCE), ki ga objavlja ameriški urad za ekonomske analize (BEA). Fed svoj cilj 2-odstotne inflacije meri prav s tem indeksom. Zajema širši nabor izdatkov kot CPI, tudi tiste, ki jih za gospodinjstva plača nekdo drug, na primer zdravstvene storitve. Jedrni PCE brez hrane in energije je kazalnik, na katerega se Fed opira najbolj.',
+    'us-ppi': 'Indeks cen pri proizvajalcih (PPI, končno povpraševanje), ki ga objavlja BLS. Meri, koliko podjetja dobijo za svoje blago in storitve. Kaže cenovne pritiske, ki lahko pozneje pridejo do potrošnikov.',
+    'eu-cpi': 'Prva ocena inflacije v evrskem območju (HICP), ki jo Eurostat objavi ob koncu meseca ali v prvih dneh naslednjega. Na njeni podlagi ECB presoja, ali se inflacija približuje cilju 2 %. Jedrna inflacija izpusti hrano, energijo, alkohol in tobak. Višja inflacija od pričakovanj zmanjša možnost, da ECB zniža obrestne mere.',
+    'us-nfp': 'Mesečno poročilo o zaposlovanju (BLS): koliko delovnih mest je nastalo zunaj kmetijstva, stopnja brezposelnosti in rast plač. Visoka zaposlenost je eden od dveh ciljev Feda, zato poročilo močno vpliva na pričakovanja o obrestnih merah. Podatka za pretekla dva meseca se ob vsaki objavi popravita.',
+    'us-adp': 'Ocena zaposlovanja v zasebnem sektorju, ki jo pripravi podjetje ADP in objavi dva dni pred uradnim poročilom o zaposlovanju. Uradnega poročila pogosto ne napove dobro.',
+    'us-retail': 'Maloprodaja, ki jo objavlja ameriški urad Census: koliko so gospodinjstva v mesecu porabila v trgovinah, gostinstvu in na spletu. Podatek ni prilagojen inflaciji, zato del rasti pomenijo višje cene. Potrošnja je največji del ameriškega gospodarstva: presenečenje navzgor kaže na odporno gospodarstvo, navzdol na slabše povpraševanje.',
+    'us-gdp': 'Bruto domači proizvod (BEA) pove, koliko je gospodarstvo ZDA zraslo v četrtletju, preračunano na letno raven. Prva ocena izide približno mesec dni po koncu četrtletja, drugi dve oceni jo popravita, ko je na voljo več podatkov.',
+    'us-ism': 'Anketa ISM med nabavnimi menedžerji v predelovalnih dejavnostih ZDA. Vrednost nad 50 pomeni rast, pod 50 krčenje. Izide prvi delovni dan v mesecu in je med prvimi podatki o preteklem mesecu; trg spremlja tudi njene dele o naročilih, zaposlovanju in cenah.',
+    'us-pmi': 'Hitra ocena indeksa nabavnih menedžerjev v ZDA (S&P Global) za predelovalne dejavnosti in storitve, objavljena proti koncu meseca. Vrednost nad 50 pomeni rast, pod 50 krčenje.',
+    'eu-pmi': 'Hitra ocena indeksa nabavnih menedžerjev v evrskem območju (HCOB) za predelovalne dejavnosti in storitve, objavljena proti koncu meseca. Vrednost nad 50 pomeni rast, pod 50 krčenje.',
+    'fomc': 'Odločitev Feda o ciljnem razponu ključne obrestne mere (federal funds). Izjava izide ob 14.00 po newyorškem času, pol ure pozneje sledi novinarska konferenca. Štirikrat na leto Fed objavi tudi napovedi članov za obrestne mere in gospodarstvo. Trg poleg odločitve pozorno bere namige o naslednjih korakih.',
+    'ecb': 'Odločitev ECB o obrestnih merah v evrskem območju. Najpomembnejša je depozitna mera, po kateri banke hranijo denar pri ECB. Odločitev izide ob 14.15, novinarska konferenca se začne ob 14.45. Štirikrat na leto ECB objavi tudi napovedi za inflacijo in rast.',
+    'us-jackson': 'Letni simpozij, ki ga Fed iz Kansas Cityja pripravi v Jackson Holu. Vodilni centralni bankirji tam pogosto nakažejo smer denarne politike.',
+  };
+
+  function eventInfo(evt: MacroEvent): string {
+    const key = Object.keys(EVENT_INFO).find((k) => evt.id === k || evt.id.startsWith(`${k}-`) || evt.id.startsWith(`${k}2`));
+    return key ? EVENT_INFO[key] : CATEGORY_INFO[evt.category] || '';
+  }
+
   const CATEGORY_INFO: Record<string, string> = {
-    'Inflacija': 'Meri spremembo cen (CPI – potrošniške cene) glede na leto/mesec prej. Višja inflacija od pričakovanj poveča verjetnost, da centralna banka obrestne mere obdrži višje dlje časa, kar navadno pritiska na delnice; nižja od pričakovanj deluje v obratno smer.',
+    'Inflacija': 'Meri spremembo cen glede na leto prej. Višja inflacija od pričakovanj poveča verjetnost, da centralna banka obrestne mere obdrži višje dlje časa, kar navadno pritiska na delnice; nižja od pričakovanj deluje v obratno smer.',
     'Poraba': 'Meri gibanje maloprodaje - kazalnik moči potrošnika, ki predstavlja večino gospodarske aktivnosti v ZDA. Presenečenje navzgor kaže na odporno gospodarstvo, navzdol na upočasnjevanje povpraševanja.',
     'PMI': 'Indeks nabavnih menedžerjev meri razpoloženje podjetij v proizvodnji in storitvah. Vrednost nad 50 pomeni širitev gospodarske aktivnosti, pod 50 pa krčenje.',
     'Centralna banka': 'Odločitev osrednje banke (Fed ali ECB) o obrestnih merah. Dvig ali jastrebji ton (napoved prihodnjih dvigov) navadno okrepi valuto in pritisne na delnice; znižanje ali golobji ton deluje v obratno smer.',
@@ -549,7 +574,7 @@
     const previousHint = evt.previous ? `<span class="cal-hint">prej: ${evt.previous}</span>` : '';
     const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'NIZKO', evt.importance === 'HIGH' ? 'high' : 'medium');
     const actualBadge = evt.actual ? badge(`DEJANSKO: ${evt.actual}`, 'actual') : '';
-    const description = CATEGORY_INFO[evt.category] || '';
+    const description = eventInfo(evt);
 
     return `
       <div class="cal-item" data-id="${evt.id}">

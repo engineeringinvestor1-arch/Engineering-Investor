@@ -1,4 +1,4 @@
-name: Update koledar actual results
+name: Update koledar actual results and forecasts
 
 on:
   schedule:
@@ -20,7 +20,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Research and update actual results
+      # Pričakovanja se objavijo samodejno (avtor, 2. 10. 2026), zato pravila najprej preverijo preizkusi.
+      - name: Test forecast rules
+        run: node --test scripts/koledar/pricakovanja.test.mjs
+
+      - name: Update actual results and forecasts
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
@@ -32,7 +36,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet -- src/data/koledar-events.json; then
             git add src/data/koledar-events.json
-            git commit -m "Koledar: update actual results $(date -u +%Y-%m-%d)"
+            git commit -m "Koledar: izidi in pričakovanja $(date -u +%Y-%m-%d)"
             git push
           else
             echo "No changes to commit."
