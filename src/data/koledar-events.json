@@ -304,7 +304,8 @@
       "title": "US NFP (sep 2026)",
       "category": "Trg dela",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "actual": "+29.000 delovnih mest"
     },
     {
       "id": "us-cpi-oct26",
