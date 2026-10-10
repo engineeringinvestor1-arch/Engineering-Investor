@@ -3,11 +3,11 @@
 // 22. 9. 2026: vsebino je prevzel kalkulator pričakovanega donosa (prej Mauboussin/McKinsey ciljni P/E).
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PricakovaniDonos from '../components/calculators/PricakovaniDonos.astro';
+import { slovar } from '../i18n/slovar';
+
+const t = slovar('sl').kalkulatorji.vrednotenje;
 ---
 
-<BaseLayout
-  title="Kalkulator pričakovanega donosa"
-  description="Kakšen letni donos lahko pričakuješ po današnji ceni delnice in koliko bi smel plačati za želeni donos: rast dobička, P/E čez pet let in trije scenariji."
->
+<BaseLayout title={t.naslov} description={t.opisMeta}>
   <PricakovaniDonos />
 </BaseLayout>

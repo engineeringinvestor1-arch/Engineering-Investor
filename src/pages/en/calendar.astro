@@ -1,0 +1,12 @@
+---
+// Ekonomski koledar v angleščini (/en/calendar). Isti sestavni del in isti podatki kot na slovenski strani.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EkonomskiKoledar from '../../components/calendar/EkonomskiKoledar.astro';
+import { slovar } from '../../i18n/slovar';
+
+const t = slovar('en').koledar;
+---
+
+<BaseLayout title={t.naslov} description={t.opisMeta}>
+  <EkonomskiKoledar />
+</BaseLayout>

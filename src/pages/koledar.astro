@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EkonomskiKoledar from '../components/calendar/EkonomskiKoledar.astro';
+import { slovar } from '../i18n/slovar';
+
+const t = slovar('sl').koledar;
 ---
 
-<BaseLayout
-  title="Ekonomski koledar"
-  description="Objave, ki redno premaknejo trg, in rezultati največjih podjetij: CPI, NFP, PCE, ISM, seje Feda in ECB ter evrska inflacija. Samo datumi, ki jih je razpisal vir."
->
+<BaseLayout title={t.naslov} description={t.opisMeta}>
   <EkonomskiKoledar />
 </BaseLayout>

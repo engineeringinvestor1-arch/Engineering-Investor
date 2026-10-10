@@ -1,6 +1,8 @@
 ---
 import Badge from '../ui/Badge.astro';
 import { url } from '../../utils/url';
+import { INTL, getLang, potClanka } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
 
 interface Props {
   title: string;
@@ -22,7 +24,10 @@ const {
   featured = false,
 } = Astro.props;
 
-const formattedDate = new Intl.DateTimeFormat('sl-SI', {
+const lang = getLang(Astro.url.pathname);
+const t = slovar(lang).clanek;
+
+const formattedDate = new Intl.DateTimeFormat(INTL[lang], {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
@@ -30,7 +35,7 @@ const formattedDate = new Intl.DateTimeFormat('sl-SI', {
 ---
 
 <article class={`article-card ${featured ? 'article-card--featured' : ''}`}>
-  <a href={url(`/analize/${slug}`)} class="article-card__link" aria-label={`Preberi: ${title}`}>
+  <a href={url(potClanka(slug, lang))} class="article-card__link" aria-label={t.preberiAria(title)}>
     <div class="article-card__meta-top">
       <Badge category={category} size="sm" />
     </div>
@@ -43,11 +48,11 @@ const formattedDate = new Intl.DateTimeFormat('sl-SI', {
         {formattedDate}
       </time>
       <span class="article-card__meta-divider" aria-hidden="true">·</span>
-      <span class="article-card__reading-time">{readingTime} min branja</span>
+      <span class="article-card__reading-time">{t.minBranja(readingTime)}</span>
     </div>
 
     <span class="article-card__cta" aria-hidden="true">
-      Preberi
+      {t.preberi}
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="5" y1="12" x2="19" y2="12"/>
         <polyline points="12 5 19 12 12 19"/>

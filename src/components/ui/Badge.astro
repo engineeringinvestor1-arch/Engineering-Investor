@@ -1,10 +1,15 @@
 ---
+import { getLang } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
+
 interface Props {
   category: string;
   size?: 'sm' | 'md';
 }
 
 const { category, size = 'md' } = Astro.props;
+// Kategorija je v članku zapisana v slovenščini; prikazano ime je v jeziku strani.
+const ime = slovar(getLang(Astro.url.pathname)).kategorije[category] ?? category;
 
 // Map kategorij na barve
 const colorMap: Record<string, string> = {
@@ -18,7 +23,7 @@ const colorMap: Record<string, string> = {
 const colorClass = colorMap[category] || 'badge--blue';
 ---
 
-<span class={`badge badge--${size} ${colorClass}`}>{category}</span>
+<span class={`badge badge--${size} ${colorClass}`}>{ime}</span>
 
 <style>
   .badge {

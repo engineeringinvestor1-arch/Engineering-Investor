@@ -1,0 +1,12 @@
+---
+// Investicijski kalkulator v angleščini (/en/investment-calculator). Isti sestavni del kot na slovenski strani.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InvesticijskiKalkulator from '../../components/calculators/InvesticijskiKalkulator.astro';
+import { slovar } from '../../i18n/slovar';
+
+const t = slovar('en').kalkulatorji.investicijski;
+---
+
+<BaseLayout title={t.naslov} description={t.opisMeta}>
+  <InvesticijskiKalkulator />
+</BaseLayout>

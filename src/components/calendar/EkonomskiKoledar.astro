@@ -1,26 +1,28 @@
 ---
+// Besedila so v slovarju (src/i18n), podatki o dogodkih pa en sam vir za vse jezike
+// (src/data/koledar-events.json); njihove vrednosti prevede src/i18n/koledar.ts.
+import { getLang } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
+
+const t = slovar(getLang(Astro.url.pathname)).koledar;
 ---
 
 <div class="koledar">
   <div class="koledar__header">
-    <h1 class="koledar__title">Ekonomski koledar</h1>
-    <p class="koledar__subtitle">
-      Objave, ki redno premaknejo trg, in rezultati največjih podjetij. Časi so v CET/CEST.
-      V koledarju so samo datumi, ki jih je razpisal vir: Fed, ECB, ameriški statistični uradi,
-      Eurostat, ISM in podjetja sama. Dokler datum ni razpisan, dogodka tu ni.
-    </p>
+    <h1 class="koledar__title">{t.naslov}</h1>
+    <p class="koledar__subtitle">{t.podnaslov}</p>
   </div>
 
   <div class="koledar__toolbar">
-    <div class="koledar__filters" id="koledar-filters" role="group" aria-label="Filtriraj dogodke">
-      <button class="filter-btn filter-btn--active" data-filter="vsi">Vsi dogodki</button>
-      <button class="filter-btn" data-filter="makro">Makro</button>
-      <button class="filter-btn" data-filter="zasluzki">Rezultati</button>
+    <div class="koledar__filters" id="koledar-filters" role="group" aria-label={t.filtri}>
+      <button class="filter-btn filter-btn--active" data-filter="vsi">{t.vsi}</button>
+      <button class="filter-btn" data-filter="makro">{t.makro}</button>
+      <button class="filter-btn" data-filter="zasluzki">{t.rezultati}</button>
     </div>
 
-    <div class="koledar__views" id="koledar-views" role="group" aria-label="Način prikaza">
-      <button class="filter-btn filter-btn--active" data-view="list">Seznam</button>
-      <button class="filter-btn" data-view="month">Koledar</button>
+    <div class="koledar__views" id="koledar-views" role="group" aria-label={t.prikaz}>
+      <button class="filter-btn filter-btn--active" data-view="list">{t.seznam}</button>
+      <button class="filter-btn" data-view="month">{t.mesec}</button>
     </div>
   </div>
 
@@ -28,9 +30,9 @@
 
   <div id="koledar-month" hidden>
     <div class="cal-month-nav">
-      <button type="button" class="cal-month-nav__btn" id="cal-prev" aria-label="Prejšnji mesec">‹</button>
+      <button type="button" class="cal-month-nav__btn" id="cal-prev" aria-label={t.prejsnjiMesec}>‹</button>
       <span class="cal-month-nav__label" id="cal-month-label"></span>
-      <button type="button" class="cal-month-nav__btn" id="cal-next" aria-label="Naslednji mesec">›</button>
+      <button type="button" class="cal-month-nav__btn" id="cal-next" aria-label={t.naslednjiMesec}>›</button>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
     <div id="cal-day-detail"></div>
@@ -456,6 +458,17 @@
 
 <script>
   import koledarData from '../../data/koledar-events.json';
+  import { INTL } from '../../i18n';
+  import { jezikStrani, slovar } from '../../i18n/slovar';
+  import { prevediKoledar } from '../../i18n/koledar';
+  // Računanje tednov je v svojem modulu, da ga preizkusi Node (scripts/koledar/tedni.test.mjs).
+  import { parseDate, toDateKey, weekKey, weekLabel } from '../../lib/koledar-tedni';
+
+  // Jezik strani: besedila iz slovarja, vrednosti dogodkov skozi prevajalnik, datumi po zapisu jezika.
+  const LANG = jezikStrani();
+  const T = slovar(LANG).koledar;
+  const LOCALE = INTL[LANG];
+  const pv = (besedilo?: string) => prevediKoledar(besedilo, LANG);
 
   type MacroEvent = {
     id: string; date: string; time?: string; title: string;
@@ -471,64 +484,21 @@
   // Opis za vsako vrsto dogodka (avtor, 2. 10. 2026: "napiši opise"). Do takrat je imela vsaka kategorija
   // en opis, zato je pri PCE in evropski inflaciji pisalo o CPI, pri ISM pa "proizvodnja in storitve".
   // Ključ je začetek oznake dogodka (us-cpi-oct26 -> us-cpi). Kategorija ostane rezerva za nove vrste.
-  const EVENT_INFO: Record<string, string> = {
-    'us-cpi': 'Indeks cen življenjskih potrebščin (CPI), ki ga objavlja ameriški statistični urad za delo (BLS). Pove, za koliko so se v enem letu podražile dobrine in storitve, ki jih kupujejo gospodinjstva. Jedrna inflacija izpusti hrano in energijo, katerih cene močno nihajo, zato bolje kaže trend. Višja inflacija od pričakovanj zmanjša možnost, da Fed zniža obrestne mere, zato navadno dvigne donosnost obveznic in pritisne na delnice.',
-    'us-pce': 'Indeks cen osebne potrošnje (PCE), ki ga objavlja ameriški urad za ekonomske analize (BEA). Fed svoj cilj 2-odstotne inflacije meri prav s tem indeksom. Zajema širši nabor izdatkov kot CPI, tudi tiste, ki jih za gospodinjstva plača nekdo drug, na primer zdravstvene storitve. Jedrni PCE brez hrane in energije je kazalnik, na katerega se Fed opira najbolj.',
-    'us-ppi': 'Indeks cen pri proizvajalcih (PPI, končno povpraševanje), ki ga objavlja BLS. Meri, koliko podjetja dobijo za svoje blago in storitve. Kaže cenovne pritiske, ki lahko pozneje pridejo do potrošnikov.',
-    'eu-cpi': 'Prva ocena inflacije v evrskem območju (HICP), ki jo Eurostat objavi ob koncu meseca ali v prvih dneh naslednjega. Na njeni podlagi ECB presoja, ali se inflacija približuje cilju 2 %. Jedrna inflacija izpusti hrano, energijo, alkohol in tobak. Višja inflacija od pričakovanj zmanjša možnost, da ECB zniža obrestne mere.',
-    'us-nfp': 'Mesečno poročilo o zaposlovanju (BLS): koliko delovnih mest je nastalo zunaj kmetijstva, stopnja brezposelnosti in rast plač. Visoka zaposlenost je eden od dveh ciljev Feda, zato poročilo močno vpliva na pričakovanja o obrestnih merah. Podatka za pretekla dva meseca se ob vsaki objavi popravita.',
-    'us-adp': 'Ocena zaposlovanja v zasebnem sektorju, ki jo pripravi podjetje ADP in objavi dva dni pred uradnim poročilom o zaposlovanju. Uradnega poročila pogosto ne napove dobro.',
-    'us-retail': 'Maloprodaja, ki jo objavlja ameriški urad Census: koliko so gospodinjstva v mesecu porabila v trgovinah, gostinstvu in na spletu. Podatek ni prilagojen inflaciji, zato del rasti pomenijo višje cene. Potrošnja je največji del ameriškega gospodarstva: presenečenje navzgor kaže na odporno gospodarstvo, navzdol na slabše povpraševanje.',
-    'us-gdp': 'Bruto domači proizvod (BEA) pove, koliko je gospodarstvo ZDA zraslo v četrtletju, preračunano na letno raven. Prva ocena izide približno mesec dni po koncu četrtletja, drugi dve oceni jo popravita, ko je na voljo več podatkov.',
-    'us-ism': 'Anketa ISM med nabavnimi menedžerji v predelovalnih dejavnostih ZDA. Vrednost nad 50 pomeni rast, pod 50 krčenje. Izide prvi delovni dan v mesecu in je med prvimi podatki o preteklem mesecu; trg spremlja tudi njene dele o naročilih, zaposlovanju in cenah.',
-    'us-pmi': 'Hitra ocena indeksa nabavnih menedžerjev v ZDA (S&P Global) za predelovalne dejavnosti in storitve, objavljena proti koncu meseca. Vrednost nad 50 pomeni rast, pod 50 krčenje.',
-    'eu-pmi': 'Hitra ocena indeksa nabavnih menedžerjev v evrskem območju (HCOB) za predelovalne dejavnosti in storitve, objavljena proti koncu meseca. Vrednost nad 50 pomeni rast, pod 50 krčenje.',
-    'fomc': 'Odločitev Feda o ciljnem razponu ključne obrestne mere (federal funds). Izjava izide ob 14.00 po newyorškem času, pol ure pozneje sledi novinarska konferenca. Štirikrat na leto Fed objavi tudi napovedi članov za obrestne mere in gospodarstvo. Trg poleg odločitve pozorno bere namige o naslednjih korakih.',
-    'ecb': 'Odločitev ECB o obrestnih merah v evrskem območju. Najpomembnejša je depozitna mera, po kateri banke hranijo denar pri ECB. Odločitev izide ob 14.15, novinarska konferenca se začne ob 14.45. Štirikrat na leto ECB objavi tudi napovedi za inflacijo in rast.',
-    'us-jackson': 'Letni simpozij, ki ga Fed iz Kansas Cityja pripravi v Jackson Holu. Vodilni centralni bankirji tam pogosto nakažejo smer denarne politike.',
-  };
+  // Besedila opisov so v slovarju (src/i18n/sl.ts in en.ts), ključ koledar.opisi.
+  const EVENT_INFO = T.opisi;
+  const CATEGORY_INFO = T.opisiKategorij;
+  const EARNINGS_INFO = T.opisRezultatov;
 
   function eventInfo(evt: MacroEvent): string {
     const key = Object.keys(EVENT_INFO).find((k) => evt.id === k || evt.id.startsWith(`${k}-`) || evt.id.startsWith(`${k}2`));
     return key ? EVENT_INFO[key] : CATEGORY_INFO[evt.category] || '';
   }
 
-  const CATEGORY_INFO: Record<string, string> = {
-    'Inflacija': 'Meri spremembo cen glede na leto prej. Višja inflacija od pričakovanj poveča verjetnost, da centralna banka obrestne mere obdrži višje dlje časa, kar navadno pritiska na delnice; nižja od pričakovanj deluje v obratno smer.',
-    'Poraba': 'Meri gibanje maloprodaje - kazalnik moči potrošnika, ki predstavlja večino gospodarske aktivnosti v ZDA. Presenečenje navzgor kaže na odporno gospodarstvo, navzdol na upočasnjevanje povpraševanja.',
-    'PMI': 'Indeks nabavnih menedžerjev meri razpoloženje podjetij v proizvodnji in storitvah. Vrednost nad 50 pomeni širitev gospodarske aktivnosti, pod 50 pa krčenje.',
-    'Centralna banka': 'Odločitev osrednje banke (Fed ali ECB) o obrestnih merah. Dvig ali jastrebji ton (napoved prihodnjih dvigov) navadno okrepi valuto in pritisne na delnice; znižanje ali golobji ton deluje v obratno smer.',
-    'GDP': 'Bruto domači proizvod meri skupno gospodarsko rast v četrtletju. Prva objava (advance) je zgodnja ocena, ki se kasneje revidira, ko so na voljo popolnejši podatki.',
-    'Trg dela': 'Poročilo o novih delovnih mestih (NFP) oz. prijavah brezposelnih. Močan trg dela je dobra novica za gospodarsko rast, a lahko pomeni tudi več pritiska na inflacijo, kar podaljša obdobje višjih obrestnih mer.',
-  };
-
-  const EARNINGS_INFO = 'Četrtletno poročilo o poslovanju podjetja. Trg primerja dejanske rezultate (dobiček na delnico, prihodki) s pričakovanji analitikov (konsenz) - odstopanje od konsenza pogosto premakne ceno delnice bolj kot sami absolutni rezultati.';
-
   const MACRO_EVENTS: MacroEvent[] = koledarData.macroEvents as MacroEvent[];
   const EARNINGS: EarningsEvent[] = koledarData.earnings as EarningsEvent[];
 
-  function parseDate(str: string): Date {
-    const [y, m, d] = str.split('-').map(Number);
-    return new Date(y, m - 1, d);
-  }
-
-  function weekKey(dateStr: string): string {
-    const d = parseDate(dateStr);
-    const mon = new Date(d);
-    mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-    return mon.toISOString().slice(0, 10);
-  }
-
-  function weekLabel(mondayStr: string): string {
-    const start = parseDate(mondayStr);
-    const end = new Date(start);
-    end.setDate(start.getDate() + 6);
-    const fmtDay = (d: Date) => d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'short' });
-    return `${fmtDay(start)} – ${fmtDay(end)}`;
-  }
-
   function dayLabel(dateStr: string): string {
-    return parseDate(dateStr).toLocaleDateString('sl-SI', { weekday: 'short', day: 'numeric', month: 'numeric' });
+    return parseDate(dateStr).toLocaleDateString(LOCALE, { weekday: 'short', day: 'numeric', month: LANG === 'sl' ? 'numeric' : 'short' });
   }
 
   // Časovni pas tistega dne po našem času: poleti CEST, pozimi CET. Do 2. 10. 2026 je pisalo vedno "CET",
@@ -569,22 +539,23 @@
     const today_ = isToday(evt.date);
     const past = isPast(evt.date);
     const regionBadge = badge(evt.region === 'US' ? '🇺🇸 US' : '🇪🇺 EU', 'region');
-    const catBadge = badge(evt.category, 'cat');
-    const forecastHint = evt.forecast ? `<span class="cal-hint">napoved: ${evt.forecast}</span>` : '';
-    const previousHint = evt.previous ? `<span class="cal-hint">prej: ${evt.previous}</span>` : '';
-    const importanceBadge = badge(evt.importance === 'HIGH' ? 'VISOKO' : 'NIZKO', evt.importance === 'HIGH' ? 'high' : 'medium');
-    const actualBadge = evt.actual ? badge(`DEJANSKO: ${evt.actual}`, 'actual') : '';
+    const catBadge = badge(T.kategorije[evt.category] ?? evt.category, 'cat');
+    const forecast = pv(evt.forecast), previous = pv(evt.previous), actual = pv(evt.actual);
+    const forecastHint = forecast ? `<span class="cal-hint">${T.napoved}: ${forecast}</span>` : '';
+    const previousHint = previous ? `<span class="cal-hint">${T.prej}: ${previous}</span>` : '';
+    const importanceBadge = badge(evt.importance === 'HIGH' ? T.visoko : T.nizko, evt.importance === 'HIGH' ? 'high' : 'medium');
+    const actualBadge = actual ? badge(`${T.dejansko}: ${actual}`, 'actual') : '';
     const description = eventInfo(evt);
 
     return `
       <div class="cal-item" data-id="${evt.id}">
         <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}" aria-expanded="false">
           <div class="cal-date">
-            <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
+            <span class="cal-day">${dayLabel(evt.date)}${today_ ? T.danes : ''}</span>
             ${evt.time ? `<span class="cal-time">${evt.time} ${zoneLabel(evt.date)}</span>` : ''}
           </div>
           <div class="cal-main">
-            <span class="cal-event-title">${evt.title}</span>
+            <span class="cal-event-title">${pv(evt.title)}</span>
             <div class="cal-meta">${regionBadge}${catBadge}${actualBadge}${forecastHint}${previousHint}</div>
           </div>
           <div class="cal-row__end">${importanceBadge}${expandIcon()}</div>
@@ -592,9 +563,9 @@
         <div class="cal-detail">
           ${description ? `<p>${description}</p>` : ''}
           <div class="cal-detail__stats">
-            ${detailStat('Prejšnja vrednost', evt.previous)}
-            ${detailStat('Napoved', evt.forecast)}
-            ${detailStat('Dejanski rezultat', evt.actual)}
+            ${detailStat(T.prejsnjaVrednost, previous)}
+            ${detailStat(T.napovedDolgo, forecast)}
+            ${detailStat(T.dejanskiRezultat, actual)}
           </div>
         </div>
       </div>
@@ -616,20 +587,20 @@
     const past = isPast(evt.date);
     const tickerBadge = badge(evt.ticker, 'region', 'cal-ticker');
     const usBadge = badge('🇺🇸 US', 'region');
-    const earningsBadge = badge('Rezultati', 'earnings');
+    const earningsBadge = badge(T.rezultati, 'earnings');
     const hasStats = evt.prevEps || evt.estEps;
-    const actualBadge = evt.actualEps ? badge(`DEJANSKO: ${evt.actualEps}`, 'actual') : '';
+    const actualBadge = evt.actualEps ? badge(`${T.dejansko}: ${pv(evt.actualEps)}`, 'actual') : '';
     // Od 26. 9. 2026 se vpišejo samo datumi, ki jih je podjetje razpisalo, zato "okvirni datum" ne drži več.
     const dateHint = evt.actualEps
-      ? '<span class="cal-hint">poročano</span>'
-      : '<span class="cal-hint">razpisano pri podjetju</span>';
+      ? `<span class="cal-hint">${T.porocano}</span>`
+      : `<span class="cal-hint">${T.razpisano}</span>`;
 
     return `
       <div class="cal-item" data-id="${evt.id}">
         <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}" aria-expanded="false">
           <div class="cal-date">
-            <span class="cal-day">${dayLabel(evt.date)}${today_ ? ' ← danes' : ''}</span>
-            <span class="cal-time">${evt.when}</span>
+            <span class="cal-day">${dayLabel(evt.date)}${today_ ? T.danes : ''}</span>
+            <span class="cal-time">${T.kdaj[evt.when] ?? evt.when}</span>
           </div>
           <div class="cal-main">
             <span class="cal-event-title">${evt.name}${quarterLabel(evt)}</span>
@@ -641,12 +612,12 @@
           <p>${EARNINGS_INFO}</p>
           ${hasStats || evt.actualEps ? `
             <div class="cal-detail__stats">
-              ${detailStat('Prejšnje četrtletje (EPS)', evt.prevEps)}
-              ${detailStat('Napoved za to četrtletje (EPS, konsenz)', evt.estEps)}
-              ${detailStat('Dejanski EPS', evt.actualEps)}
-              ${detailStat('Opomba', evt.actualNote)}
+              ${detailStat(T.prejsnjeCetrtletje, pv(evt.prevEps))}
+              ${detailStat(T.napovedEps, pv(evt.estEps))}
+              ${detailStat(T.dejanskiEps, pv(evt.actualEps))}
+              ${detailStat(T.opomba, pv(evt.actualNote))}
             </div>
-          ` : '<p class="cal-hint">Natančnejši podatki o dobičku bodo dodani bližje datumu objave.</p>'}
+          ` : `<p class="cal-hint">${T.podatkiPozneje}</p>`}
         </div>
       </div>
     `;
@@ -690,7 +661,7 @@
     const container = document.getElementById('koledar-events')!;
 
     if (allEvents.length === 0) {
-      container.innerHTML = '<div class="cal-empty">Ni prihajajočih dogodkov za izbrani filter.</div>';
+      container.innerHTML = `<div class="cal-empty">${T.niDogodkov}</div>`;
       return;
     }
 
@@ -704,21 +675,14 @@
 
     container.innerHTML = groupedArr.map(([weekMon, events]) => `
       <div class="cal-week">
-        <div class="cal-week__header">${weekLabel(weekMon)}</div>
+        <div class="cal-week__header">${weekLabel(weekMon, LOCALE)}</div>
         ${events.map(evt => renderRow(evt)).join('')}
       </div>
     `).join('');
   }
 
-  function toDateKey(d: Date): string {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
-  }
-
   function renderMonthGrid() {
-    const label = viewMonth.toLocaleDateString('sl-SI', { month: 'long', year: 'numeric' });
+    const label = viewMonth.toLocaleDateString(LOCALE, { month: 'long', year: 'numeric' });
     document.getElementById('cal-month-label')!.textContent = label;
 
     const events = getFilteredEvents(currentFilter);
@@ -732,7 +696,7 @@
     const gridStart = new Date(firstOfMonth);
     gridStart.setDate(firstOfMonth.getDate() - ((firstOfMonth.getDay() + 6) % 7));
 
-    const weekdayLabels = ['Pon', 'Tor', 'Sre', 'Čet', 'Pet', 'Sob', 'Ned'];
+    const weekdayLabels = T.dnevi;
     let html = weekdayLabels.map(w => `<div class="cal-grid__weekday">${w}</div>`).join('');
 
     const cursor = new Date(gridStart);
@@ -776,15 +740,15 @@
   function renderDayDetail() {
     const container = document.getElementById('cal-day-detail')!;
     if (!selectedDate) {
-      container.innerHTML = '<p class="cal-day-detail__hint">Klikni na dan z dogodkom, da vidiš podrobnosti.</p>';
+      container.innerHTML = `<p class="cal-day-detail__hint">${T.klikni}</p>`;
       return;
     }
     const events = getFilteredEvents(currentFilter).filter(e => e.date === selectedDate);
     if (events.length === 0) {
-      container.innerHTML = '<p class="cal-day-detail__hint">Klikni na dan z dogodkom, da vidiš podrobnosti.</p>';
+      container.innerHTML = `<p class="cal-day-detail__hint">${T.klikni}</p>`;
       return;
     }
-    const label = parseDate(selectedDate).toLocaleDateString('sl-SI', { weekday: 'long', day: 'numeric', month: 'long' });
+    const label = parseDate(selectedDate).toLocaleDateString(LOCALE, { weekday: 'long', day: 'numeric', month: 'long' });
     container.innerHTML = `
       <div class="cal-week__header">${label}</div>
       ${events.map(evt => renderRow(evt)).join('')}

@@ -185,19 +185,23 @@ export function resiMesece(v: Vhod, cilj: number, najvec = 100 * 12): number {
   return zadeto === -1 ? Number.NaN : zadeto + 1;
 }
 
-// "10 let in 3 mesece" iz števila mesecev.
-export function dobaBesedilo(mesecevSkupaj: number, let_: (n: number) => string, mesecev: (n: number) => string): string {
+// "10 let in 3 mesece" iz števila mesecev. Veznik je v jeziku strani ("in", "and").
+export function dobaBesedilo(mesecevSkupaj: number, let_: (n: number) => string, mesecev: (n: number) => string, veznik = 'in'): string {
   const leta = Math.floor(mesecevSkupaj / 12);
   const ostanek = mesecevSkupaj % 12;
   if (!leta) return mesecev(ostanek);
-  return ostanek ? `${let_(leta)} in ${mesecev(ostanek)}` : let_(leta);
+  return ostanek ? `${let_(leta)} ${veznik} ${mesecev(ostanek)}` : let_(leta);
 }
 
-export function napaka(v: Vhod, cilj: number | null): string | null {
-  if (!Number.isFinite(v.zacetni) || v.zacetni < 0) return 'Začetni znesek mora biti 0 ali več.';
-  if (!Number.isFinite(v.prispevek) || v.prispevek < 0) return 'Redno vplačilo mora biti 0 ali več.';
-  if (!Number.isFinite(v.stopnja) || v.stopnja <= -1) return 'Donosnost mora biti večja od -100 %.';
-  if (!Number.isFinite(v.leta) || v.leta <= 0 || v.leta > 100) return 'Doba mora biti med 1 mesecem in 100 leti.';
-  if (cilj !== null && (!Number.isFinite(cilj) || cilj <= 0)) return 'Cilj mora biti večji od 0.';
+// Vrne oznako napake vnosa ali null. Besedilo napake je v slovarju (src/i18n, ključ ik.napake),
+// ker je kalkulator na voljo v več jezikih.
+export type NapakaVnosa = 'zacetni' | 'prispevek' | 'stopnja' | 'leta' | 'cilj';
+
+export function napaka(v: Vhod, cilj: number | null): NapakaVnosa | null {
+  if (!Number.isFinite(v.zacetni) || v.zacetni < 0) return 'zacetni';
+  if (!Number.isFinite(v.prispevek) || v.prispevek < 0) return 'prispevek';
+  if (!Number.isFinite(v.stopnja) || v.stopnja <= -1) return 'stopnja';
+  if (!Number.isFinite(v.leta) || v.leta <= 0 || v.leta > 100) return 'leta';
+  if (cilj !== null && (!Number.isFinite(cilj) || cilj <= 0)) return 'cilj';
   return null;
 }

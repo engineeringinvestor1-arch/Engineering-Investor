@@ -2,26 +2,43 @@
 import { SITE } from '../config';
 import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
+import { DEFAULT_LANG, LOCALES, OG_LOCALE, drugiJeziki, getLang, pot, type Lang } from '../i18n';
+import { slovar } from '../i18n/slovar';
 import '../styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
   article?: boolean;
+  // Naslovi iste strani v drugih jezikih. Stalne strani jih najdejo same; članek jih poda,
+  // ker je njegov prevod ločena datoteka (in ga pri starejših člankih ni).
+  alternates?: Partial<Record<Lang, string>>;
 }
+
+const lang = getLang(Astro.url.pathname);
+const t = slovar(lang);
 
 const {
   title,
-  description = SITE.description,
+  description = t.site.description,
   article = false,
+  alternates,
 } = Astro.props;
 
-const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${SITE.tagline}`;
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${t.site.tagline}`;
 const canonicalURL = new URL(Astro.url.pathname, SITE.url);
+
+// Prevodi te strani, ki res obstajajo (za iskalnike), in cilji gumba za jezik (vedno vsi jeziki:
+// kjer prevoda ni, gumb vodi na seznam analiz oziroma na domačo stran v tistem jeziku).
+const prevodi: Partial<Record<Lang, string>> = alternates ?? drugiJeziki(Astro.url.pathname) ?? {};
+const preklop = Object.fromEntries(
+  LOCALES.map((l) => [l, prevodi[l] ?? pot(article ? 'analize' : 'domov', l)]),
+) as Record<Lang, string>;
+const hreflang = Object.keys(prevodi).length > 1 ? (Object.entries(prevodi) as [Lang, string][]) : [];
 ---
 
 <!doctype html>
-<html lang="sl">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,12 +50,18 @@ const canonicalURL = new URL(Astro.url.pathname, SITE.url);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
+    <!-- Ista stran v drugih jezikih: iskalnik tujemu bralcu pokaže pravo različico. -->
+    {hreflang.map(([l, href]) => <link rel="alternate" hreflang={l} href={new URL(href, SITE.url)} />)}
+    {hreflang.length > 0 && prevodi[DEFAULT_LANG] && (
+      <link rel="alternate" hreflang="x-default" href={new URL(prevodi[DEFAULT_LANG], SITE.url)} />
+    )}
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:locale" content="sl_SI" />
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
     <meta property="og:site_name" content={SITE.name} />
 
     <!-- Twitter -->
@@ -51,7 +74,7 @@ const canonicalURL = new URL(Astro.url.pathname, SITE.url);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Vir RSS: brez te vrstice bralnik ne najde vira, če bralec prilepi samo naslov strani. -->
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: analize`} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: ${slovar(DEFAULT_LANG).site.rss}`} href="/rss.xml" />
 
     <!-- Theme: prevent flash -->
     <script is:inline>
@@ -65,7 +88,7 @@ const canonicalURL = new URL(Astro.url.pathname, SITE.url);
   </head>
 
   <body>
-    <Navbar />
+    <Navbar preklop={preklop} />
     <main>
       <slot />
     </main>

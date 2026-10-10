@@ -1,0 +1,12 @@
+---
+// Kalkulator pričakovanega donosa v angleščini (/en/valuation-calculator).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PricakovaniDonos from '../../components/calculators/PricakovaniDonos.astro';
+import { slovar } from '../../i18n/slovar';
+
+const t = slovar('en').kalkulatorji.vrednotenje;
+---
+
+<BaseLayout title={t.naslov} description={t.opisMeta}>
+  <PricakovaniDonos />
+</BaseLayout>

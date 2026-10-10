@@ -1,0 +1,31 @@
+---
+// Angleški članki (/en/analysis/<ime datoteke>). Prevodi so v src/content/analize-en; polje
+// `izvirnik` v glavi datoteke pove, kateri slovenski članek je izvirnik.
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { jezikiClanka } from '../../../i18n/clanki';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('analize-en');
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const alternates = await jezikiClanka('en', article);
+---
+
+<ArticleLayout
+  title={article.data.title}
+  description={article.data.description}
+  pubDate={article.data.pubDate}
+  readingTime={article.data.readingTime}
+  category={article.data.category}
+  image={article.data.image}
+  alternates={alternates}
+>
+  <Content />
+</ArticleLayout>

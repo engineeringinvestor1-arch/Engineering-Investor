@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ei-chart" width="720" height="430" viewBox="0 0 720 430" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" role="img" aria-label="Share of Mobility, Delivery and Freight in Uber’s bookings and revenue">
+<style>
+  .ei-chart {
+    --ei-surface: var(--color-surface, #FCFAF5);
+    --ei-border: var(--color-border, #D8D3C5);
+    --ei-grid: var(--color-border, #E6E2D6);
+    --ei-ink: var(--color-text, #1A1A1A);
+    --ei-muted: var(--color-text-muted, #6B6B6B);
+    --ei-a: var(--chart-rise, #2a78d6);
+    --ei-b: var(--chart-vlozki, #0d9488);
+    --ei-c: var(--chart-obresti, #c4531d);
+    --ei-fall: var(--chart-fall, #e34948);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ei-chart {
+      --ei-surface: var(--color-surface, #181818);
+      --ei-border: var(--color-border, #2A2A2A);
+      --ei-grid: var(--color-border, #232323);
+      --ei-ink: var(--color-text, #F0F0EE);
+      --ei-muted: var(--color-text-muted, #888888);
+    }
+  }
+</style>
+<rect x="0.5" y="0.5" width="719" height="429" rx="10" style="fill:var(--ei-surface);stroke:var(--ei-border)"/>
+<text x="24" y="38" font-size="19" style="fill:var(--ei-ink)" font-weight="600">What Uber’s business is made of</text>
+<text x="24" y="62" font-size="13.5" style="fill:var(--ei-muted)">Segment shares in the second quarter of 2026, in percent</text><path d="M210.00,136.00 A96,96 0 0 1 210.24,328.00 L210.14,290.00 A58,58 0 0 0 210.00,174.00 Z" style="fill:var(--ei-a);stroke:var(--ei-surface)" stroke-width="2"><title>Mobility: $28.988bn</title></path><text x="287.0" y="236.9" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">50.0%</text><path d="M210.24,328.00 A96,96 0 0 1 193.75,137.39 L200.18,174.84 A58,58 0 0 0 210.14,290.00 Z" style="fill:var(--ei-b);stroke:var(--ei-surface)" stroke-width="2"><title>Delivery: $27.463bn</title></path><text x="133.3" y="243.6" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">47.3%</text><path d="M193.75,137.39 A96,96 0 0 1 210.00,136.00 L210.00,174.00 A58,58 0 0 0 200.18,174.84 Z" style="fill:var(--ei-c);stroke:var(--ei-surface)" stroke-width="2"><title>Freight: $1.571bn</title></path><line x1="201.7" y1="134.4" x2="200.1" y2="116.4" style="stroke:var(--ei-muted)" stroke-width="1"/>
+           <text x="199.7" y="112.4" font-size="12" style="fill:var(--ei-muted)">2.7%</text><text x="210" y="237" text-anchor="middle" font-size="13" font-weight="600" style="fill:var(--ei-ink)">Bookings</text>
+      <text x="210" y="362" text-anchor="middle" font-size="12.5" style="fill:var(--ei-muted)">total $58.0bn</text><path d="M510.00,136.00 A96,96 0 1 1 498.66,327.33 L503.15,289.59 A58,58 0 1 0 510.00,174.00 Z" style="fill:var(--ei-a);stroke:var(--ei-surface)" stroke-width="2"><title>Mobility: $7.363bn</title></path><text x="586.9" y="241.6" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">51.9%</text><path d="M498.66,327.33 A96,96 0 0 1 448.09,158.63 L472.60,187.67 A58,58 0 0 0 503.15,289.59 Z" style="fill:var(--ei-b);stroke:var(--ei-surface)" stroke-width="2"><title>Delivery: $5.245bn</title></path><text x="436.2" y="259.1" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">37.0%</text><path d="M448.09,158.63 A96,96 0 0 1 510.00,136.00 L510.00,174.00 A58,58 0 0 0 472.60,187.67 Z" style="fill:var(--ei-c);stroke:var(--ei-surface)" stroke-width="2"><title>Freight: $1.583bn</title></path><text x="483.6" y="164.7" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">11.2%</text><text x="510" y="237" text-anchor="middle" font-size="13" font-weight="600" style="fill:var(--ei-ink)">Revenue</text>
+      <text x="510" y="362" text-anchor="middle" font-size="12.5" style="fill:var(--ei-muted)">total $14.2bn</text><rect x="132" y="374" width="12" height="12" rx="3" style="fill:var(--ei-a)"/>
+      <text x="150" y="384" font-size="12.5" style="fill:var(--ei-ink)">Mobility</text><rect x="302" y="374" width="12" height="12" rx="3" style="fill:var(--ei-b)"/>
+      <text x="320" y="384" font-size="12.5" style="fill:var(--ei-ink)">Delivery</text><rect x="472" y="374" width="12" height="12" rx="3" style="fill:var(--ei-c)"/>
+      <text x="490" y="384" font-size="12.5" style="fill:var(--ei-ink)">Freight</text><text x="24" y="414" font-size="11.5" style="fill:var(--ei-muted)">Source: Q2 2026 earnings release, filed with the SEC on 5 Aug 2026.</text></svg>

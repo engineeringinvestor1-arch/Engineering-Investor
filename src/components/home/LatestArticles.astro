@@ -1,24 +1,25 @@
 ---
-import { getCollection } from 'astro:content';
 import ArticleCard from '../articles/ArticleCard.astro';
 import Button from '../ui/Button.astro';
 import { url } from '../../utils/url';
+import { getLang, pot } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
+import { clankiV } from '../../i18n/clanki';
 
-const allArticles = await getCollection('analize');
-const latestArticles = allArticles
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+const lang = getLang(Astro.url.pathname);
+const t = slovar(lang).home;
+const latestArticles = (await clankiV(lang)).slice(0, 3);
 ---
 
 <section class="latest-articles">
   <div class="container">
     <div class="latest-articles__header fade-in">
       <div>
-        <h2 class="latest-articles__title">Zadnje analize</h2>
-        <p class="latest-articles__subtitle">Najnovejše razlage aktualnih dogodkov in njihovega vpliva na trge.</p>
+        <h2 class="latest-articles__title">{t.zadnje}</h2>
+        <p class="latest-articles__subtitle">{t.zadnjePodnaslov}</p>
       </div>
-      <Button href={url('/analize')} variant="ghost" size="sm">
-        Vse analize
+      <Button href={url(pot('analize', lang))} variant="ghost" size="sm">
+        {t.vse}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="5" y1="12" x2="19" y2="12"/>
           <polyline points="12 5 19 12 12 19"/>
@@ -43,7 +44,7 @@ const latestArticles = allArticles
         ))}
       </div>
     ) : (
-      <p class="latest-articles__empty">Kmalu prve analize.</p>
+      <p class="latest-articles__empty">{t.kmalu}</p>
     )}
   </div>
 </section>

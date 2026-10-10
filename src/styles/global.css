@@ -317,6 +317,11 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
 }
 
+/* Kratke vrednosti ("+14 %", "5,43 mrd USD") označi vtičnik remark-nelomljivo. */
+.prose td.nowrap {
+  white-space: nowrap;
+}
+
 .prose tbody tr:nth-child(even) {
   background: var(--color-surface);
 }

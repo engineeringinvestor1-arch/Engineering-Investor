@@ -1,22 +1,23 @@
 ---
 // Stran za neznane naslove (avtor, 24. 9. 2026). Brez nje GitHub Pages postreže svojo belo stran
 // "Page not found · GitHub Pages" v angleščini, brez menija in brez poti nazaj.
-// Astro iz te datoteke naredi 404.html, ki jo GitHub Pages samodejno uporabi za vse neznane naslove.
+// Astro iz te datoteke naredi 404.html, ki jo GitHub Pages samodejno uporabi za vse neznane naslove,
+// tudi tiste pod /en/. Stran je zato slovenska, z eno vrstico za bralca angleške različice.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { NAV_LINKS } from '../config';
+import { navLinks } from '../config';
+import { pot } from '../i18n';
+import { slovar } from '../i18n/slovar';
 
-const poti = [
-  { ...NAV_LINKS.find((l) => l.href === '/analize'), opis: 'Tedenski pregledi trgov in poglobljene analize podjetij.' },
-  { ...NAV_LINKS.find((l) => l.href === '/koledar'), opis: 'Objave centralnih bank, gospodarski podatki in rezultati podjetij.' },
-  { ...NAV_LINKS.find((l) => l.href === '/kalkulatorji'), opis: 'Investicijski kalkulator in kalkulator pričakovanega donosa.' },
-];
+const t = slovar('sl').ni;
+const en = slovar('en').ni;
+const poti = navLinks('sl').map((l) => ({ ...l, opis: t[l.stran as 'analize' | 'koledar' | 'kalkulatorji'] }));
 ---
 
-<BaseLayout title="Te strani ni" description="Naslov ne obstaja ali pa je bil premaknjen. Tu so analize, koledar in kalkulatorji.">
+<BaseLayout title={t.naslov} description={t.opisMeta}>
   <div class="ni">
     <p class="ni__koda">404</p>
-    <h1 class="ni__naslov">Te strani ni</h1>
-    <p class="ni__lead">Naslov ne obstaja ali pa je bil premaknjen. Morda je bila povezava pri deljenju odrezana.</p>
+    <h1 class="ni__naslov">{t.naslov}</h1>
+    <p class="ni__lead">{t.lead}</p>
 
     <ul class="ni__seznam">
       {poti.map((p) => (
@@ -29,7 +30,8 @@ const poti = [
       ))}
     </ul>
 
-    <p class="ni__nazaj"><a href="/">Nazaj na domačo stran</a></p>
+    <p class="ni__nazaj"><a href={pot('domov', 'sl')}>{t.nazaj}</a></p>
+    <p class="ni__nazaj" lang="en"><a href={pot('domov', 'en')} hreflang="en">{en.naslov}. {en.nazaj}</a></p>
   </div>
 </BaseLayout>
 
@@ -49,4 +51,5 @@ const poti = [
   .ni__opis { display: block; font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
   .ni__nazaj a { color: var(--color-text-muted); font-size: var(--text-sm); }
   .ni__nazaj a:hover { color: var(--color-accent); }
+  .ni__nazaj + .ni__nazaj { margin-top: var(--space-sm); }
 </style>

@@ -26,14 +26,18 @@ export interface Izid {
   izPe: number; // letni prispevek spremembe P/E; (1 + letniDonos) = (1 + izRasti) * (1 + izPe)
 }
 
-export function napaka(p: Podjetje, c: Cilj, scenariji: Scenarij[]): string | null {
-  if (!(p.cena > 0)) return 'Vpiši ceno delnice, večjo od 0.';
-  if (!(p.eps > 0)) return 'Kalkulator potrebuje pozitiven dobiček na delnico. Pri podjetju z izgubo P/E ne obstaja.';
-  if (!(Number.isInteger(c.leta) && c.leta >= 1 && c.leta <= 30)) return 'Obdobje mora biti celo število let med 1 in 30.';
-  if (!(c.donos > -1)) return 'Želeni donos mora biti večji od -100 %.';
+// Vrne oznako napake vnosa ali null. Besedilo napake je v slovarju (src/i18n, ključ pd.napake),
+// ker je kalkulator na voljo v več jezikih.
+export type NapakaVnosa = 'cena' | 'eps' | 'leta' | 'donos' | 'rast' | 'pe';
+
+export function napaka(p: Podjetje, c: Cilj, scenariji: Scenarij[]): NapakaVnosa | null {
+  if (!(p.cena > 0)) return 'cena';
+  if (!(p.eps > 0)) return 'eps';
+  if (!(Number.isInteger(c.leta) && c.leta >= 1 && c.leta <= 30)) return 'leta';
+  if (!(c.donos > -1)) return 'donos';
   for (const s of scenariji) {
-    if (!(s.rast > -1)) return 'Rast dobička mora biti večja od -100 %.';
-    if (!(s.pe > 0)) return 'P/E ob koncu obdobja mora biti večji od 0.';
+    if (!(s.rast > -1)) return 'rast';
+    if (!(s.pe > 0)) return 'pe';
   }
   return null;
 }
@@ -66,4 +70,4 @@ export function pot(p: Podjetje, c: Cilj, s: Scenarij): number[] {
 
 // Zapis števil je skupen obema kalkulatorjema (src/lib/stevilke.ts); tu ga samo posredujemo naprej,
 // da uvozi v komponenti ostanejo nespremenjeni.
-export { fmt, fmtPct, fmtVnos, pctVnos, let_ } from './stevilke.ts';
+export { fmt, fmtPct, fmtVnos, pctVnos, let_, nastaviJezik, parseStevilo } from './stevilke.ts';

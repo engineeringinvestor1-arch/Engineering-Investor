@@ -5,6 +5,8 @@ import Disclaimer from '../components/ui/Disclaimer.astro';
 import Button from '../components/ui/Button.astro';
 import { SITE } from '../config';
 import { url } from '../utils/url';
+import { INTL, getLang, pot, type Lang } from '../i18n';
+import { slovar } from '../i18n/slovar';
 
 interface Props {
   title: string;
@@ -13,26 +15,32 @@ interface Props {
   readingTime: number;
   category: string;
   image?: string;
+  // Naslovi tega članka v jezikih, v katerih obstaja (za gumb za jezik in iskalnike).
+  alternates?: Partial<Record<Lang, string>>;
 }
 
-const { title, description, pubDate, readingTime, category, image } = Astro.props;
+const { title, description, pubDate, readingTime, category, image, alternates } = Astro.props;
 
-const formattedDate = new Intl.DateTimeFormat('sl-SI', {
+const lang = getLang(Astro.url.pathname);
+const s = slovar(lang);
+const t = s.clanek;
+
+const formattedDate = new Intl.DateTimeFormat(INTL[lang], {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
 }).format(pubDate);
 ---
 
-<BaseLayout title={title} description={description} article={true}>
+<BaseLayout title={title} description={description} article={true} alternates={alternates}>
   <div class="article-page">
     <div class="container">
 
       <!-- Breadcrumb -->
-      <nav class="article-breadcrumb" aria-label="Pot do strani">
-        <a href={url('/')} class="article-breadcrumb__link">Domov</a>
+      <nav class="article-breadcrumb" aria-label={t.pot}>
+        <a href={url(pot('domov', lang))} class="article-breadcrumb__link">{t.domov}</a>
         <span class="article-breadcrumb__sep" aria-hidden="true">/</span>
-        <a href={url('/analize')} class="article-breadcrumb__link">Analize</a>
+        <a href={url(pot('analize', lang))} class="article-breadcrumb__link">{s.analize.naslov}</a>
         <span class="article-breadcrumb__sep" aria-hidden="true">/</span>
         <span class="article-breadcrumb__current" aria-current="page">{title}</span>
       </nav>
@@ -55,7 +63,7 @@ const formattedDate = new Intl.DateTimeFormat('sl-SI', {
                 <div class="article-header__dates">
                   <time datetime={pubDate.toISOString()}>{formattedDate}</time>
                   <span aria-hidden="true">·</span>
-                  <span>{readingTime} min branja</span>
+                  <span>{t.minBranja(readingTime)}</span>
                 </div>
               </div>
             </div>
@@ -82,24 +90,24 @@ const formattedDate = new Intl.DateTimeFormat('sl-SI', {
           <Disclaimer />
 
           <div class="article-footer__share">
-            <p class="article-footer__share-label">Delite analizo</p>
+            <p class="article-footer__share-label">{t.deli}</p>
             <a
-              href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(SITE.url + '/analize/')}`}
+              href={`https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`${SITE.url}${pot('analize', lang)}/`)}`}
               target="_blank"
               rel="noopener noreferrer"
               class="article-footer__share-btn"
-              aria-label="Deli na X"
+              aria-label={t.deliNaX}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
-              Deli na X
+              {t.deliNaX}
             </a>
           </div>
 
           <div class="article-footer__cta">
-            <Button href={url('/analize')} variant="ghost">
-              ← Vse analize
+            <Button href={url(pot('analize', lang))} variant="ghost">
+              {t.vseAnalize}
             </Button>
           </div>
         </footer>

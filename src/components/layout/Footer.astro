@@ -1,6 +1,13 @@
 ---
-import { SITE, NAV_LINKS } from '../../config';
+import { SITE, navLinks } from '../../config';
 import { url } from '../../utils/url';
+import { getLang, pot } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
+
+const lang = getLang(Astro.url.pathname);
+const s = slovar(lang);
+const t = s.footer;
+const NAV_LINKS = navLinks(lang);
 ---
 
 <footer class="footer">
@@ -10,16 +17,16 @@ import { url } from '../../utils/url';
     <div class="footer__top">
       <!-- Brand -->
       <div class="footer__brand">
-        <a href={url('/')} class="footer__brand-link" aria-label={SITE.name}>
+        <a href={url(pot('domov', lang))} class="footer__brand-link" aria-label={SITE.name}>
           <span class="footer__brand-icon">EI</span>
           <span class="footer__brand-name">{SITE.name}</span>
         </a>
-        <p class="footer__tagline">{SITE.tagline}</p>
+        <p class="footer__tagline">{s.site.tagline}</p>
       </div>
 
       <!-- Navigation -->
-      <nav class="footer__nav" aria-label="Navigacija v nogi">
-        <p class="footer__nav-title">Strani</p>
+      <nav class="footer__nav" aria-label={t.navigacija}>
+        <p class="footer__nav-title">{t.strani}</p>
         <ul class="footer__nav-links">
           {NAV_LINKS.map((link) => (
             <li><a href={url(link.href)} class="footer__nav-link">{link.label}</a></li>
@@ -29,25 +36,18 @@ import { url } from '../../utils/url';
 
       <!-- Social -->
       <div class="footer__social">
-        <p class="footer__nav-title">Sledi</p>
+        <p class="footer__nav-title">{t.sledi}</p>
         <a
           href={SITE.twitterUrl}
           target="_blank"
           rel="noopener noreferrer"
           class="footer__social-btn"
-          aria-label="Spremljaj na X"
+          aria-label={t.spremljaj}
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
-          Spremljaj na X
-        </a>
-        <a href="/rss.xml" class="footer__social-btn" aria-label="Vir RSS za bralnike">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <circle cx="6.18" cy="17.82" r="2.18"/>
-            <path d="M4 10.1v2.9a8 8 0 0 1 8 8h2.9A10.9 10.9 0 0 0 4 10.1Zm0-5.1v2.9A13.1 13.1 0 0 1 17.1 21H20A16 16 0 0 0 4 5Z"/>
-          </svg>
-          Vir RSS
+          {t.spremljaj}
         </a>
       </div>
     </div>
@@ -55,14 +55,14 @@ import { url } from '../../utils/url';
     <!-- Disclaimer -->
     <div class="footer__disclaimer">
       <p>
-        <strong>Zavrnitev odgovornosti:</strong> Vsebina na tej strani ni finančni nasvet in ni priporočilo za nakup ali prodajo finančnih instrumentov. Vse analize in komentarji so izključno izobraževalne narave. Investiranje vključuje tveganje izgube kapitala. Pred kakršno koli finančno odločitvijo se posvetujte s pooblaščenim finančnim svetovalcem.
+        <strong>{t.zavrnitevNaslov}</strong> {t.zavrnitev}
       </p>
     </div>
 
     <!-- Bottom row -->
     <div class="footer__bottom">
       <p class="footer__copyright">
-        &copy; {new Date().getFullYear()} {SITE.name}. Vse pravice pridržane.
+        &copy; {new Date().getFullYear()} {SITE.name}. {t.pravice}
       </p>
     </div>
 

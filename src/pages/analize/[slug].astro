@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { jezikiClanka } from '../../i18n/clanki';
 
 export async function getStaticPaths() {
   const articles = await getCollection('analize');
@@ -12,6 +13,8 @@ export async function getStaticPaths() {
 
 const { article } = Astro.props;
 const { Content } = await render(article);
+// Če ima članek prevod, gumb za jezik vodi nanj; sicer na seznam analiz v tistem jeziku.
+const alternates = await jezikiClanka('sl', article);
 ---
 
 <ArticleLayout
@@ -21,6 +24,7 @@ const { Content } = await render(article);
   readingTime={article.data.readingTime}
   category={article.data.category}
   image={article.data.image}
+  alternates={alternates}
 >
   <Content />
 </ArticleLayout>

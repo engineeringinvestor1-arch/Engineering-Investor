@@ -5,53 +5,58 @@ import '../../styles/kalkulator.css';
 // in napredni s tremi scenariji kot spustni del, ki ob odprtju prevzame številke iz osnovnega.
 // Račun je v src/lib/pricakovani-donos.ts. Primer ob odprtju je izmišljeno podjetje z okroglimi
 // številkami, da stran ne kaže zastarelih podatkov o resničnem podjetju brez vira.
+import { getLang } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
+
+// Besedila so v slovarju (src/i18n, ključ pd); jezik pride iz naslova strani.
+const lang = getLang(Astro.url.pathname);
+const t = slovar(lang).pd;
+// Privzeti želeni donos v oznakah, dokler skripta ne izriše izida (slovensko "10 %", angleško "10%").
+const deset = lang === 'sl' ? '10 %' : '10%';
 const scenariji = [
-  { ime: 'Slab', rast: 4, pe: 14 },
-  { ime: 'Osnovni', rast: 8, pe: 18 },
-  { ime: 'Dober', rast: 12, pe: 22 },
+  { ime: t.imena[0], rast: 4, pe: 14 },
+  { ime: t.imena[1], rast: 8, pe: 18 },
+  { ime: t.imena[2], rast: 12, pe: 22 },
 ];
 ---
 
 <div class="kd">
   <header class="kd__header">
-    <h1 class="kd__title">Kalkulator pričakovanega donosa</h1>
-    <p class="kd__lead">
-      Vpiši ceno, dobiček in svojo oceno rasti. Kalkulator pove, kakšen letni donos lahko pričakuješ
-      in koliko bi smel plačati za donos, ki ga želiš.
-    </p>
+    <h1 class="kd__title">{t.naslov}</h1>
+    <p class="kd__lead">{t.lead}</p>
   </header>
 
-  <section class="kd__panel kb" aria-label="Osnovni kalkulator">
+  <section class="kd__panel kb" aria-label={t.osnovni}>
     <form class="kb__form" id="kb-form" novalidate>
-      <p class="kd__h">Podjetje in tvoja ocena</p>
+      <p class="kd__h">{t.podjetjeInOcena}</p>
       <label class="kd__field">
-        <span class="kd__label">Cena delnice</span>
+        <span class="kd__label">{t.cena}</span>
         <input class="kd__num" type="text" inputmode="decimal" id="kb-cena" value="100" autocomplete="off" />
       </label>
       <label class="kd__field">
-        <span class="kd__label">Dobiček na delnico<small>zadnjih 12 mesecev (EPS TTM)</small></span>
+        <span class="kd__label">{t.eps}<small>{t.epsOpis}</small></span>
         <input class="kd__num" type="text" inputmode="decimal" id="kb-eps" value="5" autocomplete="off" />
       </label>
       <label class="kd__field">
-        <span class="kd__label">Rast dobička na leto<small>tvoja ocena za 5 let</small></span>
+        <span class="kd__label">{t.rast}<small>{t.rastOpis}</small></span>
         <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="kb-rast" value="8" autocomplete="off" /><span class="kd__unit">%</span></span>
       </label>
       <label class="kd__field">
-        <span class="kd__label">P/E čez 5 let<small>današnji: <strong id="kb-pe-danes">–</strong></small></span>
+        <span class="kd__label">{t.peCez5}<small>{t.danasnji} <strong id="kb-pe-danes">–</strong></small></span>
         <input class="kd__num" type="text" inputmode="decimal" id="kb-pe" value="18" autocomplete="off" />
       </label>
       <label class="kd__field">
-        <span class="kd__label">Želeni letni donos</span>
+        <span class="kd__label">{t.zeleniDonos}</span>
         <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="kb-donos" value="10" autocomplete="off" /><span class="kd__unit">%</span></span>
       </label>
     </form>
 
     <div class="kb__out" aria-live="polite">
-      <p class="kd__h kb__out-h">Izid</p>
+      <p class="kd__h kb__out-h">{t.izid}</p>
       <div class="kb__kpis">
-        <div class="kb__kpi"><span class="kb__kpi-label">Pričakovani donos</span><span class="kb__kpi-value" id="kb-izid">–</span><span class="kb__kpi-hint">na leto</span></div>
-        <div class="kb__kpi"><span class="kb__kpi-label" id="kb-najvec-label">Najvišja cena za 10 %</span><span class="kb__kpi-value" id="kb-najvec">–</span><span class="kb__kpi-hint">danes</span></div>
-        <div class="kb__kpi"><span class="kb__kpi-label">Cena čez 5 let</span><span class="kb__kpi-value" id="kb-konec">–</span><span class="kb__kpi-hint">po tvoji oceni</span></div>
+        <div class="kb__kpi"><span class="kb__kpi-label">{t.pricakovaniDonos}</span><span class="kb__kpi-value" id="kb-izid">–</span><span class="kb__kpi-hint">{t.naLeto}</span></div>
+        <div class="kb__kpi"><span class="kb__kpi-label" id="kb-najvec-label">{t.najvisjaCenaZa(deset)}</span><span class="kb__kpi-value" id="kb-najvec">–</span><span class="kb__kpi-hint">{t.danes}</span></div>
+        <div class="kb__kpi"><span class="kb__kpi-label">{t.cenaCez5}</span><span class="kb__kpi-value" id="kb-konec">–</span><span class="kb__kpi-hint">{t.poTvojiOceni}</span></div>
       </div>
       <p class="kb__verdict" id="kb-verdict"></p>
       <div id="kb-warn"></div>
@@ -61,70 +66,69 @@ const scenariji = [
 
   <details class="kd__more kd__adv" id="kd-adv">
     <summary>
-      <span class="kd__sum-title">Napredni kalkulator</span>
-      <span class="kd__sum-sub">Trije scenariji, poljubno obdobje, kolikšno rast predvideva cena in od kod pride donos</span>
+      <span class="kd__sum-title">{t.napredni}</span>
+      <span class="kd__sum-sub">{t.napredniOpis}</span>
     </summary>
     <div class="kd__more-body">
       <p class="kd__adv-lead">
-        Ob odprtju prevzame številke iz osnovnega kalkulatorja. Slab in dober scenarij sta predlog iz tvoje ocene
-        (rast za polovico nižja ali višja, P/E za 20 % nižji ali višji); spremeni ju po svoje.
-        <button type="button" class="kd__link" id="kd-prevzemi">Prevzemi znova iz osnovnega</button>
+        {t.napredniLead}
+        <button type="button" class="kd__link" id="kd-prevzemi">{t.prevzemi}</button>
       </p>
 
       <div class="kd__grid">
         <form class="kd__panel kd__inputs" id="kd-form" novalidate>
           <fieldset>
-            <legend class="kd__h">Podjetje danes</legend>
+            <legend class="kd__h">{t.podjetjeDanes}</legend>
             <label class="kd__field">
-              <span class="kd__label">Cena delnice</span>
+              <span class="kd__label">{t.cena}</span>
               <input class="kd__num" type="text" inputmode="decimal" id="kd-cena" value="100" autocomplete="off" />
             </label>
             <label class="kd__field">
-              <span class="kd__label">Dobiček na delnico<small>zadnjih 12 mesecev (EPS TTM), v isti valuti kot cena</small></span>
+              <span class="kd__label">{t.eps}<small>{t.epsOpisValuta}</small></span>
               <input class="kd__num" type="text" inputmode="decimal" id="kd-eps" value="5" autocomplete="off" />
             </label>
-            <p class="kd__derived">Današnji P/E: <strong id="kd-pe-danes">–</strong></p>
+            <p class="kd__derived">{t.danasnjiPe} <strong id="kd-pe-danes">–</strong></p>
           </fieldset>
 
           <fieldset>
-            <legend class="kd__h">Tvoj cilj</legend>
+            <legend class="kd__h">{t.tvojCilj}</legend>
             <label class="kd__field">
-              <span class="kd__label">Želeni letni donos</span>
+              <span class="kd__label">{t.zeleniDonos}</span>
               <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="kd-donos" value="10" autocomplete="off" /><span class="kd__unit">%</span></span>
             </label>
             <label class="kd__field">
-              <span class="kd__label">Obdobje</span>
-              <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="numeric" id="kd-leta" value="5" autocomplete="off" /><span class="kd__unit">let</span></span>
+              <span class="kd__label">{t.obdobje}</span>
+              <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="numeric" id="kd-leta" value="5" autocomplete="off" /><span class="kd__unit">{t.enotaLet}</span></span>
             </label>
           </fieldset>
 
           <fieldset>
-            <legend class="kd__h">Scenariji</legend>
+            <legend class="kd__h">{t.scenariji}</legend>
             <div class="kd__scen">
               <span></span>
               {scenariji.map((s) => <span class="kd__scen-h">{s.ime}</span>)}
-              <span class="kd__scen-l">Rast dobička na leto (%)</span>
+              <span class="kd__scen-l">{t.rastVrstica}</span>
               {scenariji.map((s, i) => (
-                <input class="kd__num" type="text" inputmode="decimal" data-s={i} data-k="rast" value={s.rast} aria-label={`${s.ime} scenarij: rast dobička na leto v odstotkih`} autocomplete="off" />
+                <input class="kd__num" type="text" inputmode="decimal" data-s={i} data-k="rast" value={s.rast} aria-label={t.rastAria(s.ime)} autocomplete="off" />
               ))}
-              <span class="kd__scen-l">P/E ob koncu obdobja</span>
+              <span class="kd__scen-l">{t.peVrstica}</span>
               {scenariji.map((s, i) => (
-                <input class="kd__num" type="text" inputmode="decimal" data-s={i} data-k="pe" value={s.pe} aria-label={`${s.ime} scenarij: P/E ob koncu obdobja`} autocomplete="off" />
+                <input class="kd__num" type="text" inputmode="decimal" data-s={i} data-k="pe" value={s.pe} aria-label={t.peAria(s.ime)} autocomplete="off" />
               ))}
             </div>
-            <p class="kd__hint">P/E ob koncu je največji vzvod v izračunu. Primerjaj ga z današnjim.</p>
+            <p class="kd__hint">{t.peNamig}</p>
           </fieldset>
         </form>
 
-        <section class="kd__panel kd__results" aria-live="polite" aria-label="Izid naprednega kalkulatorja">
+        <section class="kd__panel kd__results" aria-live="polite" aria-label={t.izidNapredni}>
           <p class="kd__headline" id="kd-headline"></p>
           <table class="kd__table">
             <thead>
               <tr>
-                <th scope="col">Scenarij</th>
-                <th scope="col" id="kd-th-cena">Cena čez 5 let</th>
-                <th scope="col">Letni donos</th>
-                <th scope="col" id="kd-th-najvec">Najvišja cena za 10 %</th>
+                <th scope="col">{t.scenarij}</th>
+                <th scope="col" id="kd-th-cena">{t.cenaCez5}</th>
+                <th scope="col">{t.letniDonos}</th>
+                <th scope="col" id="kd-th-najvec">{t.najvisjaCenaZa(deset)}</th>
               </tr>
             </thead>
             <tbody id="kd-rows"></tbody>
@@ -134,43 +138,30 @@ const scenariji = [
       </div>
 
       <section class="kd__panel kd__chart-panel">
-        <h2 class="kd__h">Cena v treh scenarijih</h2>
+        <h2 class="kd__h">{t.cenaVTrehScenarijih}</h2>
         <div class="kd__chart" id="kd-chart"></div>
-        <p class="kd__caption">
-          Pas kaže razpon med slabim in dobrim scenarijem. Pot med danes in koncem obdobja je ponazoritev
-          z enakomernim letnim donosom; kalkulator računa samo ceno na začetku in na koncu.
-        </p>
+        <p class="kd__caption">{t.grafOpis}</p>
       </section>
     </div>
   </details>
 
   <details class="kd__more">
     <summary>
-      <span class="kd__sum-title">Kako kalkulator računa in česa ne upošteva</span>
+      <span class="kd__sum-title">{t.kakoRacuna}</span>
     </summary>
     <div class="kd__more-body kd__explain">
       <ol>
-        <li><strong>Dobiček čez N let</strong> = današnji dobiček × (1 + rast)<sup>N</sup></li>
-        <li><strong>Cena čez N let</strong> = dobiček čez N let × P/E ob koncu obdobja</li>
-        <li><strong>Letni donos</strong> = (cena čez N let ÷ današnja cena)<sup>1/N</sup> − 1</li>
-        <li><strong>Najvišja cena za želeni donos</strong> = cena čez N let ÷ (1 + želeni donos)<sup>N</sup></li>
+        {t.formule.map((vrstica) => <li set:html={vrstica} />)}
       </ol>
-      <p>
-        Donos ima dva vira: rast dobička in spremembo P/E. Če je P/E ob koncu višji od današnjega, del donosa
-        pride iz tega, da bo trg za isti dobiček plačal več. Na to se zanašati je bolj tvegano kot na rast.
-      </p>
-      <p><strong>Česa ne upošteva:</strong></p>
+      <p>{t.dvaVira}</p>
+      <p><strong>{t.cesaNe}</strong></p>
       <ul>
-        <li><strong>Dividend.</strong> Donos je samo sprememba cene.</li>
-        <li><strong>Da rast stane.</strong> Podjetje mora za rast vlagati. Visoka rast pri nizki donosnosti vloženega kapitala je vredna manj, kot kaže izračun.</li>
-        <li><strong>Enkratnih učinkov.</strong> Če je bil dobiček zadnjih 12 mesecev izjemen (enkratni prihodek, odpis, davčna postavka), je izhodišče napačno.</li>
+        {t.neUposteva.map((vrstica) => <li set:html={vrstica} />)}
       </ul>
     </div>
   </details>
 
-  <p class="kd__note">
-    Izobraževalni pripomoček. Izid je toliko dober, kolikor so dobre tvoje predpostavke, in ni finančni nasvet.
-  </p>
+  <p class="kd__note">{t.opomba}</p>
 </div>
 
 <style is:global>
@@ -255,21 +246,22 @@ const scenariji = [
 </style>
 
 <script>
-  import { fmt, fmtPct, fmtVnos, izracun, let_, napaka, pctVnos, pot, potrebnaRast, peDanes, type Scenarij } from '../../lib/pricakovani-donos';
+  import { fmt, fmtPct, fmtVnos, izracun, let_, napaka, nastaviJezik, parseStevilo, pctVnos, pot, potrebnaRast, peDanes, type Scenarij } from '../../lib/pricakovani-donos';
+  import { jezikStrani, slovar } from '../../i18n/slovar';
 
-  const IMENA = ['Slab', 'Osnovni', 'Dober'];
+  // Jezik strani določa besedila (slovar src/i18n, ključ pd) in zapis števil.
+  const LANG = jezikStrani();
+  nastaviJezik(LANG);
+  const T = slovar(LANG).pd;
+
+  const IMENA = T.imena;
   const LETA_OSNOVNI = 5;
   const $ = (id: string) => document.getElementById(id)!;
   const val = (id: string) => parse(($(id) as HTMLInputElement).value);
   const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-  // Sprejme "12,5", "12.5" in "1.234,5". Vejica je decimalna; če je ni, je pika decimalna.
-  function parse(raw: string): number {
-    const t = raw.trim().replace(/\s/g, '');
-    if (!t) return Number.NaN;
-    const n = t.includes(',') ? t.replace(/\./g, '').replace(',', '.') : t;
-    return /^[-+]?\d*\.?\d+$/.test(n) ? Number(n) : Number.NaN;
-  }
+  // Branje vnosa je skupno obema kalkulatorjema in upošteva zapis števil v jeziku strani (src/lib/stevilke.ts).
+  const parse = parseStevilo;
 
   function oznaciNeveljavne(formId: string) {
     document.querySelectorAll<HTMLInputElement>(`#${formId} .kd__num`).forEach((el) => {
@@ -278,7 +270,7 @@ const scenariji = [
   }
 
   const opozoriloPe = (pe: number, danes: number, leta: string) =>
-    `<p class="kd__warn"><span class="kd__warn-icon" aria-hidden="true">!</span><span><strong>P/E čez ${leta} (${fmtVnos(pe)}) je višji od današnjega (${fmt(danes, 1)}).</strong> Del donosa predvideva, da bo trg za isti dobiček plačal več kot danes, ne da bo podjetje zraslo.</span></p>`;
+    `<p class="kd__warn"><span class="kd__warn-icon" aria-hidden="true">!</span><span>${T.opozoriloPe(leta, fmtVnos(pe), fmt(danes, 1))}</span></p>`;
 
   // ---------- osnovni kalkulator ----------
 
@@ -291,21 +283,21 @@ const scenariji = [
     const err = napaka(p, c, [s]);
     if (err) {
       ['kb-izid', 'kb-najvec', 'kb-konec'].forEach((id) => { $(id).textContent = '–'; });
-      $('kb-verdict').innerHTML = `<span class="kd__error">${esc(err)}</span>`;
+      $('kb-verdict').innerHTML = `<span class="kd__error">${esc(T.napake[err])}</span>`;
       $('kb-warn').innerHTML = '';
       $('kb-chart').innerHTML = '';
       return;
     }
     const r = izracun(p, c, s);
     $('kb-izid').textContent = fmtPct(r.letniDonos, 1, true);
-    $('kb-najvec-label').textContent = `Najvišja cena za ${pctVnos(c.donos)}`;
+    $('kb-najvec-label').textContent = T.najvisjaCenaZa(pctVnos(c.donos));
     $('kb-najvec').textContent = fmt(r.najvisjaCena);
     $('kb-konec').textContent = fmt(r.cenaKonec);
     $('kb-verdict').innerHTML = r.letniDonos >= c.donos
-      ? `Po tej oceni <strong>dosežeš svoj cilj ${pctVnos(c.donos)}</strong>: današnja cena ${fmt(p.cena)} je pod najvišjo ceno ${fmt(r.najvisjaCena)}.`
-      : `Po tej oceni <strong>ne dosežeš cilja ${pctVnos(c.donos)}</strong>: zanj bi smel plačati največ ${fmt(r.najvisjaCena)}, danes pa delnica stane ${fmt(p.cena)}.`;
+      ? T.dosezes(pctVnos(c.donos), fmt(p.cena), fmt(r.najvisjaCena))
+      : T.neDosezes(pctVnos(c.donos), fmt(r.najvisjaCena), fmt(p.cena));
     $('kb-warn').innerHTML = s.pe > peDanes(p) ? opozoriloPe(s.pe, peDanes(p), let_(LETA_OSNOVNI)) : '';
-    graf('kb-chart', p, c, [{ ime: 'Cena', s }]);
+    graf('kb-chart', p, c, [{ ime: T.serijaCena, s }]);
   }
 
   // ---------- napredni kalkulator ----------
@@ -343,7 +335,7 @@ const scenariji = [
     const err = napaka(p, c, scen);
     $('kd-pe-danes').textContent = p.cena > 0 && p.eps > 0 ? fmt(peDanes(p), 1) : '–';
     if (err) {
-      $('kd-headline').innerHTML = `<span class="kd__error">${esc(err)}</span>`;
+      $('kd-headline').innerHTML = `<span class="kd__error">${esc(T.napake[err])}</span>`;
       $('kd-rows').innerHTML = '';
       $('kd-notes').innerHTML = '';
       $('kd-chart').innerHTML = '';
@@ -351,12 +343,12 @@ const scenariji = [
     }
     const izidi = scen.map((s) => izracun(p, c, s));
     const leta = let_(c.leta);
-    $('kd-th-cena').textContent = `Cena čez ${leta}`;
-    $('kd-th-najvec').textContent = `Najvišja cena za ${pctVnos(c.donos)}`;
+    $('kd-th-cena').textContent = T.cenaCez(leta);
+    $('kd-th-najvec').textContent = T.najvisjaCenaZa(pctVnos(c.donos));
 
     const donosi = izidi.map((r) => r.letniDonos);
     const lo = Math.min(...donosi), hi = Math.max(...donosi);
-    $('kd-headline').innerHTML = `Pri ceni <strong>${fmt(p.cena)}</strong> lahko po teh predpostavkah pričakuješ od <strong>${fmtPct(lo)}</strong> do <strong>${fmtPct(hi)}</strong> na leto; osnovni scenarij <strong>${fmtPct(izidi[1].letniDonos)}</strong>.`;
+    $('kd-headline').innerHTML = T.naslovVrstica(fmt(p.cena), fmtPct(lo), fmtPct(hi), fmtPct(izidi[1].letniDonos));
 
     $('kd-rows').innerHTML = izidi.map((r, i) => `<tr class="${i === 1 ? 'kd__base' : ''}">
       <td>${IMENA[i]}</td><td>${fmt(r.cenaKonec)}</td><td>${fmtPct(r.letniDonos, 1, true)}</td><td>${fmt(r.najvisjaCena)}</td></tr>`).join('');
@@ -365,13 +357,12 @@ const scenariji = [
     const base = scen[1], rb = izidi[1];
     const potrebna = potrebnaRast(p, c, base.pe);
     const notes: string[] = [];
-    notes.push(`<p class="kd__insight">Za <strong>${pctVnos(c.donos)}</strong> na leto bi moral dobiček rasti <strong>${fmtPct(potrebna)}</strong> na leto, če bo P/E čez ${leta} ${fmtVnos(base.pe)}. V osnovnem scenariju računaš z ${pctVnos(base.rast)}.</p>`);
-    const smer = rb.izPe >= 0 ? 'višjega' : 'nižjega';
-    notes.push(`<p class="kd__insight">Osnovni scenarij: ${fmtPct(rb.izRasti, 1, true)} na leto iz rasti dobička, ${fmtPct(rb.izPe, 1, true)} iz ${smer} P/E (${fmt(peDanes(p), 1)} danes, ${fmtVnos(base.pe)} ob koncu).</p>`);
+    notes.push(`<p class="kd__insight">${T.potrebnaRast(pctVnos(c.donos), fmtPct(potrebna), leta, fmtVnos(base.pe), pctVnos(base.rast))}</p>`);
+    notes.push(`<p class="kd__insight">${T.razclenitev(fmtPct(rb.izRasti, 1, true), fmtPct(rb.izPe, 1, true), rb.izPe >= 0, fmt(peDanes(p), 1), fmtVnos(base.pe))}</p>`);
     const visji = scen.map((s, i) => ({ s, i })).filter(({ s }) => s.pe > peDanes(p));
     if (visji.length) {
       const kje = visji.map(({ s, i }) => `${IMENA[i].toLowerCase()} (${fmtVnos(s.pe)})`).join(', ');
-      notes.push(`<p class="kd__warn"><span class="kd__warn-icon" aria-hidden="true">!</span><span><strong>Višji P/E od današnjega</strong> v scenariju: ${kje}. Predvidevaš, da bo trg čez ${leta} za isti dobiček plačal več kot danes (${fmt(peDanes(p), 1)}). Ta del donosa ne pride iz rasti podjetja.</span></p>`);
+      notes.push(`<p class="kd__warn"><span class="kd__warn-icon" aria-hidden="true">!</span><span>${T.visjiPe(kje, leta, fmt(peDanes(p), 1))}</span></p>`);
     }
     $('kd-notes').innerHTML = notes.join('');
 
@@ -415,7 +406,7 @@ const scenariji = [
     const xt: string[] = [];
     for (let t = 0; t <= c.leta; t++) {
       if (t % every && t !== c.leta) continue;
-      const lbl = t === 0 ? 'danes' : t === c.leta ? let_(t) : String(t);
+      const lbl = t === 0 ? T.grafDanes : t === c.leta ? let_(t) : String(t);
       xt.push(`<text x="${x(t).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="11" style="fill:var(--color-text-muted)">${lbl}</text>`);
     }
 
@@ -440,7 +431,7 @@ const scenariji = [
     for (let k = 1; k < labels.length; k++) if (labels[k].y - labels[k - 1].y < 16) labels[k].y = labels[k - 1].y + 16;
     const endLabels = labels.map((l) => `<text x="${(x(c.leta) + 10).toFixed(1)}" y="${(l.y + 4).toFixed(1)}" font-size="12" style="fill:var(--color-text-muted)">${pas ? `${serije[l.i].ime} ` : ''}<tspan font-weight="700" style="fill:var(--color-text)">${fmt(l.v, dec)}</tspan></text>`);
 
-    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${pas ? 'Cena delnice v treh scenarijih' : 'Cena delnice po tvoji oceni'} od danes do konca obdobja">
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${pas ? T.grafOznakaTri : T.grafOznakaEna}">
       ${grid.join('')}${xt.join('')}${risba}
       ${konci.map((v, i) => `<circle cx="${x(c.leta).toFixed(1)}" cy="${y(v).toFixed(1)}" r="${i === glavna ? 4 : 3}" style="fill:var(--color-accent);stroke:var(--color-surface)" stroke-width="2"/>`).join('')}
       <circle cx="${x(0).toFixed(1)}" cy="${y(p.cena).toFixed(1)}" r="4.5" style="fill:var(--color-text);stroke:var(--color-surface)" stroke-width="2"/>
@@ -461,7 +452,7 @@ const scenariji = [
       cross.setAttribute('x1', x(t).toFixed(1));
       cross.setAttribute('x2', x(t).toFixed(1));
       cross.style.display = '';
-      const naslov = t === 0 ? 'Danes' : `Čez ${let_(t)}`;
+      const naslov = t === 0 ? T.namigDanes : T.namigCez(let_(t));
       tip.innerHTML = `<strong>${naslov}</strong>${vrstni.map((i) => `<span>${serije[i].ime} <b>${fmt(poti[i][t], dec)}</b></span>`).join('')}`;
       tip.style.display = 'block';
       const left = (x(t) / W) * r.width;

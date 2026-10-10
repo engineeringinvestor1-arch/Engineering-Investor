@@ -7,26 +7,21 @@
 // slepoto in kontrast na svetli in temni podlagi; ista trojica prestane v obeh temah.
 import '../../styles/kalkulator.css';
 import { POGOSTOSTI } from '../../lib/investicijski';
+import { getLang } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
 
-const ZAVIHKI = [
-  { id: 'koncni', ime: 'Končni znesek' },
-  { id: 'vplacilo', ime: 'Redno vplačilo' },
-  { id: 'donos', ime: 'Donosnost' },
-  { id: 'zacetni', ime: 'Začetni znesek' },
-  { id: 'doba', ime: 'Doba' },
-];
+// Besedila so v slovarju (src/i18n, ključ ik); jezik pride iz naslova strani.
+const t = slovar(getLang(Astro.url.pathname)).ik;
+const ZAVIHKI = (['koncni', 'vplacilo', 'donos', 'zacetni', 'doba'] as const).map((id) => ({ id, ime: t.zavihki[id] }));
 ---
 
 <div class="ik">
   <header class="ik__header">
-    <h1 class="ik__title">Investicijski kalkulator</h1>
-    <p class="ik__lead">
-      Koliko zraste privarčevani denar, koliko moraš vlagati za svoj cilj, kolikšno donosnost ali koliko časa
-      za to potrebuješ. Izberi, kaj naj kalkulator izračuna.
-    </p>
+    <h1 class="ik__title">{t.naslov}</h1>
+    <p class="ik__lead">{t.lead}</p>
   </header>
 
-  <div class="ik__tabs" role="tablist" aria-label="Kaj naj kalkulator izračuna">
+  <div class="ik__tabs" role="tablist" aria-label={t.zavihkiOznaka}>
     {ZAVIHKI.map((z, i) => (
       <button type="button" role="tab" class={`ik__tab${i === 0 ? ' ik__tab--on' : ''}`} data-tab={z.id} aria-selected={i === 0 ? 'true' : 'false'}>{z.ime}</button>
     ))}
@@ -35,57 +30,57 @@ const ZAVIHKI = [
   <div class="ik__grid">
     <form class="ik__panel ik__inputs" id="ik-form" novalidate>
       <label class="kd__field" data-polje="cilj" hidden>
-        <span class="kd__label">Cilj<small id="ik-cilj-opis">koliko želiš imeti ob koncu</small></span>
+        <span class="kd__label">{t.cilj}<small id="ik-cilj-opis">{t.ciljOpis}</small></span>
         <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-cilj" value="100000" autocomplete="off" /><span class="kd__unit">€</span></span>
       </label>
       <label class="kd__field" data-polje="zacetni">
-        <span class="kd__label">Začetni znesek</span>
+        <span class="kd__label">{t.zacetni}</span>
         <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-zacetni" value="20000" autocomplete="off" /><span class="kd__unit">€</span></span>
       </label>
       <label class="kd__field" data-polje="leta">
-        <span class="kd__label">Doba</span>
-        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-leta" value="10" autocomplete="off" /><span class="kd__unit">let</span></span>
+        <span class="kd__label">{t.doba}</span>
+        <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-leta" value="10" autocomplete="off" /><span class="kd__unit">{t.enotaLet}</span></span>
       </label>
       <label class="kd__field" data-polje="stopnja">
-        <span class="kd__label">Letna donosnost</span>
+        <span class="kd__label">{t.letnaDonosnost}</span>
         <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-stopnja" value="6" autocomplete="off" /><span class="kd__unit">%</span></span>
       </label>
       <label class="kd__field">
-        <span class="kd__label">Obrestovanje<small>kako pogosto se donos pripiše</small></span>
+        <span class="kd__label">{t.obrestovanje}<small>{t.obrestovanjeOpis}</small></span>
         <select class="kd__num ik__select" id="ik-pogostost">
-          {POGOSTOSTI.map((p) => <option value={p.id} selected={p.id === 'letno'}>{p.ime}</option>)}
+          {POGOSTOSTI.map((p) => <option value={p.id} selected={p.id === 'letno'}>{t.pogostosti[p.id]}</option>)}
         </select>
       </label>
       <label class="kd__field" data-polje="prispevek">
-        <span class="kd__label">Redno vplačilo</span>
+        <span class="kd__label">{t.prispevek}</span>
         <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-prispevek" value="500" autocomplete="off" /><span class="kd__unit">€</span></span>
       </label>
       <fieldset class="ik__radios">
-        <legend class="kd__label">Vplačam</legend>
+        <legend class="kd__label">{t.vplacam}</legend>
         <div class="ik__radio-row">
-          <label class="ik__radio"><input type="radio" name="ik-kdaj" value="zacetek" /> na začetku</label>
-          <label class="ik__radio"><input type="radio" name="ik-kdaj" value="konec" checked /> na koncu</label>
+          <label class="ik__radio"><input type="radio" name="ik-kdaj" value="zacetek" /> {t.naZacetku}</label>
+          <label class="ik__radio"><input type="radio" name="ik-kdaj" value="konec" checked /> {t.naKoncu}</label>
         </div>
         <div class="ik__radio-row">
-          <label class="ik__radio"><input type="radio" name="ik-ritem" value="mesecno" checked /> vsakega meseca</label>
-          <label class="ik__radio"><input type="radio" name="ik-ritem" value="letno" /> vsakega leta</label>
+          <label class="ik__radio"><input type="radio" name="ik-ritem" value="mesecno" checked /> {t.vsakMesec}</label>
+          <label class="ik__radio"><input type="radio" name="ik-ritem" value="letno" /> {t.vsakoLeto}</label>
         </div>
       </fieldset>
 
       <div class="ik__infl">
         <label class="ik__check">
           <input type="checkbox" id="ik-infl-on" />
-          <span class="kd__label">Upoštevaj inflacijo<small>izid preračunan v današnji denar</small></span>
+          <span class="kd__label">{t.inflacija}<small>{t.inflacijaOpis}</small></span>
         </label>
         <label class="kd__field" id="ik-infl-polje" hidden>
-          <span class="kd__label">Letna inflacija</span>
+          <span class="kd__label">{t.letnaInflacija}</span>
           <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="ik-infl" value="3" autocomplete="off" /><span class="kd__unit">%</span></span>
         </label>
       </div>
     </form>
 
-    <section class="ik__panel ik__out" aria-live="polite" aria-label="Izid">
-      <p class="kd__h" id="ik-glavna-oznaka">Končni znesek</p>
+    <section class="ik__panel ik__out" aria-live="polite" aria-label={t.izid}>
+      <p class="kd__h" id="ik-glavna-oznaka">{t.zavihki.koncni}</p>
       <p class="ik__glavna" id="ik-glavna">–</p>
       <p class="ik__opomba" id="ik-opomba"></p>
       <ul class="ik__deli" id="ik-deli"></ul>
@@ -95,10 +90,10 @@ const ZAVIHKI = [
 
   <section class="ik__panel ik__potek">
     <div class="ik__potek-head">
-      <p class="kd__h" id="ik-potek-naslov">Rast po letih</p>
-      <div class="ik__preklop" role="group" aria-label="Prikaz tabele">
-        <button type="button" class="ik__mini ik__mini--on" data-tabela="leta">Po letih</button>
-        <button type="button" class="ik__mini" data-tabela="meseci">Po mesecih</button>
+      <p class="kd__h" id="ik-potek-naslov">{t.rastPoLetih}</p>
+      <div class="ik__preklop" role="group" aria-label={t.prikazTabele}>
+        <button type="button" class="ik__mini ik__mini--on" data-tabela="leta">{t.poLetih}</button>
+        <button type="button" class="ik__mini" data-tabela="meseci">{t.poMesecih}</button>
       </div>
     </div>
     <div class="ik__chart" id="ik-stolpci"></div>
@@ -107,24 +102,13 @@ const ZAVIHKI = [
   </section>
 
   <details class="kd__more">
-    <summary><span class="kd__sum-title">Kako kalkulator računa</span></summary>
+    <summary><span class="kd__sum-title">{t.kakoRacuna}</span></summary>
     <div class="kd__more-body kd__explain">
       <ul>
-        <li><strong>Donosnost</strong> je nominalna letna. Pogostost obrestovanja pove, kolikokrat na leto se donos pripiše: pri 6 % in mesečnem obrestovanju je to 0,5 % na mesec, kar da 6,17 % na leto.</li>
-        <li><strong>Vplačila</strong> se prištejejo vsak mesec ali vsako leto, na začetku ali na koncu obdobja. Vplačilo na začetku je eno obdobje dlje obrestovano.</li>
-        <li><strong>Obresti</strong> so razlika med končnim zneskom ter začetnim zneskom in vsoto vplačil.</li>
-        <li>
-          <strong>Inflacija</strong> je izbirna. Če jo vklopiš, je vsak znesek deljen z rastjo cen do svojega
-          leta, izid pa pove kupno moč v današnjem denarju. Cilj takrat razumemo kot današnjo kupno moč,
-          redno vplačilo pa ostane vsak mesec enako in z inflacijo ne raste.
-        </li>
+        {t.razlaga.map((vrstica) => <li set:html={vrstica} />)}
       </ul>
-      <p>
-        Kalkulator ne upošteva <strong>davkov in provizij</strong> ter predpostavlja enakomeren donos, kar se
-        v resnici ne zgodi: trg niha, zaporedje dobrih in slabih let pa vpliva na izid, še posebej, kadar
-        sproti vlagaš ali dvigaš.
-      </p>
-      <p class="kd__note">Izobraževalni pripomoček, ne finančni nasvet.</p>
+      <p set:html={t.neUposteva} />
+      <p class="kd__note">{t.opomba}</p>
     </div>
   </details>
 </div>
@@ -194,8 +178,14 @@ const ZAVIHKI = [
 </style>
 
 <script>
-  import { dobaBesedilo, izracunaj, napaka, POGOSTOSTI, poLetihIz, poMesecih, resiMesece, resiMeseceRealno, resiPrispevek, resiStopnjo, resiZacetni, vDanasnjemDenarju, type Izid, type Pogostost, type Vhod, type Vrstica } from '../../lib/investicijski';
-  import { evro, fmt, fmtPct, let_, letih, mesecev, parseStevilo } from '../../lib/stevilke';
+  import { dobaBesedilo, izracunaj, napaka, poLetihIz, poMesecih, resiMesece, resiMeseceRealno, resiPrispevek, resiStopnjo, resiZacetni, vDanasnjemDenarju, type Izid, type Pogostost, type Vhod, type Vrstica } from '../../lib/investicijski';
+  import { evro, fmt, fmtPct, let_, letih, mesecev, nastaviJezik, parseStevilo } from '../../lib/stevilke';
+  import { jezikStrani, slovar } from '../../i18n/slovar';
+
+  // Jezik strani določa besedila (slovar src/i18n, ključ ik) in zapis števil.
+  const LANG = jezikStrani();
+  nastaviJezik(LANG);
+  const T = slovar(LANG).ik;
 
   const $ = (id: string) => document.getElementById(id)!;
   const potek = document.querySelector<HTMLElement>('.ik__potek')!;
@@ -213,14 +203,14 @@ const ZAVIHKI = [
   };
 
   const DELI = [
-    { kljuc: 'zacetni', ime: 'Začetni znesek', barva: 'var(--ik-start)' },
-    { kljuc: 'vlozki', ime: 'Vplačila skupaj', barva: 'var(--ik-vlozki)' },
-    { kljuc: 'obresti', ime: 'Obresti', barva: 'var(--ik-obresti)' },
+    { kljuc: 'zacetni', ime: T.deli.zacetni, barva: 'var(--ik-start)' },
+    { kljuc: 'vlozki', ime: T.deli.vlozki, barva: 'var(--ik-vlozki)' },
+    { kljuc: 'obresti', ime: T.deli.obresti, barva: 'var(--ik-obresti)' },
   ] as const;
 
   // Z vklopljeno inflacijo tretji del ni več "obresti", ampak donos nad rastjo cen (lahko je negativen).
   let inflAktivna: number | null = null;
-  const imeDela = (d: { kljuc: string; ime: string }) => (d.kljuc === 'obresti' && inflAktivna !== null ? 'Donos nad inflacijo' : d.ime);
+  const imeDela = (d: { kljuc: string; ime: string }) => (d.kljuc === 'obresti' && inflAktivna !== null ? T.donosNadInflacijo : d.ime);
 
   function nastaviVidnost() {
     document.querySelectorAll<HTMLElement>('[data-polje]').forEach((el) => {
@@ -258,42 +248,42 @@ const ZAVIHKI = [
 
   // Vrne dopolnjen vhod (z izračunano manjkajočo vrednostjo), glavni odgovor in opombo.
   function resi(v: Vhod, cilj: number, infl: number | null): { v: Vhod; meseci: number; oznaka: string; odgovor: string; opomba: string } | string {
-    const ritemBesedilo = v.ritem === 'mesecno' ? 'na mesec' : 'na leto';
-    const danes = infl === null ? '' : ' v današnjem denarju';
-    const zInflacijo = infl === null ? '' : ` in ${fmtPct(infl)} inflacije`;
-    if (infl !== null && (!Number.isFinite(infl) || infl <= -1)) return 'Inflacija mora biti večja od -100 %.';
+    const ritemBesedilo = v.ritem === 'mesecno' ? T.naMesec : T.naLeto;
+    const danes = infl === null ? '' : T.vDanasnjemDenarju;
+    const zInflacijo = infl === null ? '' : T.inInflacije(fmtPct(infl));
+    if (infl !== null && (!Number.isFinite(infl) || infl <= -1)) return T.napake.inflacija;
     if (zavihek === 'koncni') {
       const napakaVnosa = napaka(v, null);
-      if (napakaVnosa) return napakaVnosa;
+      if (napakaVnosa) return T.napake[napakaVnosa];
       const meseci = Math.round(v.leta * 12);
-      return { v, meseci, oznaka: `Končni znesek${danes}`, odgovor: evro(razdelitev(v, meseci, infl).izid.koncni), opomba: `po ${letih(Math.round(v.leta))} pri ${fmtPct(v.stopnja)} letne donosnosti${zInflacijo}` };
+      return { v, meseci, oznaka: T.koncniOznaka(danes), odgovor: evro(razdelitev(v, meseci, infl).izid.koncni), opomba: T.koncniOpomba(letih(Math.round(v.leta)), fmtPct(v.stopnja), zInflacijo) };
     }
     const napakaVnosa = napaka(v, cilj);
-    if (napakaVnosa) return napakaVnosa;
+    if (napakaVnosa) return T.napake[napakaVnosa];
     // Cilj je vpisan v današnjem denarju, zato mora znesek na računu do konca dobe zrasti z rastjo cen.
     const ciljNom = infl === null ? cilj : cilj * (1 + infl) ** v.leta;
     const ciljBesedilo = `${evro(cilj)}${danes}`;
     if (zavihek === 'vplacilo') {
       const p = resiPrispevek(v, ciljNom);
-      if (!Number.isFinite(p)) return 'Tega cilja s temi vnosi ni mogoče doseči.';
-      if (p < 0) return `Cilj ${ciljBesedilo} dosežeš že brez rednih vplačil. Znižaj začetni znesek, dobo ali donosnost.`;
-      return { v: { ...v, prispevek: p }, meseci: Math.round(v.leta * 12), oznaka: `Potrebno vplačilo ${ritemBesedilo}`, odgovor: evro(p), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}` };
+      if (!Number.isFinite(p)) return T.napake.nedosegljivo;
+      if (p < 0) return T.napake.brezVplacil(ciljBesedilo);
+      return { v: { ...v, prispevek: p }, meseci: Math.round(v.leta * 12), oznaka: T.potrebnoVplacilo(ritemBesedilo), odgovor: evro(p), opomba: T.daDosezes(letih(Math.round(v.leta)), ciljBesedilo) };
     }
     if (zavihek === 'zacetni') {
       const z = resiZacetni(v, ciljNom);
-      if (!Number.isFinite(z)) return 'Tega cilja s temi vnosi ni mogoče doseči.';
-      if (z < 0) return `Cilj ${ciljBesedilo} dosežeš že z rednimi vplačili, brez začetnega zneska. Za izračun zvišaj cilj ali znižaj redno vplačilo, dobo oziroma donosnost.`;
-      return { v: { ...v, zacetni: z }, meseci: Math.round(v.leta * 12), oznaka: 'Potreben začetni znesek', odgovor: evro(z), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}` };
+      if (!Number.isFinite(z)) return T.napake.nedosegljivo;
+      if (z < 0) return T.napake.brezZacetnega(ciljBesedilo);
+      return { v: { ...v, zacetni: z }, meseci: Math.round(v.leta * 12), oznaka: T.potrebenZacetni, odgovor: evro(z), opomba: T.daDosezes(letih(Math.round(v.leta)), ciljBesedilo) };
     }
     if (zavihek === 'donos') {
       const s = resiStopnjo(v, ciljNom);
-      if (!Number.isFinite(s)) return 'Tega cilja ni mogoče doseči niti pri zelo visoki donosnosti. Preveri vnose.';
-      return { v: { ...v, stopnja: s }, meseci: Math.round(v.leta * 12), oznaka: 'Potrebna letna donosnost', odgovor: fmtPct(s, 2), opomba: `da v ${letih(Math.round(v.leta))} dosežeš ${ciljBesedilo}; obrestovanje ${POGOSTOSTI.find((p) => p.id === v.pogostost)?.ime}` };
+      if (!Number.isFinite(s)) return T.napake.donosnost;
+      return { v: { ...v, stopnja: s }, meseci: Math.round(v.leta * 12), oznaka: T.potrebnaDonosnost, odgovor: fmtPct(s, 2), opomba: T.daDosezesObrestovanje(letih(Math.round(v.leta)), ciljBesedilo, T.pogostosti[v.pogostost]) };
     }
     // Pri dobi cilj z vsakim letom čakanja zraste, zato ga primerjamo s preračunanim stanjem.
     const m = infl === null ? resiMesece(v, cilj) : resiMeseceRealno(v, cilj, infl);
-    if (!Number.isFinite(m)) return 'Cilja s temi vnosi ne dosežeš niti v 100 letih.';
-    return { v: { ...v, leta: m / 12 }, meseci: m, oznaka: 'Potrebna doba', odgovor: dobaBesedilo(m, let_, mesecev), opomba: `da dosežeš ${ciljBesedilo} pri ${fmtPct(v.stopnja)} letne donosnosti${zInflacijo}` };
+    if (!Number.isFinite(m)) return T.napake.stoLet;
+    return { v: { ...v, leta: m / 12 }, meseci: m, oznaka: T.potrebnaDoba, odgovor: dobaBesedilo(m, let_, mesecev, T.in), opomba: T.dobaOpomba(ciljBesedilo, fmtPct(v.stopnja), zInflacijo) };
   }
 
   function izrisi() {
@@ -304,12 +294,12 @@ const ZAVIHKI = [
     const { v, cilj, infl } = preberi();
     inflAktivna = infl;
     $('ik-infl-polje').hidden = infl === null;
-    $('ik-cilj-opis').textContent = infl === null ? 'koliko želiš imeti ob koncu' : 'koliko želiš imeti ob koncu, v današnjem denarju';
-    $('ik-potek-naslov').textContent = infl === null ? 'Rast po letih' : 'Rast po letih, v današnjem denarju';
+    $('ik-cilj-opis').textContent = infl === null ? T.ciljOpis : T.ciljOpisRealno;
+    $('ik-potek-naslov').textContent = infl === null ? T.rastPoLetih : T.rastPoLetihRealno;
     const izid = resi(v, cilj, infl);
     if (typeof izid === 'string') {
       $('ik-glavna').innerHTML = `<span class="ik__napaka">${esc(izid)}</span>`;
-      $('ik-glavna-oznaka').textContent = 'Izid';
+      $('ik-glavna-oznaka').textContent = T.izid;
       $('ik-opomba').textContent = '';
       $('ik-deli').innerHTML = '';
       $('ik-donut').innerHTML = '';
@@ -332,15 +322,15 @@ const ZAVIHKI = [
     const dec = r.koncni >= 100000 ? 0 : 2;
     const vrednosti = { zacetni: r.zacetni, vlozki: r.vlozki, obresti: r.obresti };
     // Deleže izpišemo le, kadar so vsi deli pozitivni; sicer bi bilo "134 %" in "-34 %" videti kot napaka.
-    const delez = (znesek: number) => (r.obresti < 0 ? '' : ` <span class="ik__del-ime">${fmt((znesek / skupaj) * 100, 0)} %</span>`);
+    const delez = (znesek: number) => (r.obresti < 0 ? '' : ` <span class="ik__del-ime">${fmtPct(znesek / skupaj, 0)}</span>`);
     $('ik-deli').innerHTML = DELI.map((d) => `<li class="ik__del">
         <span class="ik__pika" style="background:${d.barva}"></span>
         <span class="ik__del-ime">${imeDela(d)}</span>
         <span class="ik__del-znesek">${evro(vrednosti[d.kljuc], dec)}${delez(vrednosti[d.kljuc])}</span>
-      </li>`).join('') + `<li class="ik__del ik__del--skupaj"><span></span><span class="ik__del-ime">Skupaj</span><span class="ik__del-znesek">${evro(r.koncni, dec)}</span></li>`;
+      </li>`).join('') + `<li class="ik__del ik__del--skupaj"><span></span><span class="ik__del-ime">${T.skupaj}</span><span class="ik__del-znesek">${evro(r.koncni, dec)}</span></li>`;
 
     $('ik-legenda').innerHTML = DELI.map((d) => `<li><span class="ik__pika" style="background:${d.barva}"></span>${imeDela(d)}</li>`).join('')
-      + (r.obresti < 0 ? '<li><span class="ik__pika ik__pika--izguba"></span>izguba kupne moči</li>' : '');
+      + (r.obresti < 0 ? `<li><span class="ik__pika ik__pika--izguba"></span>${T.izgubaKupneMoci}</li>` : '');
     kolobar(vrednosti, dec);
     const letne = poLetihIz(mesecne);
     stolpci(letne, r.zacetni, dec);
@@ -366,12 +356,12 @@ const ZAVIHKI = [
       const d1 = `M${tocka(kot, R)} A${R},${R} 0 ${velik} 1 ${tocka(konec, R)} L${tocka(konec, r)} A${r},${r} 0 ${velik} 0 ${tocka(kot, r)} Z`;
       const sredina = (kot + konec) / 2;
       const oznaka = delez >= 0.08
-        ? `<text x="${(120 + ((R + r) / 2) * Math.cos(sredina)).toFixed(1)}" y="${(120 + ((R + r) / 2) * Math.sin(sredina) + 4).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="700" style="fill:#fff">${fmt(delez * 100, 0)} %</text>`
+        ? `<text x="${(120 + ((R + r) / 2) * Math.cos(sredina)).toFixed(1)}" y="${(120 + ((R + r) / 2) * Math.sin(sredina) + 4).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="700" style="fill:#fff">${fmtPct(delez, 0)}</text>`
         : '';
       kot = konec;
       return `<path d="${d1}" style="fill:${d.barva};stroke:var(--color-surface)" stroke-width="2"><title>${imeDela(d)}: ${evro(d.znesek, dec)}</title></path>${oznaka}`;
     });
-    $('ik-donut').innerHTML = `<svg viewBox="0 0 240 240" role="img" aria-label="Razdelitev končnega zneska na začetni znesek, vplačila in obresti">${loki.join('')}</svg>`;
+    $('ik-donut').innerHTML = `<svg viewBox="0 0 240 240" role="img" aria-label="${T.kolobarOznaka}">${loki.join('')}</svg>`;
   }
 
   // ---------- stolpčni graf ----------
@@ -406,7 +396,7 @@ const ZAVIHKI = [
     const mreza: string[] = [];
     for (let v = 0; v <= y1 + step / 2; v += step) {
       mreza.push(`<line x1="${m.l}" x2="${W - m.r}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:var(--color-border)" stroke-width="1"/>`);
-      mreza.push(`<text x="${m.l - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" font-size="11" style="fill:var(--color-text-muted)">${v >= 1000 ? fmt(v / 1000, 0) + ' tis.' : fmt(v, 0)}</text>`);
+      mreza.push(`<text x="${m.l - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" font-size="11" style="fill:var(--color-text-muted)">${v >= 1000 ? fmt(v / 1000, 0) + T.tisoc : fmt(v, 0)}</text>`);
     }
 
     const paliceHtml: string[] = [];
@@ -424,13 +414,13 @@ const ZAVIHKI = [
       const donos = t.stanje - t.vplacano;
       const segmenti = kos(0, doZacetni, 'var(--ik-start)') + kos(doZacetni, doVplacano, 'var(--ik-vlozki)')
         + (donos > 0 ? kos(t.vplacano, t.stanje, 'var(--ik-obresti)') : kos(t.stanje, t.vplacano, 'url(#ik-srafura)'));
-      paliceHtml.push(`<g data-leto="${t.obdobje}">${segmenti}<rect x="${(m.l + i * sirina).toFixed(1)}" y="${m.t}" width="${sirina.toFixed(1)}" height="${H - m.t - m.b}" fill="transparent"><title>${let_(t.obdobje)}: ${evro(t.stanje, dec)} (vplačano ${evro(t.vplacano, dec)}, ${donos < 0 ? 'izguba' : 'donos'} ${evro(Math.abs(donos), dec)})</title></rect></g>`);
+      paliceHtml.push(`<g data-leto="${t.obdobje}">${segmenti}<rect x="${(m.l + i * sirina).toFixed(1)}" y="${m.t}" width="${sirina.toFixed(1)}" height="${H - m.t - m.b}" fill="transparent"><title>${T.stolpecNamig(let_(t.obdobje), evro(t.stanje, dec), evro(t.vplacano, dec), donos < 0, evro(Math.abs(donos), dec))}</title></rect></g>`);
       if (i === 0 || (i + 1) % korak === 0 || i === tocke.length - 1) {
         osHtml.push(`<text x="${(m.l + i * sirina + sirina / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="11" style="fill:var(--color-text-muted)">${t.obdobje}</text>`);
       }
     });
 
-    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Rast po letih: začetni znesek, vplačila in obresti">
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${T.stolpciOznaka}">
       <defs><pattern id="ik-srafura" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
         <rect width="7" height="7" style="fill:var(--color-surface)"/>
         <line x1="0" y1="0" x2="0" y2="7" style="stroke:var(--ik-obresti)" stroke-width="3" opacity="0.5"/>
@@ -443,8 +433,8 @@ const ZAVIHKI = [
   // ---------- tabela ----------
 
   function izpisiTabelo(vrstice: { obdobje: number; vlozek: number; obresti: number; stanje: number }[], dec: number) {
-    const prvi = tabela === 'leta' ? 'Leto' : 'Mesec';
-    $('ik-glava').innerHTML = `<tr><th scope="col">${prvi}</th><th scope="col">Vplačila</th><th scope="col">Obresti</th><th scope="col">Stanje</th></tr>`;
+    const prvi = tabela === 'leta' ? T.tabela.leto : T.tabela.mesec;
+    $('ik-glava').innerHTML = `<tr><th scope="col">${prvi}</th><th scope="col">${T.tabela.vplacila}</th><th scope="col">${T.tabela.obresti}</th><th scope="col">${T.tabela.stanje}</th></tr>`;
     $('ik-vrstice').innerHTML = vrstice.map((v) => `<tr><td>${v.obdobje}</td><td>${evro(v.vlozek, dec)}</td><td>${evro(v.obresti, dec)}</td><td>${evro(v.stanje, dec)}</td></tr>`).join('');
   }
 
