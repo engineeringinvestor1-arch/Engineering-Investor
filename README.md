@@ -1,24 +1,48 @@
-# Engineering Investor — glavna stran
+# Engineering Investor: stran
 
-To je **prava/glavna** stran (za bodočo domeno). Vizualno je enaka kot `engineering-investor` (staro razvojno okolje za preizkušanje), a vsebuje samo:
+Koda strani [engineering-investor.com](https://engineering-investor.com). Javni repozitorij: vse, kar je tu, je vidno vsem.
 
-- **Domača stran** (`/`)
-- **Analize** (`/analize` — seznam, `/analize/[slug]` — posamezna analiza)
+Tedenske analize pripravlja agent v zasebnem repozitoriju `engineering-investor-agent`; sem pride samo članek, ki ga je avtor potrdil.
 
-Brez prijave, premium vsebin, kalkulatorjev ali drugih strani — te ostanejo v `engineering-investor` za preizkušanje, dokler niso pripravljene za objavo tukaj.
+## Kaj je na strani
 
-## Zagon lokalno
+| Stran | Naslov | Koda |
+|---|---|---|
+| Domača | `/` | `src/pages/index.astro`, `src/components/home/` |
+| Analize | `/analize`, `/analize/<ime>` | `src/pages/analize/`, članki v `src/content/analize/*.md` |
+| Koledar | `/koledar` | `src/components/calendar/EkonomskiKoledar.astro`, podatki v `src/data/koledar-events.json` |
+| Kalkulatorji | `/kalkulatorji`, `/investicijski-kalkulator`, `/kalkulator-vrednotenja` | `src/components/calculators/`, račun v `src/lib/` |
+| Angleška različica | `/en/...` | `src/pages/en/`, slovarja v `src/i18n/`, prevodi člankov v `src/content/analize-en/` |
+
+## Struktura
 
 ```
-npm install
-npm run dev
+src/pages/          strani (slovenske na vrhu, angleške v en/)
+src/components/     gradniki po področjih: articles, calculators, calendar, home, layout, ui
+src/layouts/        ogrodje strani in članka
+src/content/        članki: analize/ (slovenski izvirniki), analize-en/ (prevodi)
+src/data/           podatki koledarja
+src/i18n/           slovarja sl.ts in en.ts, naslovi strani, prevajalnik koledarja
+src/lib/            računi brez vmesnika (kalkulatorja, zapis števil, tedni koledarja)
+src/plugins/        obdelava člankov: vstavljanje grafov .svg, nelomljive vrednosti v preglednicah
+src/styles/         skupni slog
+public/images/articles/<ime članka>/   grafi članka
+scripts/            robot za koledar in preizkusi (clanki/, i18n/, koledar/)
 ```
 
-Odpri naslov, ki ga izpiše terminal (privzeto `http://localhost:4321`).
+## Ukazi
+
+```
+npm install            samo prvič
+npm run dev            lokalni predogled (naslov izpiše terminal)
+npm test               preizkusi koledarja in člankov
+npm run test:prevodi   preizkusi slovarjev, prevoda koledarja in zapisa števil
+npm run build          zgradi stran v dist/
+```
 
 ## Kako dodati novo analizo
 
-Ustvari novo `.md` datoteko v `src/content/analize/` (ime datoteke = URL, brez šumnikov/presledkov):
+Ustvari novo `.md` datoteko v `src/content/analize/` (ime datoteke = URL, brez šumnikov in presledkov):
 
 ```markdown
 ---
@@ -37,7 +61,7 @@ Vsebina v Markdownu.
 
 Kategorije: `Makro`, `Geopolitika`, `Trgi`, `Bitcoin`, `Delnice`. `featured: true` prikaže analizo na domači strani.
 
-Primer/predloga: `src/content/analize/dobrodosli.md` — uredi ali izbriši.
+Grafi `.svg` iz `public/images/articles/` se vstavijo naravnost v stran, da sledijo svetli in temni temi.
 
 ## Jeziki
 
@@ -49,10 +73,14 @@ Prvotni jezik je slovenščina na dosedanjih naslovih (`/analize`, `/koledar` ..
 - **Koledar** ima ene podatke za vse jezike (`src/data/koledar-events.json`, v slovenščini). Vrednosti prevede `src/i18n/koledar.ts`: robotove predloge po vzorcih, ročno napisane opombe po seznamu `NATANCNO_EN`. Nova ročna opomba potrebuje nov vnos v tem seznamu.
 - **Kalkulatorja** vzameta besedila iz slovarja, zapis števil pa iz `src/lib/stevilke.ts` (slovensko `1.234,50 €`, angleško `€1,234.50`).
 
-Pred objavo poženi `npm run test:prevodi`: preveri, da imata slovarja iste ključe, da v koledarju ni vrednosti, ki bi v angleščini ostala slovenska, in da je zapis števil v obeh jezikih pravilen.
-
 Nov jezik: nov slovar v `src/i18n/`, vnos v `LOCALES` in `POTI` (`src/i18n/index.ts`), mapa strani `src/pages/<jezik>/` po zgledu `src/pages/en/`, mapa prevodov člankov in pravila za koledar.
 
-## Deployment
+## Objava
 
-Domena in gostovanje še nista izbrana. Ko bo domena kupljena, se doda `site` v `astro.config.mjs` in ustrezen deploy workflow (npr. GitHub Actions, Vercel, Netlify).
+Vsak zapis v vejo `main` na GitHubu stran zgradi in objavi (`.github/workflows/deploy.yml`). Zato:
+
+- na `main` gre samo, kar je avtor potrdil z besedo "objavi";
+- delo v pripravi živi v ločeni veji in se ne pošilja, dokler ni potrjeno;
+- pred objavo: `npm test`, `npm run test:prevodi`, `npm run build`.
+
+Sam objavlja samo robot za koledar (`.github/workflows/update-koledar.yml`, vsak dan): v `src/data/koledar-events.json` vpiše objavljene izide in pričakovanja.
