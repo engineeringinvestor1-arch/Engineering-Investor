@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node --test scripts/koledar/pricakovanja.test.mjs"
+    "test": "node --test scripts/koledar/pricakovanja.test.mjs scripts/koledar/objave.test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

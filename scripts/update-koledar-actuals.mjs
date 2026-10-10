@@ -19,20 +19,29 @@
  * they're left for manual entry — the UI already handles a missing `actual`
  * gracefully.
  *
+ * Since 10 Oct 2026 it also adds earnings dates of the 20 largest S&P 500
+ * companies (src/data/koledar-podjetja.json) once the company has scheduled
+ * them, recognised by Nasdaq's earnings calendar listing a release time
+ * (scripts/koledar/objave.mjs). The author asked for this: "avtomatiziraj,
+ * da se koledar posodablja z dogodki".
+ *
  * Safe by construction: it fills in previously-empty `actual` / `actualEps`
- * fields on events whose date has already passed, and refreshes `forecast`
- * only on future events that have no result yet. It never touches dates,
- * titles or times, and every change lands in a normal git commit that can be
- * reviewed or reverted like any other.
+ * fields on events whose date has already passed, refreshes `forecast`
+ * only on future events that have no result yet, and adds earnings events
+ * that are not in the calendar yet. It never touches dates, titles or times
+ * of existing events, and every change lands in a normal git commit that can
+ * be reviewed or reverted like any other.
  */
 
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchForexFactory, fetchNasdaqDay, forecastFor, ruleFor } from './koledar/pricakovanja.mjs';
+import { DNI_NAPREJ, dopolniObjave, fetchNasdaqEarningsDay, razpisaneObjave } from './koledar/objave.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, '../src/data/koledar-events.json');
+const PODJETJA_PATH = path.join(__dirname, '../src/data/koledar-podjetja.json');
 const LOOKBACK_DAYS = 4; // covers weekends / a missed run without re-scanning ancient history
 const FORECAST_DAYS = 14; // the calendar looks two weeks ahead; consensus appears a few days before a release
 
@@ -269,6 +278,28 @@ async function updateForecasts(data, today) {
 
 /* ------------------------------------------------------------------ */
 
+// Nove objave rezultatov: za vsak delovni dan naslednjih tednov pogleda Nasdaqov koledar in doda objave
+// spremljanih podjetij, ki imajo razpisan datum. Dan, ki ga ni mogoče prebrati, se preskoči; jutri je nov poskus.
+async function addScheduledEarnings(data, today) {
+  const podjetja = JSON.parse(await readFile(PODJETJA_PATH, 'utf-8')).companies;
+  const rowsByDate = {};
+  for (let i = 0; i <= DNI_NAPREJ; i++) {
+    const d = new Date(today + i * 86_400_000);
+    if ([0, 6].includes(d.getUTCDay())) continue;
+    const date = d.toISOString().slice(0, 10);
+    try {
+      rowsByDate[date] = await fetchNasdaqEarningsDay(date);
+    } catch (err) {
+      console.warn(`  objave:   ${date} ni prebran: ${err.message}`);
+    }
+  }
+  const { earnings, dodane, razhajanja } = dopolniObjave(data.earnings, razpisaneObjave(rowsByDate, podjetja));
+  for (const e of dodane) console.log(`  objave:   dodano ${e.id} ${e.date} ${e.when}`);
+  for (const r of razhajanja) console.warn(`  objave:   ${r.id} je v koledarju ${r.na_strani}, Nasdaq navaja ${r.nasdaq}; datuma ne premikam`);
+  data.earnings = earnings;
+  return dodane.length;
+}
+
 async function main() {
   const fredKey = process.env.FRED_API_KEY;
   const finnhubKey = process.env.FINNHUB_API_KEY;
@@ -326,6 +357,7 @@ async function main() {
   }
 
   changed += await updateForecasts(data, today);
+  changed += await addScheduledEarnings(data, today);
 
   if (changed === 0) {
     console.log('Koledar: nothing new to write.');

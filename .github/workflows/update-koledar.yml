@@ -22,7 +22,7 @@ jobs:
 
       # Pričakovanja se objavijo samodejno (avtor, 2. 10. 2026), zato pravila najprej preverijo preizkusi.
       - name: Test forecast rules
-        run: node --test scripts/koledar/pricakovanja.test.mjs
+        run: node --test scripts/koledar/pricakovanja.test.mjs scripts/koledar/objave.test.mjs
 
       - name: Update actual results and forecasts
         env:

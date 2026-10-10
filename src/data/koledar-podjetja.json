@@ -1,0 +1,27 @@
+{
+  "note": "Podjetja, katerih objave rezultatov robot sam dodaja v koledar: 20 največjih v S&P 500 po uteži v skladu SPY (avtor, 26. 9. 2026). Seznam se osveži ročno, kadar se sestava spremeni.",
+  "source": "https://www.ssga.com/us/en/intermediary/library-content/products/fund-data/etfs/us/holdings-daily-us-en-spy.xlsx",
+  "as_of": "2026-10-09",
+  "companies": [
+    { "ticker": "NVDA", "name": "NVIDIA" },
+    { "ticker": "AAPL", "name": "Apple" },
+    { "ticker": "MSFT", "name": "Microsoft" },
+    { "ticker": "GOOGL", "name": "Alphabet" },
+    { "ticker": "AMZN", "name": "Amazon" },
+    { "ticker": "AVGO", "name": "Broadcom" },
+    { "ticker": "META", "name": "Meta Platforms" },
+    { "ticker": "MU", "name": "Micron" },
+    { "ticker": "TSLA", "name": "Tesla" },
+    { "ticker": "AMD", "name": "AMD" },
+    { "ticker": "BRK.B", "name": "Berkshire Hathaway" },
+    { "ticker": "LLY", "name": "Eli Lilly" },
+    { "ticker": "JPM", "name": "JPMorgan Chase" },
+    { "ticker": "XOM", "name": "Exxon Mobil" },
+    { "ticker": "V", "name": "Visa" },
+    { "ticker": "JNJ", "name": "Johnson & Johnson" },
+    { "ticker": "INTC", "name": "Intel" },
+    { "ticker": "WMT", "name": "Walmart" },
+    { "ticker": "ABBV", "name": "AbbVie" },
+    { "ticker": "MA", "name": "Mastercard" }
+  ]
+}
