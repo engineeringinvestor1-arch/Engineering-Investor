@@ -315,7 +315,9 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "HIGH",
-      "previous": "3,4 % medletno (avg 2026); jedrna 2,4 %"
+      "previous": "3,4 % medletno (avg 2026); jedrna 2,4 %",
+      "forecast": "3,6 % medletno; jedrna 2,5 %",
+      "forecastSource": "Nasdaq, Forex Factory"
     },
     {
       "id": "us-retail-oct26",
@@ -325,7 +327,9 @@
       "category": "Poraba",
       "region": "US",
       "importance": "LOW",
-      "previous": "+1,1 % mesečno (avg 2026)"
+      "previous": "+1,1 % mesečno (avg 2026)",
+      "forecast": "0,3 % mesečno",
+      "forecastSource": "Nasdaq, Forex Factory"
     },
     {
       "id": "fomc-oct26",
