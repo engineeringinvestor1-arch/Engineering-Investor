@@ -37,7 +37,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchForexFactory, fetchNasdaqDay, forecastFor, ruleFor } from './koledar/pricakovanja.mjs';
-import { DNI_NAPREJ, dopolniObjave, fetchNasdaqEarningsDay, razpisaneObjave } from './koledar/objave.mjs';
+import { DNI_NAPREJ, dopolniObjave, dopolniPredvidene, fetchNasdaqEarningsDay, fetchYahooEarnings, izberiPredvidene, ocenjeneObjave, razpisaneObjave, yahooObjave } from './koledar/objave.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, '../src/data/koledar-events.json');
@@ -280,6 +280,7 @@ async function updateForecasts(data, today) {
 
 // Nove objave rezultatov: za vsak delovni dan naslednjih tednov pogleda Nasdaqov koledar in doda objave
 // spremljanih podjetij, ki imajo razpisan datum. Dan, ki ga ni mogoče prebrati, se preskoči; jutri je nov poskus.
+// Za podjetja, ki datuma še niso razpisala, vpiše predviden datum z oznako ocene.
 async function addScheduledEarnings(data, today) {
   const podjetja = JSON.parse(await readFile(PODJETJA_PATH, 'utf-8')).companies;
   const rowsByDate = {};
@@ -293,11 +294,29 @@ async function addScheduledEarnings(data, today) {
       console.warn(`  objave:   ${date} ni prebran: ${err.message}`);
     }
   }
-  const { earnings, dodane, razhajanja } = dopolniObjave(data.earnings, razpisaneObjave(rowsByDate, podjetja));
+  const { earnings, dodane, razhajanja, potrjene } = dopolniObjave(data.earnings, razpisaneObjave(rowsByDate, podjetja));
   for (const e of dodane) console.log(`  objave:   dodano ${e.id} ${e.date} ${e.when}`);
+  for (const p of potrjene) console.log(`  objave:   razpisano ${p.id} ${p.date} ${p.when} (predvideno je bilo ${p.prej})`);
   for (const r of razhajanja) console.warn(`  objave:   ${r.id} je v koledarju ${r.na_strani}, Nasdaq navaja ${r.nasdaq}; datuma ne premikam`);
-  data.earnings = earnings;
-  return dodane.length;
+
+  // Predvideni datumi za objave, ki jih podjetje še ni razpisalo (scripts/koledar/objave.mjs). Če Yahoo ne
+  // odgovori, ostanejo Nasdaqove ocene in že vpisane ocene; jutri je nov poskus.
+  let yahoo = [];
+  try {
+    yahoo = yahooObjave(await fetchYahooEarnings(podjetja), podjetja);
+  } catch (err) {
+    console.warn(`  objave:   Yahoo ni prebran (${err.message}), predvideni datumi po Nasdaqu`);
+  }
+  const danes = new Date(today).toISOString().slice(0, 10);
+  const predvidene = izberiPredvidene(yahoo, ocenjeneObjave(rowsByDate, podjetja), { today: danes });
+  const ocene = dopolniPredvidene(earnings, predvidene, { today: danes });
+  for (const e of ocene.dodane) console.log(`  objave:   predvideno ${e.id} ${e.date} (${e.estimateSource})`);
+  for (const p of ocene.premaknjene) console.log(`  objave:   predviden datum ${p.id} premaknjen z ${p.prej} na ${p.zdaj}`);
+  for (const e of ocene.odstranjene) console.log(`  objave:   predviden datum ${e.id} ${e.date} je minil brez razpisa, vpis odstranjen`);
+  // Oznaka ocene izgine tudi pri vpisu, ki je medtem dobil izid; to se pozna samo v primerjavi seznamov.
+  const spremenjeno = JSON.stringify(ocene.earnings) !== JSON.stringify(data.earnings);
+  data.earnings = ocene.earnings;
+  return spremenjeno ? Math.max(1, dodane.length + potrjene.length + ocene.dodane.length + ocene.premaknjene.length + ocene.odstranjene.length) : 0;
 }
 
 async function main() {

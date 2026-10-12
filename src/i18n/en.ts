@@ -142,6 +142,11 @@ export const en: Slovar = {
     dejanskiRezultat: 'Actual',
     porocano: 'reported',
     razpisano: 'date confirmed by the company',
+    predvidoma: 'expected',
+    predvidenDatum: 'expected date',
+    nepotrjeno: 'not yet confirmed by the company',
+    predvidenoOpis:
+      'The date is an estimate by the data provider ({vir}) based on the company’s past releases and may change. Once the company announces the date, the entry is updated and the label disappears.',
     prejsnjeCetrtletje: 'Previous quarter (EPS)',
     napovedEps: 'Estimate for this quarter (EPS, consensus)',
     dejanskiEps: 'Actual EPS',

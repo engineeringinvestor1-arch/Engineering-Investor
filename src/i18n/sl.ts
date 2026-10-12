@@ -142,6 +142,11 @@ export const sl = {
     dejanskiRezultat: 'Dejanski rezultat',
     porocano: 'poročano',
     razpisano: 'razpisano pri podjetju',
+    predvidoma: 'predvidoma',
+    predvidenDatum: 'predviden datum',
+    nepotrjeno: 'podjetje datuma še ni potrdilo',
+    predvidenoOpis:
+      'Datum je ocena ponudnika podatkov ({vir}) po dosedanjih objavah podjetja in se lahko spremeni. Ko podjetje datum razpiše, se vpis posodobi in oznaka izgine.',
     prejsnjeCetrtletje: 'Prejšnje četrtletje (EPS)',
     napovedEps: 'Napoved za to četrtletje (EPS, konsenz)',
     dejanskiEps: 'Dejanski EPS',

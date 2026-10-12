@@ -757,6 +757,15 @@
       "year": 2026
     },
     {
+      "id": "v-q3-26",
+      "date": "2026-10-27",
+      "ticker": "V",
+      "name": "Visa",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
       "id": "googl-q3-26",
       "date": "2026-10-28",
       "ticker": "GOOGL",
@@ -771,6 +780,16 @@
       "ticker": "MSFT",
       "name": "Microsoft",
       "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "meta-q3-26",
+      "date": "2026-10-28",
+      "ticker": "META",
+      "name": "Meta Platforms",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance",
       "quarter": 3,
       "year": 2026
     },
@@ -794,11 +813,40 @@
       "year": 2026
     },
     {
+      "id": "ma-q3-26",
+      "date": "2026-10-29",
+      "ticker": "MA",
+      "name": "Mastercard",
+      "when": "pred odprtjem",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "amzn-q3-26",
+      "date": "2026-10-29",
+      "ticker": "AMZN",
+      "name": "Amazon",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
       "id": "abbv-q3-26",
       "date": "2026-10-30",
       "ticker": "ABBV",
       "name": "AbbVie",
       "when": "pred odprtjem",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "xom-q3-26",
+      "date": "2026-10-30",
+      "ticker": "XOM",
+      "name": "Exxon Mobil",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance",
       "quarter": 3,
       "year": 2026
     },
@@ -817,6 +865,16 @@
       "ticker": "AMD",
       "name": "AMD",
       "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "brkb-q3-26",
+      "date": "2026-11-07",
+      "ticker": "BRK.B",
+      "name": "Berkshire Hathaway",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance",
       "quarter": 3,
       "year": 2026
     },

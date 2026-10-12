@@ -83,4 +83,9 @@ Vsak zapis v vejo `main` na GitHubu stran zgradi in objavi (`.github/workflows/d
 - delo v pripravi živi v ločeni veji in se ne pošilja, dokler ni potrjeno;
 - pred objavo: `npm test`, `npm run test:prevodi`, `npm run build`.
 
-Sam objavlja samo robot za koledar (`.github/workflows/update-koledar.yml`, vsak dan): v `src/data/koledar-events.json` vpiše objavljene izide in pričakovanja.
+Sam objavlja samo robot za koledar (`.github/workflows/update-koledar.yml`, vsak dan): v `src/data/koledar-events.json` vpiše objavljene izide in pričakovanja ter objave rezultatov 20 največjih podjetij (`scripts/koledar/objave.mjs`).
+
+Objave rezultatov v koledarju so dveh vrst:
+
+- **razpisana**: podjetje je datum objavilo (Nasdaqov koledar jo navede z uro). Robot je ne premika.
+- **predviden datum** (`estimated: true`, od 12. 10. 2026): podjetje datuma še ni razpisalo, vpisana je ocena vira (Yahoo Finance, rezerva Nasdaq). Na strani ima oznako "predviden datum" in ležeč zapis. Ocena se lahko premakne; ko podjetje datum razpiše, vpis dobi uradni datum in čas, oznaka izgine. Ocena, katere dan mine brez razpisa, se odstrani.

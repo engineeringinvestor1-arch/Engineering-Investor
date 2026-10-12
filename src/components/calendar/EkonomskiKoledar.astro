@@ -262,6 +262,22 @@ const t = slovar(getLang(Astro.url.pathname)).koledar;
     border: 1px solid var(--color-accent-border);
   }
 
+  /* Predviden datum objave rezultatov: črtkan rob in ležeč datum, da se loči od razpisanega. */
+  .cal-badge--estimated {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px dashed var(--color-text-subtle);
+  }
+
+  .cal-row--estimated .cal-day,
+  .cal-row--estimated .cal-time {
+    font-style: italic;
+  }
+
+  .cal-estimate-note {
+    font-style: italic;
+  }
+
   .cal-badge--region {
     background: transparent;
     color: var(--color-text-muted);
@@ -447,6 +463,7 @@ const t = slovar(getLang(Astro.url.pathname)).koledar;
   .cal-day-dot--high { background: #dc2626; }
   .cal-day-dot--medium { background: #b45309; }
   .cal-day-dot--earnings { background: var(--color-accent); }
+  .cal-day-dot--estimated { background: transparent; border: 1px dashed var(--color-accent); box-sizing: border-box; }
 
   .cal-day-detail__hint {
     text-align: center;
@@ -476,9 +493,11 @@ const t = slovar(getLang(Astro.url.pathname)).koledar;
     previous?: string; forecast?: string; actual?: string;
   };
   type EarningsEvent = {
-    id: string; date: string; ticker: string; name: string; when: string;
+    id: string; date: string; ticker: string; name: string; when?: string;
     prevEps?: string; estEps?: string; actualEps?: string; actualNote?: string;
     quarter?: number; year?: number;
+    // Predviden datum: podjetje ga še ni razpisalo, vpisal ga je robot po oceni vira (scripts/koledar/objave.mjs).
+    estimated?: boolean; estimateSource?: string;
   };
 
   // Opis za vsako vrsto dogodka (avtor, 2. 10. 2026: "napiši opise"). Do takrat je imela vsaka kategorija
@@ -590,25 +609,31 @@ const t = slovar(getLang(Astro.url.pathname)).koledar;
     const earningsBadge = badge(T.rezultati, 'earnings');
     const hasStats = evt.prevEps || evt.estEps;
     const actualBadge = evt.actualEps ? badge(`${T.dejansko}: ${pv(evt.actualEps)}`, 'actual') : '';
-    // Od 26. 9. 2026 se vpišejo samo datumi, ki jih je podjetje razpisalo, zato "okvirni datum" ne drži več.
+    // Od 26. 9. 2026 so brez oznake samo datumi, ki jih je podjetje razpisalo. Od 12. 10. 2026 koledar pokaže
+    // tudi predvidene datume (avtor: "investing.com ima vse določene, v mojem koledarju pa manjkajo"), a vedno
+    // z oznako, da ocena ni videti kot dejstvo: 10. 10. 2026 je bila Tesla po oceni vpisana dan prezgodaj.
+    const estimated = Boolean(evt.estimated) && !evt.actualEps;
+    const estimatedBadge = estimated ? badge(T.predvidenDatum, 'estimated') : '';
     const dateHint = evt.actualEps
       ? `<span class="cal-hint">${T.porocano}</span>`
-      : `<span class="cal-hint">${T.razpisano}</span>`;
+      : `<span class="cal-hint">${estimated ? T.nepotrjeno : T.razpisano}</span>`;
+    const when = estimated ? T.predvidoma : (T.kdaj[evt.when ?? ''] ?? evt.when ?? '');
 
     return `
       <div class="cal-item" data-id="${evt.id}">
-        <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''}" aria-expanded="false">
+        <button type="button" class="cal-row ${today_ ? 'cal-row--today' : ''} ${past ? 'cal-row--past' : ''} ${estimated ? 'cal-row--estimated' : ''}" aria-expanded="false">
           <div class="cal-date">
             <span class="cal-day">${dayLabel(evt.date)}${today_ ? T.danes : ''}</span>
-            <span class="cal-time">${T.kdaj[evt.when] ?? evt.when}</span>
+            <span class="cal-time">${when}</span>
           </div>
           <div class="cal-main">
             <span class="cal-event-title">${evt.name}${quarterLabel(evt)}</span>
-            <div class="cal-meta">${tickerBadge}${usBadge}${earningsBadge}${actualBadge}${dateHint}</div>
+            <div class="cal-meta">${tickerBadge}${usBadge}${earningsBadge}${estimatedBadge}${actualBadge}${dateHint}</div>
           </div>
           <div class="cal-row__end">${expandIcon()}</div>
         </button>
         <div class="cal-detail">
+          ${estimated ? `<p class="cal-estimate-note">${T.predvidenoOpis.replace('{vir}', evt.estimateSource ?? '')}</p>` : ''}
           <p>${EARNINGS_INFO}</p>
           ${hasStats || evt.actualEps ? `
             <div class="cal-detail__stats">
@@ -709,7 +734,8 @@ const t = slovar(getLang(Astro.url.pathname)).koledar;
 
       const colors = new Set<string>();
       for (const evt of dayEvents) {
-        if (evt.type === 'zasluzki') colors.add('earnings');
+        // Predviden datum ima votlo piko, razpisan polno.
+        if (evt.type === 'zasluzki') colors.add(evt.estimated && !evt.actualEps ? 'estimated' : 'earnings');
         else colors.add(evt.importance === 'HIGH' ? 'high' : 'medium');
       }
       const dots = Array.from(colors).slice(0, 3)
