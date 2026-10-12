@@ -105,7 +105,7 @@ Financial Times piše o širokem soglasju za še eno zvišanje v tem letu. New Y
 |---|---|---|---|
 | torek, 13. 10., pred odprtjem | JPMorgan Chase (JPM) | 5,92 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 1,3 %. |
 | torek, 13. 10., pred odprtjem | Johnson & Johnson (JNJ) | 2,59 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 0,9 %. |
-| torek, 20. 10., po zaprtju | Tesla (TSLA) | 0,43 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 1,6 %. |
+| sreda, 21. 10., po zaprtju | Tesla (TSLA) | 0,43 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 1,6 %. |
 | četrtek, 22. 10., pred odprtjem | Mastercard (MA) | 5,30 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 0,7 %. |
 | petek, 23. 10. | Exxon Mobil (XOM) | 3,71 USD | Eno od 20 največjih podjetij v S&P 500, utež v indeksu 1,0 %. |
 
