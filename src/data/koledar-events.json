@@ -748,6 +748,33 @@
       "estEps": "2,45 USD"
     },
     {
+      "id": "tsla-q3-26",
+      "date": "2026-10-21",
+      "ticker": "TSLA",
+      "name": "Tesla",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "googl-q3-26",
+      "date": "2026-10-28",
+      "ticker": "GOOGL",
+      "name": "Alphabet",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "msft-q3-26",
+      "date": "2026-10-28",
+      "ticker": "MSFT",
+      "name": "Microsoft",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
       "id": "lly-q3-26",
       "date": "2026-10-29",
       "ticker": "LLY",
@@ -756,6 +783,42 @@
       "quarter": 3,
       "year": 2026,
       "estEps": "10,00 USD"
+    },
+    {
+      "id": "intc-q3-26",
+      "date": "2026-10-29",
+      "ticker": "INTC",
+      "name": "Intel",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "abbv-q3-26",
+      "date": "2026-10-30",
+      "ticker": "ABBV",
+      "name": "AbbVie",
+      "when": "pred odprtjem",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "aapl-q3-26",
+      "date": "2026-11-02",
+      "ticker": "AAPL",
+      "name": "Apple",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
+      "id": "amd-q3-26",
+      "date": "2026-11-03",
+      "ticker": "AMD",
+      "name": "AMD",
+      "when": "po zaprtju",
+      "quarter": 3,
+      "year": 2026
     },
     {
       "id": "wmt-q3-27",
