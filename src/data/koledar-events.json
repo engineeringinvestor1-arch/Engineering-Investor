@@ -757,6 +757,16 @@
       "year": 2026
     },
     {
+      "id": "meta-q3-26",
+      "date": "2026-10-21",
+      "ticker": "META",
+      "name": "Meta Platforms",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance",
+      "quarter": 3,
+      "year": 2026
+    },
+    {
       "id": "v-q3-26",
       "date": "2026-10-27",
       "ticker": "V",
@@ -780,16 +790,6 @@
       "ticker": "MSFT",
       "name": "Microsoft",
       "when": "po zaprtju",
-      "quarter": 3,
-      "year": 2026
-    },
-    {
-      "id": "meta-q3-26",
-      "date": "2026-10-28",
-      "ticker": "META",
-      "name": "Meta Platforms",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance",
       "quarter": 3,
       "year": 2026
     },
@@ -877,6 +877,14 @@
       "estimateSource": "Yahoo Finance",
       "quarter": 3,
       "year": 2026
+    },
+    {
+      "id": "nvda-2026-11-17",
+      "date": "2026-11-17",
+      "ticker": "NVDA",
+      "name": "NVIDIA",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance"
     },
     {
       "id": "wmt-q3-27",
