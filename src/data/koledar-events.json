@@ -317,7 +317,8 @@
       "importance": "HIGH",
       "previous": "3,4 % medletno (avg 2026); jedrna 2,4 %",
       "forecast": "3,6 % medletno; jedrna 2,5 %",
-      "forecastSource": "Nasdaq, Forex Factory"
+      "forecastSource": "Nasdaq, Forex Factory",
+      "actual": "CPI 3,7 % medletno; jedrna 2,6 %"
     },
     {
       "id": "us-retail-oct26",
@@ -761,8 +762,7 @@
       "date": "2026-10-21",
       "ticker": "META",
       "name": "Meta Platforms",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance",
+      "when": "po zaprtju",
       "quarter": 3,
       "year": 2026
     },
