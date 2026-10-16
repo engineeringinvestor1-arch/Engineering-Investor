@@ -330,7 +330,8 @@
       "importance": "LOW",
       "previous": "+1,1 % mesečno (avg 2026)",
       "forecast": "0,3 % mesečno",
-      "forecastSource": "Nasdaq, Forex Factory"
+      "forecastSource": "Nasdaq, Forex Factory",
+      "actual": "0,8 % mesečno"
     },
     {
       "id": "fomc-oct26",
