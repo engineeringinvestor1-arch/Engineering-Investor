@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
-import { Card, Button, Input, Select, Field, Modal, SectionHeader } from '../ui.jsx';
+import { Card, Button, Input, Select, Field, Modal, PageHeader, SectionHeader } from '../ui.jsx';
+import { CatIcon } from '../ikone.jsx';
+import { Swatches } from '../QuickAdd.jsx';
 import { fmtEur, exportJson, exportCsv, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
 import { hasDemo } from '../demo.js';
 
@@ -78,94 +80,61 @@ export default function Settings({ state, dispatch }) {
   const expenseCats = state.categories.filter((c) => c.type === 'expense' && !c.archived);
   const archived = state.categories.filter((c) => c.archived);
 
+  const catChips = (list) => (
+    <div className="sl-chiprow">
+      {list.map((c) => (
+        <button key={c.id} type="button" className="sl-chip" onClick={() => setEditingCat(c)}>
+          <CatIcon category={c} size={24} />{c.name}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <SectionHeader title="Nastavitve" subtitle="Kategorije, trgovine, podatki, izvoz / uvoz" />
+      <PageHeader title="Nastavitve" subtitle="Kategorije, trgovine, varnostna kopija in izvoz" />
 
       <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
-          <div>
-            <strong style={{ fontSize: '1rem' }}>Podatki</strong>
-            <div style={{ marginTop: 4, fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.6, maxWidth: 480 }}>
-              Vsi podatki so shranjeni samo na tej napravi. Nič ne pošljemo na strežnik.
-              Redno shrani varnostno kopijo (datoteka JSON), da podatkov ne izgubiš: ob brisanju podatkov brskalnika ali novem telefonu jo uvoziš nazaj.
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Button variant="secondary" onClick={handleExport}>Shrani varnostno kopijo</Button>
-            <Button variant="secondary" onClick={() => fileRef.current?.click()}>Uvozi varnostno kopijo</Button>
-            <Button variant="secondary" onClick={() => { const napaka = exportCsv(state); if (napaka) alert(napaka); }}>Izvozi za Excel (CSV)</Button>
-            <input ref={fileRef} type="file" accept="application/json" onChange={handleImportFile} style={{ display: 'none' }} />
-            {hasDemo(state)
-              ? <Button variant="secondary" onClick={() => dispatch({ type: 'demo/remove' })}>Odstrani testne podatke</Button>
-              : <Button variant="secondary" onClick={() => dispatch({ type: 'demo/load', today: todayIso() })}>Naloži testne podatke</Button>}
-            <Button variant="danger" onClick={handleReset}>Ponastavi vse</Button>
-          </div>
+        <SectionHeader title="Podatki" subtitle="Vsi podatki so shranjeni samo na tej napravi. Nič ne pošljemo na strežnik. Redno shrani varnostno kopijo (datoteka JSON): ob brisanju podatkov brskalnika ali na novem telefonu jo uvoziš nazaj." />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8 }}>
+          <Button variant="primary" onClick={handleExport}>Shrani varnostno kopijo</Button>
+          <Button variant="secondary" onClick={() => fileRef.current?.click()}>Uvozi varnostno kopijo</Button>
+          <Button variant="secondary" onClick={() => { const napaka = exportCsv(state); if (napaka) alert(napaka); }}>Izvozi za Excel (CSV)</Button>
+          {hasDemo(state)
+            ? <Button variant="secondary" onClick={() => dispatch({ type: 'demo/remove' })}>Odstrani testne podatke</Button>
+            : <Button variant="secondary" onClick={() => dispatch({ type: 'demo/load', today: todayIso() })}>Naloži testne podatke</Button>}
+          <input ref={fileRef} type="file" accept="application/json" onChange={handleImportFile} style={{ display: 'none' }} />
         </div>
-        <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-          <div>Računi: <strong style={{ color: 'var(--color-text)' }}>{state.accounts.length}</strong></div>
-          <div>Kategorije: <strong style={{ color: 'var(--color-text)' }}>{state.categories.length}</strong></div>
-          <div>Transakcije: <strong style={{ color: 'var(--color-text)' }}>{state.transactions.length}</strong></div>
-          <div>Cilji: <strong style={{ color: 'var(--color-text)' }}>{state.goals.length}</strong></div>
-          <div>Pravila: <strong style={{ color: 'var(--color-text)' }}>{state.recurring.length}</strong></div>
-        </div>
-      </Card>
-
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <strong style={{ fontSize: '1rem' }}>Kategorije prihodkov ({incomeCats.length})</strong>
-          <Button size="sm" variant="secondary" onClick={() => setEditingCat(emptyCategory('income'))}>+ Dodaj</Button>
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {incomeCats.map((c) => (
-            <button key={c.id} onClick={() => setEditingCat(c)} style={{
-              padding: '6px 12px', borderRadius: 999,
-              background: `${c.color}22`, border: `1px solid ${c.color}55`, color: c.color,
-              cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem', fontWeight: 600,
-            }}>{c.name}</button>
+        <div style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap', gap: '6px 16px', fontSize: '0.8rem', color: 'var(--sl-muted)' }}>
+          {[['Računi', state.accounts.length], ['Kategorije', state.categories.length], ['Transakcije', state.transactions.length], ['Cilji', state.goals.length], ['Pravila', state.recurring.length]].map(([k, v]) => (
+            <span key={k}>{k} <strong className="sl-num" style={{ color: 'var(--sl-ink)', fontWeight: 500 }}>{v}</strong></span>
           ))}
         </div>
       </Card>
 
       <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <strong style={{ fontSize: '1rem' }}>Kategorije odhodkov ({expenseCats.length})</strong>
-          <Button size="sm" variant="secondary" onClick={() => setEditingCat(emptyCategory('expense'))}>+ Dodaj</Button>
-        </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {expenseCats.map((c) => (
-            <button key={c.id} onClick={() => setEditingCat(c)} style={{
-              padding: '6px 12px', borderRadius: 999,
-              background: `${c.color}22`, border: `1px solid ${c.color}55`, color: c.color,
-              cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem', fontWeight: 600,
-            }}>{c.name}</button>
-          ))}
-        </div>
+        <SectionHeader title={`Kategorije odhodkov (${expenseCats.length})`} action={<Button size="sm" variant="secondary" onClick={() => setEditingCat(emptyCategory('expense'))}>Dodaj</Button>} />
+        {catChips(expenseCats)}
       </Card>
 
       <Card>
-        <div style={{ marginBottom: 12 }}>
-          <strong style={{ fontSize: '1rem' }}>Trgovine in storitve ({payees.length})</strong>
-          <div style={{ marginTop: 4, fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
-            Sledilnik si trgovino zapomni ob prvem vnosu, skupaj s kategorijo. Tu jo lahko preimenuješ, ji spremeniš kategorijo ali jo pozabiš.
-          </div>
-        </div>
+        <SectionHeader title={`Kategorije prihodkov (${incomeCats.length})`} action={<Button size="sm" variant="secondary" onClick={() => setEditingCat(emptyCategory('income'))}>Dodaj</Button>} />
+        {catChips(incomeCats)}
+      </Card>
+
+      <Card>
+        <SectionHeader title={`Trgovine in storitve (${payees.length})`} subtitle="Sledilnik si trgovino zapomni ob prvem vnosu, skupaj s kategorijo. Tu jo lahko preimenuješ, ji spremeniš kategorijo ali jo pozabiš." />
         {payees.length === 0 ? (
-          <div style={{ fontSize: '0.85rem', color: 'var(--color-text-subtle)' }}>Še ni shranjenih trgovin. Pojavijo se, ko pri vnosu vpišeš, kje si kupil.</div>
+          <div className="sl-subtle" style={{ fontSize: '0.85rem' }}>Še ni shranjenih trgovin. Pojavijo se, ko pri vnosu vpišeš, kje si kupil.</div>
         ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          <div className="sl-chiprow">
             {payees.map((p) => {
               const cat = catById[p.categoryId];
               return (
-                <button key={p.id} onClick={() => setEditingPayee(p)} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  padding: '6px 12px', borderRadius: 999,
-                  background: 'var(--color-bg)', border: '1px solid var(--color-border)', color: 'var(--color-text)',
-                  cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.85rem', fontWeight: 600,
-                }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: cat?.color || '#64748b' }} />
+                <button key={p.id} type="button" className="sl-chip sl-chip--plain" onClick={() => setEditingPayee(p)}>
+                  <span className="sl-dot" style={{ background: cat?.color || 'var(--sl-subtle)' }} />
                   {p.name}
-                  <span style={{ color: 'var(--color-text-subtle)', fontWeight: 500 }}>{cat?.name || 'brez kategorije'} · {p.count}×</span>
+                  <span className="sl-subtle" style={{ fontWeight: 400 }}>{cat?.name || 'brez kategorije'} · {p.count}×</span>
                 </button>
               );
             })}
@@ -175,17 +144,13 @@ export default function Settings({ state, dispatch }) {
 
       {archived.length > 0 && (
         <details>
-          <summary style={{ cursor: 'pointer', color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
+          <summary className="sl-label" style={{ cursor: 'pointer' }}>
             Arhivirane kategorije ({archived.length})
           </summary>
-          <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          <div className="sl-chiprow" style={{ marginTop: 10 }}>
             {archived.map((c) => (
-              <button key={c.id} onClick={() => dispatch({ type: 'category/update', category: { ...c, archived: false } })}
-                style={{
-                  padding: '4px 10px', borderRadius: 999,
-                  background: 'var(--color-bg)', border: '1px solid var(--color-border)',
-                  color: 'var(--color-text-muted)', fontSize: '0.8rem', cursor: 'pointer',
-                }}>
+              <button key={c.id} type="button" className="sl-chip sl-chip--plain" style={{ color: 'var(--sl-muted)' }}
+                onClick={() => dispatch({ type: 'category/update', category: { ...c, archived: false } })}>
                 {c.name} (obnovi)
               </button>
             ))}
@@ -193,9 +158,14 @@ export default function Settings({ state, dispatch }) {
         </details>
       )}
 
+      <Card>
+        <SectionHeader title="Ponastavitev" subtitle="Izbriše vse podatke na tej napravi. Pred tem shrani varnostno kopijo." />
+        <Button variant="danger" onClick={handleReset}>Ponastavi vse</Button>
+      </Card>
+
       <Modal open={!!editingPayee} onClose={() => setEditingPayee(null)} title="Trgovina ali storitev">
         {editingPayee && (
-          <form onSubmit={savePayee} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <form onSubmit={savePayee} className="sl-form">
             <Field label="Ime" hint="Sprememba imena velja za nove vnose; stare transakcije ohranijo zapisano ime.">
               <Input required value={editingPayee.name} autoFocus
                 onChange={(e) => setEditingPayee({ ...editingPayee, name: e.target.value })} />
@@ -206,12 +176,12 @@ export default function Settings({ state, dispatch }) {
                 {state.categories.filter((c) => c.type === editingPayee.type && !c.archived).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </Select>
             </Field>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--sl-muted)' }}>
               Uporabljeno {editingPayee.count}×, zadnjič {fmtEur(editingPayee.lastAmount, true)}.
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4 }}>
+            <div className="sl-form-actions">
               <Button type="button" variant="danger" onClick={() => removePayee(editingPayee.id)}>Pozabi</Button>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div>
                 <Button type="button" variant="secondary" onClick={() => setEditingPayee(null)}>Prekliči</Button>
                 <Button type="submit">Shrani</Button>
               </div>
@@ -222,7 +192,7 @@ export default function Settings({ state, dispatch }) {
 
       <Modal open={!!editingCat} onClose={() => setEditingCat(null)} title={editingCat?.id ? 'Uredi kategorijo' : 'Nova kategorija'}>
         {editingCat && (
-          <form onSubmit={saveCategory} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <form onSubmit={saveCategory} className="sl-form">
             <Field label="Ime">
               <Input required value={editingCat.name} autoFocus
                 onChange={(e) => setEditingCat({ ...editingCat, name: e.target.value })} />
@@ -234,22 +204,13 @@ export default function Settings({ state, dispatch }) {
               </Select>
             </Field>
             <Field label="Barva">
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {PALETTE.map((c) => (
-                  <button key={c} type="button" onClick={() => setEditingCat({ ...editingCat, color: c })}
-                    style={{
-                      width: 26, height: 26, borderRadius: 6, background: c,
-                      border: editingCat.color === c ? '2px solid var(--color-text)' : '2px solid transparent',
-                      cursor: 'pointer',
-                    }} />
-                ))}
-              </div>
+              <Swatches value={editingCat.color} onChange={(color) => setEditingCat({ ...editingCat, color })} />
             </Field>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4 }}>
+            <div className="sl-form-actions">
               {editingCat.id ? (
                 <Button type="button" variant="danger" onClick={() => removeCategory(editingCat.id)}>Izbriši</Button>
               ) : <span />}
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div>
                 <Button type="button" variant="secondary" onClick={() => setEditingCat(null)}>Prekliči</Button>
                 <Button type="submit">Shrani</Button>
               </div>

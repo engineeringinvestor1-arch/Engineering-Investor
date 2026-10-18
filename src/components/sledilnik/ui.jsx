@@ -1,121 +1,97 @@
 /**
- * Shared inline-styled UI primitives for the tracker.
+ * Skupni gradniki sledilnika. Videz je v sledilnik.css (prenova 18. 10. 2026); tu so samo zgradba
+ * in razredi, da so vsi pogledi enotni.
  */
 
-export function Card({ children, padding = '1.25rem', style = {}, ...rest }) {
+const cx = (...names) => names.filter(Boolean).join(' ');
+
+export function Card({ children, padding = '1.15rem', style = {}, className, ...rest }) {
   return (
-    <div style={{
-      background: 'var(--color-surface)',
-      border: '1px solid var(--color-border)',
-      borderRadius: 8,
-      padding,
-      ...style,
-    }} {...rest}>
+    <div className={cx('sl-card', className)} style={{ padding, ...style }} {...rest}>
       {children}
     </div>
   );
 }
 
+// Naslov ploskve znotraj pogleda.
 export function SectionHeader({ title, subtitle, action }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
-      <div>
-        <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--color-text)' }}>{title}</h2>
-        {subtitle && (
-          <div style={{ marginTop: 4, color: 'var(--color-text-muted)', fontSize: '0.88rem' }}>{subtitle}</div>
-        )}
+    <div className="sl-sechead">
+      <div style={{ minWidth: 0 }}>
+        <h2 className="sl-sectitle">{title}</h2>
+        {subtitle && <div className="sl-secsub">{subtitle}</div>}
       </div>
       {action}
     </div>
   );
 }
 
-export function Button({ variant = 'primary', size = 'md', children, style = {}, ...rest }) {
-  const sizes = {
-    sm: { padding: '0.35rem 0.7rem', fontSize: '0.8rem' },
-    md: { padding: '0.5rem 0.95rem', fontSize: '0.88rem' },
-    lg: { padding: '0.7rem 1.2rem', fontSize: '0.95rem' },
-  };
-  const variants = {
-    primary:   { background: 'var(--color-accent)', color: 'white', border: '1px solid var(--color-accent)' },
-    secondary: { background: 'transparent', color: 'var(--color-text)', border: '1px solid var(--color-border-strong)' },
-    ghost:     { background: 'transparent', color: 'var(--color-text-muted)', border: '1px solid transparent' },
-    danger:    { background: 'transparent', color: '#dc2626', border: '1px solid rgba(220,38,38,0.3)' },
-  };
+// Naslov pogleda: velik, na vrhu zaslona.
+export function PageHeader({ title, subtitle, action }) {
   return (
-    <button {...rest} style={{
-      ...sizes[size], ...variants[variant],
-      borderRadius: 6, fontWeight: 500, cursor: 'pointer',
-      transition: 'all 0.15s', fontFamily: 'inherit',
-      display: 'inline-flex', alignItems: 'center', gap: 6,
-      ...style,
-    }}>
+    <div className="sl-pagehead">
+      <div style={{ minWidth: 0 }}>
+        <h1 className="sl-pagetitle">{title}</h1>
+        {subtitle && <div className="sl-pagesub">{subtitle}</div>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+export function Button({ variant = 'primary', size = 'md', children, className, ...rest }) {
+  return (
+    <button {...rest} className={cx('sl-btn', `sl-btn--${variant}`, `sl-btn--${size}`, className)}>
       {children}
     </button>
   );
 }
 
-export function Input(props) {
-  return (
-    <input {...props} style={{
-      width: '100%',
-      padding: '0.55rem 0.75rem',
-      background: 'var(--color-bg)',
-      border: '1px solid var(--color-border)',
-      borderRadius: 6,
-      color: 'var(--color-text)',
-      fontSize: '0.9rem',
-      fontFamily: 'inherit',
-      outline: 'none',
-      ...(props.style || {}),
-    }} />
-  );
+export function Input({ className, ...props }) {
+  return <input {...props} className={cx('sl-input', className)} />;
 }
 
-export function Select({ children, ...rest }) {
-  return (
-    <select {...rest} style={{
-      width: '100%',
-      padding: '0.55rem 0.75rem',
-      background: 'var(--color-bg)',
-      border: '1px solid var(--color-border)',
-      borderRadius: 6,
-      color: 'var(--color-text)',
-      fontSize: '0.9rem',
-      fontFamily: 'inherit',
-      outline: 'none',
-      cursor: 'pointer',
-      ...(rest.style || {}),
-    }}>{children}</select>
-  );
+export function Select({ children, className, ...rest }) {
+  return <select {...rest} className={cx('sl-select', className)}>{children}</select>;
 }
 
 export function Field({ label, hint, children }) {
   return (
-    <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <span style={{ fontSize: '0.72rem', color: 'var(--color-text-subtle)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-        {label}
-      </span>
+    <label className="sl-field">
+      <span className="sl-label">{label}</span>
       {children}
-      {hint && <span style={{ fontSize: '0.74rem', color: 'var(--color-text-subtle)' }}>{hint}</span>}
+      {hint && <span className="sl-hint">{hint}</span>}
     </label>
+  );
+}
+
+// Skupina številk v eni ploskvi. items: [{ label, value, sub, color }]
+export function Stats({ items }) {
+  return (
+    <div className="sl-card sl-stats-wrap">
+      <div className="sl-stats">
+        {items.filter(Boolean).map((s) => (
+          <div key={s.label} className="sl-stat">
+            <div className="sl-stat-label">{s.label}</div>
+            <div className="sl-stat-value" style={s.color ? { color: s.color } : undefined}>{s.value}</div>
+            {s.sub && <div className="sl-stat-sub">{s.sub}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 export function KpiCard({ label, value, sub, trend, color }) {
   return (
-    <Card padding="1.1rem 1.25rem">
-      <div style={{ fontSize: '0.68rem', color: 'var(--color-text-subtle)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-        {label}
-      </div>
-      <div style={{ fontSize: '1.55rem', fontWeight: 700, marginTop: 4, color: color || 'var(--color-text)', letterSpacing: '-0.02em' }}>
-        {value}
-      </div>
+    <Card padding="0.95rem 1.05rem">
+      <div className="sl-stat-label">{label}</div>
+      <div className="sl-stat-value" style={color ? { color } : undefined}>{value}</div>
       {(sub || trend != null) && (
-        <div style={{ marginTop: 4, fontSize: '0.76rem', color: 'var(--color-text-muted)', display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="sl-stat-sub" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {trend != null && (
-            <span style={{ color: trend > 0 ? '#059669' : trend < 0 ? '#dc2626' : 'var(--color-text-muted)', fontWeight: 600 }}>
-              {trend > 0 ? '▲' : trend < 0 ? '▼' : '◆'} {Math.abs(trend).toFixed(1)}%
+            <span style={{ color: trend > 0 ? 'var(--sl-in)' : trend < 0 ? 'var(--sl-bad)' : 'var(--sl-muted)', fontWeight: 600 }}>
+              {trend > 0 ? '▲' : trend < 0 ? '▼' : '◆'} {Math.abs(trend).toFixed(1)} %
             </span>
           )}
           {sub && <span>{sub}</span>}
@@ -125,30 +101,18 @@ export function KpiCard({ label, value, sub, trend, color }) {
   );
 }
 
+const ZAPRI = <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12" /><path d="M18 6 6 18" /></svg>;
+
+// Na telefonu se okno odpre kot list od spodaj (sledilnik.css), na računalniku na sredini zaslona.
 export function Modal({ open, onClose, title, children, width = 520 }) {
   if (!open) return null;
   return (
-    <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(15,15,15,0.45)', backdropFilter: 'blur(4px)',
-      display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-      padding: '4rem 1rem 1rem',
-      overflowY: 'auto',
-    }}>
-      <div onClick={(e) => e.stopPropagation()} style={{
-        width: '100%', maxWidth: width,
-        background: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 8,
-        padding: '1.5rem',
-        boxShadow: '0 16px 40px rgba(0,0,0,0.12)',
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.1rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.015em', color: 'var(--color-text)' }}>{title}</h3>
-          <button onClick={onClose} aria-label="Zapri" style={{
-            background: 'transparent', border: 'none', color: 'var(--color-text-muted)',
-            cursor: 'pointer', fontSize: '1.4rem', lineHeight: 1, padding: 4,
-          }}>×</button>
+    <div className="sl-overlay" onClick={onClose}>
+      <div className="sl-dialog" role="dialog" aria-modal="true" aria-label={title} style={{ maxWidth: width }} onClick={(e) => e.stopPropagation()}>
+        <div className="sl-dialog-handle" aria-hidden="true" />
+        <div className="sl-dialog-head">
+          <h3 className="sl-dialog-title">{title}</h3>
+          <button type="button" className="sl-iconbtn" onClick={onClose} aria-label="Zapri">{ZAPRI}</button>
         </div>
         {children}
       </div>
@@ -158,10 +122,10 @@ export function Modal({ open, onClose, title, children, width = 520 }) {
 
 export function Empty({ title, description, action }) {
   return (
-    <Card padding="3rem 2rem" style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 6, color: 'var(--color-text)' }}>{title}</div>
+    <Card padding="2.75rem 1.5rem" style={{ textAlign: 'center' }}>
+      <div style={{ fontSize: '1.02rem', fontWeight: 600, letterSpacing: '-0.015em', marginBottom: 6 }}>{title}</div>
       {description && (
-        <div style={{ color: 'var(--color-text-muted)', fontSize: '0.88rem', maxWidth: 420, margin: '0 auto 1rem', lineHeight: 1.65 }}>
+        <div style={{ color: 'var(--sl-muted)', fontSize: '0.88rem', maxWidth: 400, margin: '0 auto 1.1rem', lineHeight: 1.6 }}>
           {description}
         </div>
       )}
@@ -172,14 +136,30 @@ export function Empty({ title, description, action }) {
 
 export function Tag({ children, color }) {
   return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 4,
-      padding: '3px 9px', fontSize: '0.7rem', fontWeight: 600,
-      background: color ? `${color}14` : 'var(--color-bg)',
-      color: color || 'var(--color-text-muted)',
-      border: `1px solid ${color ? `${color}33` : 'var(--color-border)'}`,
-      borderRadius: 4,
-      letterSpacing: '0.01em',
-    }}>{children}</span>
+    <span className="sl-tag">
+      {color && <span className="sl-dot" style={{ width: 6, height: 6, background: color }} />}
+      {children}
+    </span>
+  );
+}
+
+const NOTICE_ICONS = {
+  warn: <><path d="M12 9v4" /><path d="M12 17h.01" /><path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /></>,
+  good: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v5" /><path d="M12 7.5h.01" /></>,
+  bad: <><circle cx="12" cy="12" r="9" /><path d="M12 7.5v5" /><path d="M12 16.5h.01" /></>,
+};
+
+// Obvestilo z ikono: varnostna kopija, testni podatki, samodejno vpisani redni stroški, nasveti.
+export function Notice({ tone = 'info', children, action, onClose }) {
+  return (
+    <div role="status" className={`sl-notice sl-notice--${tone}`}>
+      <span className="sl-notice-ico" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{NOTICE_ICONS[tone]}</svg>
+      </span>
+      <div className="sl-notice-body">{children}</div>
+      {action}
+      {onClose && <button type="button" className="sl-iconbtn" style={{ width: 30, height: 30 }} onClick={onClose} aria-label="Zapri obvestilo">{ZAPRI}</button>}
+    </div>
   );
 }

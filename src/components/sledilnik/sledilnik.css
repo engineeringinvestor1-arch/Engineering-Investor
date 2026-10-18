@@ -1,0 +1,334 @@
+/*
+ * Videz aplikacije Sledilnik financ (avtor, 18. 10. 2026: "zgolj videz aplikacije, da izgleda bolj
+ * profesionalno in čisto"). Barve in pisava so iz strani (global.css); tu so samo izpeljane vrednosti
+ * in razredi, da komponente ne nosijo vsaka svojih vgnezdenih slogov.
+ *
+ * Načela: ena poudarjena barva (modra strani), zneski v pisavi s stalno širino znakov, tanke ločnice
+ * namesto okvirjev, kategorije prepoznavne po ikoni. Rdeča in oranžna samo za opozorila; odhodek je
+ * v barvi besedila, prihodek v zeleni.
+ */
+
+.sl {
+  --sl-bg: var(--color-bg);
+  --sl-card: var(--color-surface);
+  --sl-field: color-mix(in srgb, var(--color-text) 5%, var(--color-surface));
+  --sl-field-hover: color-mix(in srgb, var(--color-text) 8%, var(--color-surface));
+  --sl-line: color-mix(in srgb, var(--color-text) 9%, transparent);
+  --sl-line-strong: color-mix(in srgb, var(--color-text) 18%, transparent);
+  --sl-ink: var(--color-text);
+  --sl-muted: var(--color-text-muted);
+  --sl-subtle: var(--color-text-subtle);
+  --sl-accent: var(--color-accent);
+  --sl-accent-soft: color-mix(in srgb, var(--color-accent) 11%, transparent);
+  --sl-in: #12805c;
+  --sl-out: color-mix(in srgb, var(--color-text) 55%, transparent);
+  --sl-warn: #b45309;
+  --sl-bad: #c0392b;
+  --sl-r: 16px;
+  --sl-r-sm: 11px;
+  --sl-num: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  min-height: 100vh;
+  background: var(--sl-bg);
+  color: var(--sl-ink);
+  padding-top: env(safe-area-inset-top);
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-theme='dark'] .sl {
+  --sl-field: color-mix(in srgb, var(--color-text) 7%, var(--color-surface));
+  --sl-field-hover: color-mix(in srgb, var(--color-text) 11%, var(--color-surface));
+  --sl-line: color-mix(in srgb, var(--color-text) 10%, transparent);
+  --sl-in: #3fb985;
+  --sl-warn: #f0a04b;
+  --sl-bad: #f2777a;
+}
+
+.sl *, .sl *::before, .sl *::after { box-sizing: border-box; }
+.sl button { font-family: inherit; -webkit-tap-highlight-color: transparent; }
+
+.sl-num {
+  font-family: var(--sl-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+.sl-in { color: var(--sl-in); }
+.sl-muted { color: var(--sl-muted); }
+.sl-subtle { color: var(--sl-subtle); }
+
+/* ---------- ogrodje ---------- */
+
+.sl-shell {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  max-width: 1320px;
+  margin: 0 auto;
+}
+/* Stranski meni ni lepljiv: global.css ima na body overflow-x: hidden, ob katerem position: sticky ne deluje. */
+.sl-side {
+  min-height: 100vh;
+  padding: 1.75rem 0.9rem;
+  border-right: 1px solid var(--sl-line);
+  display: flex;
+  flex-direction: column;
+}
+.sl-brand { display: flex; align-items: center; gap: 10px; padding: 0 0.6rem 1.5rem; }
+.sl-brand-mark {
+  width: 32px; height: 32px; border-radius: 9px; background: var(--sl-accent); color: #fff;
+  display: flex; align-items: center; justify-content: center; flex: none;
+}
+.sl-brand-name { font-size: 0.95rem; font-weight: 650; letter-spacing: -0.015em; line-height: 1.2; }
+.sl-brand-sub { font-size: 0.74rem; color: var(--sl-subtle); }
+.sl-side-group { font-size: 0.72rem; color: var(--sl-subtle); padding: 1.25rem 0.75rem 0.4rem; }
+.sl-side-link {
+  display: flex; align-items: center; gap: 11px; width: 100%;
+  padding: 0.55rem 0.75rem; border-radius: 10px; border: none; background: transparent;
+  font-size: 0.9rem; font-weight: 500; color: var(--sl-muted); cursor: pointer; text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+.sl-side-link:hover { background: var(--sl-field); color: var(--sl-ink); }
+.sl-side-link[aria-current='page'] { background: var(--sl-accent-soft); color: var(--sl-accent); }
+.sl-side-foot { margin-top: 1.5rem; }
+
+.sl-main { padding: 2rem 2.25rem 4rem; min-width: 0; }
+.sl-content { max-width: 1040px; display: flex; flex-direction: column; gap: 1rem; }
+
+/* Spodnja vrstica na telefonu: štirje vsakdanji pogledi in "Več". */
+.sl-tabs { display: none; }
+.sl-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 2px 6px; border: none; background: transparent; cursor: pointer;
+  font-size: 0.68rem; font-weight: 500; color: var(--sl-subtle); letter-spacing: 0.01em;
+}
+.sl-tab[aria-current='page'] { color: var(--sl-accent); }
+
+@media (max-width: 760px) {
+  .sl-shell { grid-template-columns: minmax(0, 1fr); }
+  .sl-side { display: none; }
+  .sl-main { padding: 0.9rem 1rem calc(84px + env(safe-area-inset-bottom)); }
+  .sl-tabs {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    padding: 0 6px env(safe-area-inset-bottom);
+    background: color-mix(in srgb, var(--sl-card) 92%, transparent);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    border-top: 1px solid var(--sl-line);
+  }
+}
+
+/* ---------- naslovi ---------- */
+
+.sl-pagehead { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.25rem; }
+.sl-pagetitle { margin: 0; font-size: 1.7rem; font-weight: 650; letter-spacing: -0.035em; line-height: 1.15; color: var(--sl-ink); }
+.sl-pagesub { margin-top: 5px; font-size: 0.85rem; color: var(--sl-muted); line-height: 1.5; }
+.sl-sechead { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem; }
+.sl-sectitle { margin: 0; font-size: 1rem; font-weight: 600; letter-spacing: -0.015em; color: var(--sl-ink); }
+.sl-secsub { margin-top: 3px; font-size: 0.8rem; color: var(--sl-muted); line-height: 1.5; }
+.sl-label { font-size: 0.78rem; font-weight: 500; color: var(--sl-muted); }
+
+/* ---------- ploskve ---------- */
+
+.sl-card { background: var(--sl-card); border: 1px solid var(--sl-line); border-radius: var(--sl-r); }
+.sl-list { display: flex; flex-direction: column; }
+.sl-row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  width: 100%; padding: 0.75rem 1rem; background: transparent; border: none; border-bottom: 1px solid var(--sl-line);
+  color: inherit; text-align: left; font-family: inherit; font-size: 0.92rem;
+}
+.sl-row:last-child { border-bottom: none; }
+.sl-row-wrap { border-bottom: 1px solid var(--sl-line); }
+.sl-row-wrap:last-child { border-bottom: none; }
+.sl-row-wrap > .sl-row { border-bottom: none; }
+button.sl-row { cursor: pointer; transition: background 0.12s; }
+button.sl-row:hover { background: var(--sl-field); }
+.sl-row-title { font-weight: 500; color: var(--sl-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-row-sub { margin-top: 2px; font-size: 0.78rem; color: var(--sl-subtle); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-row-amount { font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 0.92rem; font-weight: 500; white-space: nowrap; }
+.sl-daygroup { padding: 1rem 1rem 0.15rem; font-size: 0.76rem; font-weight: 550; color: var(--sl-subtle); }
+
+.sl-ico {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 36px; height: 36px; border-radius: 11px;
+}
+.sl-ico--tint { background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--c); }
+[data-theme='dark'] .sl .sl-ico--tint { background: color-mix(in srgb, var(--c) 24%, transparent); color: color-mix(in srgb, var(--c) 70%, #fff); }
+.sl-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex: none; }
+
+/* Skupina številk v eni ploskvi, ločenih s tankimi črtami. */
+.sl-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.sl-stat { padding: 0.9rem 1rem; box-shadow: -1px 0 0 var(--sl-line), 0 -1px 0 var(--sl-line); min-width: 0; }
+.sl-stat-label { font-size: 0.76rem; font-weight: 500; color: var(--sl-muted); }
+.sl-stat-value { margin-top: 3px; font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 1.2rem; font-weight: 500; color: var(--sl-ink); }
+.sl-stat-sub { margin-top: 3px; font-size: 0.74rem; color: var(--sl-muted); line-height: 1.45; }
+.sl-stats-wrap { overflow: hidden; }
+
+/* ---------- gumbi in polja ---------- */
+
+.sl-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: var(--sl-r-sm); font-weight: 550; cursor: pointer; white-space: nowrap;
+  border: 1px solid transparent; transition: background 0.12s, border-color 0.12s, transform 0.08s;
+}
+.sl-btn:active { transform: scale(0.98); }
+.sl-btn--sm { height: 32px; padding: 0 0.75rem; font-size: 0.8rem; border-radius: 9px; }
+.sl-btn--md { height: 40px; padding: 0 1rem; font-size: 0.88rem; }
+.sl-btn--lg { height: 48px; padding: 0 1.3rem; font-size: 0.95rem; }
+.sl-btn--primary { background: var(--sl-accent); color: #fff; }
+.sl-btn--primary:hover { background: color-mix(in srgb, var(--sl-accent) 88%, #000); }
+.sl-btn--secondary { background: var(--sl-field); color: var(--sl-ink); }
+.sl-btn--secondary:hover { background: var(--sl-field-hover); }
+.sl-btn--ghost { background: transparent; color: var(--sl-muted); }
+.sl-btn--ghost:hover { background: var(--sl-field); color: var(--sl-ink); }
+.sl-btn--danger { background: transparent; color: var(--sl-bad); border-color: color-mix(in srgb, var(--sl-bad) 35%, transparent); }
+.sl-btn--danger:hover { background: color-mix(in srgb, var(--sl-bad) 8%, transparent); }
+.sl-link { background: none; border: none; padding: 0; color: var(--sl-accent); cursor: pointer; font: inherit; font-weight: 500; }
+
+.sl-input, .sl-select {
+  width: 100%; height: 44px; padding: 0 0.85rem; border-radius: var(--sl-r-sm);
+  background: var(--sl-field); border: 1px solid transparent; color: var(--sl-ink);
+  font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.12s, background 0.12s;
+}
+.sl-input::placeholder { color: var(--sl-subtle); }
+.sl-input:focus, .sl-select:focus { border-color: var(--sl-accent); background: var(--sl-card); box-shadow: 0 0 0 3px var(--sl-accent-soft); }
+.sl-select {
+  cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 2.2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a877f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.85rem center;
+}
+.sl-input[type='date'], .sl-input[type='month'] { min-width: 0; }
+.sl-field { display: flex; flex-direction: column; gap: 6px; }
+.sl-hint { font-size: 0.75rem; color: var(--sl-subtle); line-height: 1.45; }
+
+/* Preklopnik z dvema ali tremi možnostmi. */
+.sl-seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--sl-field); border-radius: 11px; }
+.sl-seg button {
+  flex: 1; height: 32px; padding: 0 0.85rem; border: none; border-radius: 8px; background: transparent;
+  font-size: 0.82rem; font-weight: 550; color: var(--sl-muted); cursor: pointer; white-space: nowrap;
+}
+.sl-seg button[aria-pressed='true'] { background: var(--sl-card); color: var(--sl-ink); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--sl-line); }
+
+.sl-chip {
+  display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 0.8rem 0 0.55rem;
+  border-radius: 999px; border: 1px solid var(--sl-line); background: var(--sl-card);
+  font-size: 0.84rem; font-weight: 500; color: var(--sl-ink); cursor: pointer; white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s;
+}
+.sl-chip:hover { background: var(--sl-field); }
+.sl-chip[aria-pressed='true'] { background: var(--sl-accent-soft); border-color: var(--sl-accent); color: var(--sl-accent); }
+.sl-chip--plain { padding: 0 0.85rem; }
+.sl-chip--dashed { border-style: dashed; color: var(--sl-muted); padding: 0 0.85rem; }
+.sl-chiprow { display: flex; flex-wrap: wrap; gap: 7px; }
+/* Vrstica, ki se na telefonu pomika vstran, namesto da bi se lomila v več vrst. */
+.sl-scrollrow { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; margin: 0 -1.1rem; padding: 0 1.1rem; }
+.sl-scrollrow::-webkit-scrollbar { display: none; }
+
+.sl-tag {
+  display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 6px;
+  background: var(--sl-field); color: var(--sl-muted); font-size: 0.72rem; font-weight: 550; white-space: nowrap;
+}
+
+.sl-iconbtn {
+  display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+  border-radius: 10px; border: none; background: transparent; color: var(--sl-muted); cursor: pointer;
+}
+.sl-iconbtn:hover { background: var(--sl-field); color: var(--sl-ink); }
+.sl-iconbtn:disabled { opacity: 0.35; cursor: default; background: transparent; }
+
+/* ---------- obvestila ---------- */
+
+.sl-notice {
+  display: flex; align-items: center; gap: 12px; padding: 0.75rem 0.9rem; border-radius: 14px;
+  background: var(--sl-card); border: 1px solid var(--sl-line); font-size: 0.86rem; line-height: 1.5; color: var(--sl-muted);
+}
+.sl-notice strong { color: var(--sl-ink); font-weight: 600; }
+.sl-notice-ico { flex: none; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.sl-notice-body { flex: 1; min-width: 0; }
+.sl-notice--warn .sl-notice-ico { background: color-mix(in srgb, var(--sl-warn) 14%, transparent); color: var(--sl-warn); }
+.sl-notice--good .sl-notice-ico { background: color-mix(in srgb, var(--sl-in) 14%, transparent); color: var(--sl-in); }
+.sl-notice--info .sl-notice-ico { background: var(--sl-accent-soft); color: var(--sl-accent); }
+.sl-notice--bad .sl-notice-ico { background: color-mix(in srgb, var(--sl-bad) 14%, transparent); color: var(--sl-bad); }
+
+/* ---------- okno: na telefonu list od spodaj, na računalniku na sredini ---------- */
+
+.sl-overlay {
+  position: fixed; inset: 0; z-index: 100; background: rgba(12, 12, 12, 0.42);
+  display: flex; align-items: flex-start; justify-content: center; padding: 4rem 1rem 1rem; overflow-y: auto;
+  animation: sl-fade 0.16s ease-out;
+}
+.sl-dialog {
+  width: 100%; background: var(--sl-card); border-radius: 20px; padding: 1.25rem 1.35rem 1.4rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18); border: 1px solid var(--sl-line);
+}
+.sl-dialog-handle { display: none; }
+.sl-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
+.sl-dialog-title { margin: 0; font-size: 1.1rem; font-weight: 650; letter-spacing: -0.02em; color: var(--sl-ink); }
+.sl-form { display: flex; flex-direction: column; gap: 0.9rem; }
+.sl-form-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.sl-form-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.35rem; }
+.sl-form-actions > div { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 760px) {
+  .sl-overlay { align-items: flex-end; padding: 2.5rem 0 0; }
+  .sl-dialog {
+    border-radius: 22px 22px 0 0; max-height: 92vh; overflow-y: auto; border: none;
+    padding: 0.6rem 1.1rem calc(1.25rem + env(safe-area-inset-bottom));
+    animation: sl-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .sl-dialog-handle { display: block; width: 40px; height: 5px; border-radius: 3px; background: var(--sl-line-strong); margin: 0 auto 0.75rem; }
+  .sl-form-actions { flex-direction: column-reverse; align-items: stretch; }
+  .sl-form-actions > div { flex-direction: column-reverse; }
+  .sl-form-actions .sl-btn { width: 100%; height: 46px; }
+}
+
+@keyframes sl-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sl-up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+
+/* ---------- hiter vnos ---------- */
+
+.sl-qa { padding: 1.1rem; display: flex; flex-direction: column; gap: 0.95rem; }
+.sl-qa-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sl-qa-title { font-size: 0.98rem; font-weight: 600; letter-spacing: -0.015em; }
+.sl-qa-amount { position: relative; }
+.sl-qa-amount input {
+  width: 100%; height: 64px; padding: 0 2.6rem 0 1rem; border-radius: 14px; border: 1px solid transparent;
+  background: var(--sl-field); color: var(--sl-ink); outline: none;
+  font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; font-size: 2rem; font-weight: 500;
+}
+.sl-qa-amount input::placeholder { color: var(--sl-subtle); }
+.sl-qa-amount input:focus { border-color: var(--sl-accent); background: var(--sl-card); box-shadow: 0 0 0 3px var(--sl-accent-soft); }
+.sl-qa-amount span { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-family: var(--sl-num); font-size: 1.25rem; color: var(--sl-subtle); pointer-events: none; }
+.sl-qa-payee { display: flex; gap: 8px; }
+.sl-qa-payee > div { position: relative; flex: 1; min-width: 0; }
+.sl-qa-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sl-qa-meta .sl-input, .sl-qa-meta .sl-select { height: 36px; font-size: 0.84rem; width: auto; }
+.sl-qa-msg { min-height: 1.3rem; font-size: 0.84rem; line-height: 1.45; }
+
+.sl-suggest {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20; overflow: hidden;
+  background: var(--sl-card); border: 1px solid var(--sl-line); border-radius: 12px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+.sl-suggest button {
+  display: flex; justify-content: space-between; gap: 8px; width: 100%; padding: 0.65rem 0.85rem;
+  background: transparent; border: none; cursor: pointer; font-size: 0.9rem; color: var(--sl-ink); text-align: left;
+}
+.sl-suggest button[aria-selected='true'], .sl-suggest button:hover { background: var(--sl-field); }
+
+/* ---------- pregled ---------- */
+
+.sl-monthbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sl-monthbar-nav { display: flex; align-items: center; gap: 2px; }
+.sl-hero { padding: 0.5rem 0.15rem 0.25rem; }
+.sl-hero-value { font-family: var(--sl-num); font-variant-numeric: tabular-nums; font-size: 2.9rem; font-weight: 500; letter-spacing: -0.05em; line-height: 1.05; margin-top: 4px; color: var(--sl-ink); }
+.sl-hero-delta { margin-top: 8px; font-size: 0.86rem; color: var(--sl-muted); line-height: 1.5; }
+.sl-bar { height: 4px; border-radius: 2px; margin-top: 8px; background: var(--sl-field); overflow: hidden; }
+.sl-bar > div { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+.sl-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; align-items: start; }
+
+@media (max-width: 760px) {
+  /* Na telefonu dva stolpca številk; liha zadnja zasede vso širino, da ne ostane prazen kot. */
+  .sl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sl-stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .sl-pagetitle { font-size: 1.6rem; }
+  .sl-hero-value { font-size: 2.6rem; }
+  .sl-form-2 { grid-template-columns: 1fr 1fr; }
+}

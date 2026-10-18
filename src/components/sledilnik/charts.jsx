@@ -75,14 +75,14 @@ export function CumulativeChart({ current, previous, days, currentLabel, previou
   const hoverCur = hover && hover <= current.length ? current[hover - 1] : null;
   const hoverPrev = hover && hover <= previous.length ? previous[hover - 1] : null;
   const tipLeft = hover ? Math.min(Math.max(x(hover) - 80, 0), Math.max(0, width - 170)) : 0;
-  const key = (color) => ({ display: 'inline-block', width: 16, height: 0, borderTop: `2px solid ${color}`, verticalAlign: 'middle', marginRight: 6 });
+  const key = (color, dashed) => ({ display: 'inline-block', width: 16, height: 0, borderTop: `2px ${dashed ? 'dashed' : 'solid'} ${color}`, verticalAlign: 'middle', marginRight: 6 });
   const summary = `Poraba skozi mesec. ${currentLabel}: ${format(endVal)} do ${lastDay}. dne. ${previousLabel}: ${format(prevEnd)} v celem mesecu.`;
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: 6 }}>
-        <span><span style={key('var(--color-accent)')} />{currentLabel}</span>
-        <span><span style={key('var(--color-text-muted)')} />{previousLabel}</span>
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: '0.78rem', color: 'var(--sl-muted)', marginBottom: 8 }}>
+        <span><span style={key('var(--sl-accent)')} />{currentLabel}</span>
+        <span><span style={key('var(--sl-subtle)', true)} />{previousLabel}</span>
       </div>
       <div ref={ref} style={{ position: 'relative', height }}>
         {width > 0 && (
@@ -92,34 +92,34 @@ export function CumulativeChart({ current, previous, days, currentLabel, previou
             style={{ display: 'block', outlineOffset: 2, touchAction: 'pan-y' }}>
             {ticks.map((t) => (
               <g key={t}>
-                <line x1={padL} x2={padL + innerW} y1={y(t)} y2={y(t)} stroke="var(--color-border)" strokeWidth="1" />
-                <text x={padL - 8} y={y(t)} textAnchor="end" dominantBaseline="middle" fontSize="11" fill="var(--color-text-subtle)" style={{ fontVariantNumeric: 'tabular-nums' }}>{format(t)}</text>
+                <line x1={padL} x2={padL + innerW} y1={y(t)} y2={y(t)} stroke="var(--sl-line)" strokeWidth="1" />
+                <text x={padL - 8} y={y(t)} textAnchor="end" dominantBaseline="middle" fontSize="11" fill="var(--sl-subtle)" style={{ fontVariantNumeric: 'tabular-nums' }}>{format(t)}</text>
               </g>
             ))}
             {dayTicks.map((d) => (
-              <text key={d} x={x(d)} y={height - 8} textAnchor="middle" fontSize="11" fill="var(--color-text-subtle)">{d}.</text>
+              <text key={d} x={x(d)} y={height - 8} textAnchor="middle" fontSize="11" fill="var(--sl-subtle)">{d}.</text>
             ))}
 
-            {previous.length > 1 && <path d={linePath(previous)} fill="none" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />}
+            {previous.length > 1 && <path d={linePath(previous)} fill="none" stroke="var(--sl-subtle)" strokeWidth="1.75" strokeDasharray="4 4" strokeLinejoin="round" strokeLinecap="round" />}
             {current.length > 1 && (
-              <path d={`${linePath(current)} L${x(lastDay).toFixed(1)},${y(0).toFixed(1)} L${x(1).toFixed(1)},${y(0).toFixed(1)} Z`} fill="var(--color-accent)" opacity="0.1" />
+              <path d={`${linePath(current)} L${x(lastDay).toFixed(1)},${y(0).toFixed(1)} L${x(1).toFixed(1)},${y(0).toFixed(1)} Z`} fill="var(--sl-accent)" opacity="0.08" />
             )}
-            {current.length > 1 && <path d={linePath(current)} fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />}
+            {current.length > 1 && <path d={linePath(current)} fill="none" stroke="var(--sl-accent)" strokeWidth="2.25" strokeLinejoin="round" strokeLinecap="round" />}
             {current.length > 0 && (
               <>
-                <circle cx={x(lastDay)} cy={y(endVal)} r="5" fill="var(--color-accent)" stroke="var(--color-surface)" strokeWidth="2" />
-                <text x={x(lastDay) + 10} y={y(endVal)} dominantBaseline="middle" fontSize="12" fontWeight="700" fill="var(--color-text)">{format(endVal)}</text>
+                <circle cx={x(lastDay)} cy={y(endVal)} r="5" fill="var(--sl-accent)" stroke="var(--sl-card)" strokeWidth="2.5" />
+                <text x={x(lastDay) + 10} y={y(endVal)} dominantBaseline="middle" fontSize="12" fontWeight="500" fill="var(--sl-ink)" style={{ fontFamily: 'var(--sl-num)', letterSpacing: '-0.03em' }}>{format(endVal)}</text>
               </>
             )}
             {showPrevLabel && (
-              <text x={x(previous.length) + 10} y={y(prevEnd)} dominantBaseline="middle" fontSize="11" fill="var(--color-text-muted)">{format(prevEnd)}</text>
+              <text x={x(previous.length) + 10} y={y(prevEnd)} dominantBaseline="middle" fontSize="11" fill="var(--sl-subtle)" style={{ fontFamily: 'var(--sl-num)', letterSpacing: '-0.03em' }}>{format(prevEnd)}</text>
             )}
 
             {hover && (
               <g pointerEvents="none">
-                <line x1={x(hover)} x2={x(hover)} y1={padT} y2={padT + innerH} stroke="var(--color-border-strong)" strokeWidth="1" />
-                {hoverPrev != null && <circle cx={x(hover)} cy={y(hoverPrev)} r="4" fill="var(--color-text-muted)" stroke="var(--color-surface)" strokeWidth="2" />}
-                {hoverCur != null && <circle cx={x(hover)} cy={y(hoverCur)} r="4" fill="var(--color-accent)" stroke="var(--color-surface)" strokeWidth="2" />}
+                <line x1={x(hover)} x2={x(hover)} y1={padT} y2={padT + innerH} stroke="var(--sl-line-strong)" strokeWidth="1" />
+                {hoverPrev != null && <circle cx={x(hover)} cy={y(hoverPrev)} r="4" fill="var(--sl-subtle)" stroke="var(--sl-card)" strokeWidth="2" />}
+                {hoverCur != null && <circle cx={x(hover)} cy={y(hoverCur)} r="4" fill="var(--sl-accent)" stroke="var(--sl-card)" strokeWidth="2" />}
               </g>
             )}
           </svg>
@@ -127,17 +127,17 @@ export function CumulativeChart({ current, previous, days, currentLabel, previou
         {hover && (
           <div role="status" style={{
             position: 'absolute', top: 4, left: tipLeft, width: 170, pointerEvents: 'none',
-            background: 'var(--color-surface)', border: '1px solid var(--color-border-strong)', borderRadius: 6,
-            padding: '0.45rem 0.6rem', fontSize: '0.78rem', boxShadow: '0 6px 18px rgba(0,0,0,0.14)', lineHeight: 1.5,
+            background: 'var(--sl-card)', border: '1px solid var(--sl-line)', borderRadius: 10,
+            padding: '0.5rem 0.65rem', fontSize: '0.78rem', boxShadow: '0 10px 28px rgba(0,0,0,0.14)', lineHeight: 1.55,
           }}>
-            <div style={{ color: 'var(--color-text-muted)' }}>Do {hover}. dne v mesecu</div>
+            <div style={{ color: 'var(--sl-muted)' }}>Do {hover}. dne v mesecu</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-              <span style={{ color: 'var(--color-text-muted)' }}><span style={key('var(--color-accent)')} />{currentLabel}</span>
-              <strong style={{ color: 'var(--color-text)' }}>{hoverCur != null ? format(hoverCur) : 'še ni'}</strong>
+              <span style={{ color: 'var(--sl-muted)' }}><span style={key('var(--sl-accent)')} />{currentLabel}</span>
+              <strong className="sl-num" style={{ color: 'var(--sl-ink)', fontWeight: 500 }}>{hoverCur != null ? format(hoverCur) : 'še ni'}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-              <span style={{ color: 'var(--color-text-muted)' }}><span style={key('var(--color-text-muted)')} />{previousLabel}</span>
-              <strong style={{ color: 'var(--color-text)' }}>{hoverPrev != null ? format(hoverPrev) : 'ni dneva'}</strong>
+              <span style={{ color: 'var(--sl-muted)' }}><span style={key('var(--sl-subtle)', true)} />{previousLabel}</span>
+              <strong className="sl-num" style={{ color: 'var(--sl-ink)', fontWeight: 500 }}>{hoverPrev != null ? format(hoverPrev) : 'ni dneva'}</strong>
             </div>
           </div>
         )}
@@ -154,12 +154,13 @@ export function PieChart({ data, size = 200, thickness = 32, centerLabel, center
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Tortni graf">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-border)" strokeWidth={thickness} />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--sl-field)" strokeWidth={thickness} />
       {total > 0 && data.map((d, i) => {
         const v = Math.max(0, d.value);
         if (v === 0) return null;
         const len = (v / total) * (2 * Math.PI * r);
-        const dash = `${len} ${2 * Math.PI * r - len}`;
+        const gap = data.filter((x) => x.value > 0).length > 1 ? Math.min(2, len / 2) : 0;
+        const dash = `${len - gap} ${2 * Math.PI * r - len + gap}`;
         const offset = -acc;
         acc += len;
         return (
@@ -177,13 +178,13 @@ export function PieChart({ data, size = 200, thickness = 32, centerLabel, center
         <g>
           {centerValue && (
             <text x={cx} y={cy - 2} textAnchor="middle" dominantBaseline="middle"
-              fill="var(--color-text)" fontSize={Math.round(size * 0.13)} fontWeight="700">
+              fill="var(--sl-ink)" fontSize={Math.round(size * 0.12)} fontWeight="500" style={{ fontFamily: 'var(--sl-num)', letterSpacing: '-0.03em' }}>
               {centerValue}
             </text>
           )}
           {centerLabel && (
             <text x={cx} y={cy + 16} textAnchor="middle" dominantBaseline="middle"
-              fill="var(--color-text-muted)" fontSize={Math.round(size * 0.07)}>
+              fill="var(--sl-muted)" fontSize={Math.round(size * 0.065)}>
               {centerLabel}
             </text>
           )}
@@ -206,7 +207,7 @@ export function BarChart({ data, height = 220, format = (v) => String(v) }) {
       <svg viewBox={`0 0 ${w} 100`} preserveAspectRatio="none" width="100%" height={height} style={{ display: 'block' }}>
         {[0, 0.25, 0.5, 0.75, 1].map((p) => (
           <line key={p} x1={padX} x2={w - padX} y1={5 + 90 * (1 - p)} y2={5 + 90 * (1 - p)}
-            stroke="var(--color-border)" strokeWidth="0.2" vectorEffect="non-scaling-stroke" />
+            stroke="var(--sl-line)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
         ))}
         {data.map((d, i) => {
           const x = padX + i * barAreaW;
@@ -218,17 +219,17 @@ export function BarChart({ data, height = 220, format = (v) => String(v) }) {
             const bw = barAreaW * 0.35;
             return (
               <g key={i}>
-                <rect x={x + barAreaW * 0.1} y={5 + (90 - ih)} width={bw} height={ih} fill="#059669" rx="0.5" />
-                <rect x={x + barAreaW * 0.1 + bw + 1} y={5 + (90 - eh)} width={bw} height={eh} fill="#dc2626" rx="0.5" />
+                <rect x={x + barAreaW * 0.1} y={5 + (90 - ih)} width={bw} height={ih} fill="var(--sl-in)" rx="0.6" />
+                <rect x={x + barAreaW * 0.1 + bw + 1} y={5 + (90 - eh)} width={bw} height={eh} fill="var(--sl-out)" rx="0.6" />
               </g>
             );
           }
           const v = Math.max(0, d.value || 0);
           const h = (v / max) * 90;
-          return <rect key={i} x={x + barAreaW * 0.15} y={5 + (90 - h)} width={barAreaW * 0.7} height={h} fill={d.color || 'var(--color-accent)'} rx="0.5" />;
+          return <rect key={i} x={x + barAreaW * 0.15} y={5 + (90 - h)} width={barAreaW * 0.7} height={h} fill={d.color || 'var(--sl-accent)'} rx="0.6" />;
         })}
       </svg>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: '0.7rem', color: 'var(--color-text-subtle)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: '0.72rem', color: 'var(--sl-subtle)' }}>
         {data.map((d, i) => (
           <div key={i} style={{ flex: 1, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {d.label}
@@ -260,7 +261,7 @@ export function LineChart({ series, height = 220, format = (v) => String(v) }) {
       <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" width="100%" height={height} style={{ display: 'block' }}>
         {[0, 0.25, 0.5, 0.75, 1].map((p) => (
           <line key={p} x1={padL} x2={w - padR} y1={padT + innerH * (1 - p)} y2={padT + innerH * (1 - p)}
-            stroke="var(--color-border)" strokeWidth="0.2" vectorEffect="non-scaling-stroke" />
+            stroke="var(--sl-line)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
         ))}
         {series.map((s, si) => {
           const path = s.points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xPos(i)} ${yPos(p.y)}`).join(' ');
@@ -273,16 +274,14 @@ export function LineChart({ series, height = 220, format = (v) => String(v) }) {
                   opacity="0.12"
                 />
               )}
-              <path d={path} fill="none" stroke={s.color || 'var(--color-accent)'} strokeWidth="0.6" vectorEffect="non-scaling-stroke" />
-              {s.points.map((p, i) => (
-                <circle key={i} cx={xPos(i)} cy={yPos(p.y)} r="0.7" fill={s.color || 'var(--color-accent)'} />
-              ))}
+              {/* Brez pik na točkah: graf je raztegnjen (preserveAspectRatio none) in pike bi bile elipse. */}
+              <path d={path} fill="none" stroke={s.color || 'var(--sl-accent)'} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
             </g>
           );
         })}
       </svg>
       {labels.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: '0.7rem', color: 'var(--color-text-subtle)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: '0.72rem', color: 'var(--sl-subtle)' }}>
           {labels.map((l, i) => (
             <div key={i} style={{ flex: 1, textAlign: 'center' }}>{l}</div>
           ))}
@@ -292,15 +291,15 @@ export function LineChart({ series, height = 220, format = (v) => String(v) }) {
   );
 }
 
-export function ProgressBar({ value, max, color = 'var(--color-accent)', height = 8 }) {
+export function ProgressBar({ value, max, color = 'var(--sl-accent)', height = 6 }) {
   const pct = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
   return (
     <div style={{
-      width: '100%', height, background: 'var(--color-border)', borderRadius: height,
+      width: '100%', height, background: 'var(--sl-field)', borderRadius: height,
       overflow: 'hidden',
     }}>
       <div style={{
-        width: `${pct * 100}%`, height: '100%',
+        width: `${pct * 100}%`, height: '100%', borderRadius: height,
         background: color,
         transition: 'width 0.3s ease',
       }} />
@@ -308,12 +307,12 @@ export function ProgressBar({ value, max, color = 'var(--color-accent)', height 
   );
 }
 
-export function StackedBar({ segments, height = 14 }) {
+export function StackedBar({ segments, height = 10 }) {
   const total = segments.reduce((s, x) => s + Math.max(0, x.value), 0);
   return (
     <div style={{
-      display: 'flex', width: '100%', height, borderRadius: height,
-      overflow: 'hidden', background: 'var(--color-border)',
+      display: 'flex', gap: 2, width: '100%', height, borderRadius: height,
+      overflow: 'hidden', background: total > 0 ? 'transparent' : 'var(--sl-field)',
     }}>
       {total > 0 && segments.map((s, i) => {
         const pct = (Math.max(0, s.value) / total) * 100;
@@ -363,7 +362,7 @@ export function FlowChart({ incomes, expenses, height = 360 }) {
 
   return (
     <svg viewBox={`0 0 ${w} 100`} preserveAspectRatio="none" width="100%" height={height} style={{ display: 'block' }}>
-      <rect x={hubX} y={0} width={hubW} height={100} fill="var(--color-accent)" opacity="0.7" rx="0.5" />
+      <rect x={hubX} y={0} width={hubW} height={100} fill="var(--sl-accent)" opacity="0.75" rx="0.5" />
       {incomeNodes.map((n, i) => {
         const sourceX = 0;
         const sourceY = n.y + n.h / 2;

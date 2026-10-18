@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
-import { Card, Button, Input, Select, Field, Modal, SectionHeader, Empty, Tag } from '../ui.jsx';
-import { fmtEur, fmtDate, findPayee, todayIso, uid } from '../store.js';
+import { Fragment, useMemo, useState } from 'react';
+import { Card, Button, Input, Select, Field, Modal, PageHeader, Empty } from '../ui.jsx';
+import { CatIcon } from '../ikone.jsx';
+import { fmtEur, findPayee, todayIso, uid } from '../store.js';
 import QuickAdd from '../QuickAdd.jsx';
 
 const TYPES = [
@@ -24,9 +25,20 @@ function emptyTx() {
   };
 }
 
+// Naslov skupine vnosov enega dne: "Sobota, 17. oktober" (leto samo, če ni letošnje).
+const dnevFmt = new Intl.DateTimeFormat('sl-SI', { weekday: 'long', day: 'numeric', month: 'long' });
+const dnevLetoFmt = new Intl.DateTimeFormat('sl-SI', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+function dan(iso) {
+  const d = new Date(`${iso}T12:00:00`);
+  const text = (iso.slice(0, 4) === todayIso().slice(0, 4) ? dnevFmt : dnevLetoFmt).format(d);
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+const PRAZEN_FILTER = { type: 'all', accountId: 'all', categoryId: 'all', from: '', to: '', search: '' };
+
 export default function Transactions({ state, dispatch, quickAdd = true }) {
   const [editing, setEditing] = useState(null);
-  const [filter, setFilter] = useState({ type: 'all', accountId: 'all', categoryId: 'all', from: '', to: '', search: '' });
+  const [filter, setFilter] = useState(PRAZEN_FILTER);
 
   const accountsAlive = state.accounts.filter((a) => !a.archived);
   const cats = state.categories.filter((c) => !c.archived);
@@ -85,111 +97,78 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
 
   const totalIn = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + (Number(t.amount) || 0), 0);
   const totalOut = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + (Number(t.amount) || 0), 0);
+  const moreFilters = filter.type !== 'all' || filter.accountId !== 'all' || filter.categoryId !== 'all' || filter.from || filter.to;
+  const anyFilter = filter.search || moreFilters;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <SectionHeader
+      <PageHeader
         title="Transakcije"
-        subtitle={`${filtered.length} vnosov · ${fmtEur(totalIn)} prihodki · ${fmtEur(totalOut)} odhodki`}
-        action={<Button variant="secondary" onClick={openNew}>Podroben vnos ali prenos</Button>}
+        subtitle={`${filtered.length} vnosov · prihodki ${fmtEur(totalIn)} · odhodki ${fmtEur(totalOut)}`}
+        action={<Button variant="secondary" size="sm" onClick={openNew}>Podroben vnos ali prenos</Button>}
       />
 
       {quickAdd && <QuickAdd state={state} dispatch={dispatch} />}
 
-      <Card padding="0.85rem 1rem">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>
-            Filtri
+      <Card padding="0.75rem">
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <Input type="search" placeholder="Išči po trgovini, opombi, kategoriji" aria-label="Iskanje" value={filter.search} onChange={(e) => setFilter({ ...filter, search: e.target.value })} />
+          {anyFilter && <Button variant="ghost" size="sm" onClick={() => setFilter(PRAZEN_FILTER)}>Počisti</Button>}
+        </div>
+        <details open={moreFilters || undefined} style={{ marginTop: 8 }}>
+          <summary className="sl-label" style={{ cursor: 'pointer', padding: '0.2rem 0.25rem' }}>Več filtrov</summary>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 8, marginTop: 8 }}>
+            <Select value={filter.type} aria-label="Vrsta" onChange={(e) => setFilter({ ...filter, type: e.target.value })}>
+              <option value="all">Vse vrste</option>
+              {TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+            </Select>
+            <Select value={filter.accountId} aria-label="Račun" onChange={(e) => setFilter({ ...filter, accountId: e.target.value })}>
+              <option value="all">Vsi računi</option>
+              {accountsAlive.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </Select>
+            <Select value={filter.categoryId} aria-label="Kategorija" onChange={(e) => setFilter({ ...filter, categoryId: e.target.value })}>
+              <option value="all">Vse kategorije</option>
+              {cats.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? 'P' : 'O'})</option>)}
+            </Select>
+            <Input type="date" value={filter.from} aria-label="Od" onChange={(e) => setFilter({ ...filter, from: e.target.value })} />
+            <Input type="date" value={filter.to} aria-label="Do" onChange={(e) => setFilter({ ...filter, to: e.target.value })} />
           </div>
-          {(filter.search || filter.type !== 'all' || filter.accountId !== 'all' || filter.categoryId !== 'all' || filter.from || filter.to) && (
-            <button
-              onClick={() => setFilter({ type: 'all', accountId: 'all', categoryId: 'all', from: '', to: '', search: '' })}
-              style={{ background: 'transparent', border: 'none', color: 'var(--color-accent)', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit' }}
-            >
-              Počisti
-            </button>
-          )}
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.5rem' }}>
-          <Input placeholder="Po plačniku, opombi..." value={filter.search} onChange={(e) => setFilter({ ...filter, search: e.target.value })} />
-          <Select value={filter.type} onChange={(e) => setFilter({ ...filter, type: e.target.value })}>
-            <option value="all">Vse vrste</option>
-            {TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
-          </Select>
-          <Select value={filter.accountId} onChange={(e) => setFilter({ ...filter, accountId: e.target.value })}>
-            <option value="all">Vsi računi</option>
-            {accountsAlive.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-          </Select>
-          <Select value={filter.categoryId} onChange={(e) => setFilter({ ...filter, categoryId: e.target.value })}>
-            <option value="all">Vse kategorije</option>
-            {cats.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? 'P' : 'O'})</option>)}
-          </Select>
-          <Input type="date" value={filter.from} placeholder="Od" onChange={(e) => setFilter({ ...filter, from: e.target.value })} />
-          <Input type="date" value={filter.to} placeholder="Do" onChange={(e) => setFilter({ ...filter, to: e.target.value })} />
-        </div>
+        </details>
       </Card>
 
       {filtered.length === 0 ? (
         <Empty
           title={state.transactions.length === 0 ? 'Še ni transakcij' : 'Ni zadetkov'}
-          description={state.transactions.length === 0 ? 'Vnesi prvi prihodek ali odhodek.' : 'Spremeni filtre.'}
-          action={state.transactions.length === 0 && <Button onClick={openNew}>+ Nova transakcija</Button>}
+          description={state.transactions.length === 0 ? 'Vnesi prvi prihodek ali odhodek.' : 'Spremeni iskanje ali filtre.'}
+          action={state.transactions.length === 0 && <Button onClick={openNew}>Nova transakcija</Button>}
         />
       ) : (
-        <Card padding="0">
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <Card padding="0" style={{ overflow: 'hidden' }}>
+          <div className="sl-list">
             {filtered.map((t, i) => {
               const acc = state.accounts.find((a) => a.id === t.accountId);
               const cat = state.categories.find((c) => c.id === t.categoryId);
               const dst = state.accounts.find((a) => a.id === t.transferToAccountId);
+              const newDay = i === 0 || filtered[i - 1].date !== t.date;
+              const sub = [
+                t.type === 'transfer' ? 'Prenos' : cat && t.payee ? cat.name : null,
+                `${acc?.name || '-'}${t.type === 'transfer' && dst ? ` → ${dst.name}` : ''}`,
+                t.notes || null,
+              ].filter(Boolean).join(' · ');
               return (
-                <button
-                  key={t.id}
-                  onClick={() => setEditing({ ...t, amount: String(t.amount) })}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'auto 1fr auto',
-                    gap: '0.85rem',
-                    padding: '0.85rem 1.1rem',
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: i < filtered.length - 1 ? '1px solid var(--color-border)' : 'none',
-                    color: 'inherit',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    fontFamily: 'inherit',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div style={{
-                    width: 38, textAlign: 'center',
-                    fontSize: '0.7rem', color: 'var(--color-text-muted)',
-                    lineHeight: 1.2,
-                  }}>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-text)' }}>
-                      {t.date.slice(8, 10)}
+                <Fragment key={t.id}>
+                  {newDay && <div className="sl-daygroup" style={i === 0 ? { paddingTop: '0.75rem' } : undefined}>{dan(t.date)}</div>}
+                  <button type="button" className="sl-row" onClick={() => setEditing({ ...t, amount: String(t.amount) })}>
+                    <CatIcon category={cat} type={t.type} kind={t.type === 'transfer' ? 'transfer' : undefined} />
+                    <div style={{ minWidth: 0 }}>
+                      <div className="sl-row-title">{t.payee || cat?.name || (t.type === 'transfer' ? 'Prenos' : 'Transakcija')}</div>
+                      <div className="sl-row-sub">{sub}</div>
                     </div>
-                    <div>{t.date.slice(5, 7)}/{t.date.slice(2, 4)}</div>
-                  </div>
-                  <div style={{ overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 3, flexWrap: 'wrap' }}>
-                      <strong style={{ fontSize: '0.95rem' }}>{t.payee || cat?.name || (t.type === 'transfer' ? 'Prenos' : 'Transakcija')}</strong>
-                      {cat && t.type !== 'transfer' && <Tag color={cat.color}>{cat.name}</Tag>}
-                      {t.type === 'transfer' && <Tag>Prenos</Tag>}
-                    </div>
-                    <div style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>
-                      {acc?.name || '-'}
-                      {t.type === 'transfer' && dst && ` → ${dst.name}`}
-                      {t.notes && ` · ${t.notes}`}
-                    </div>
-                  </div>
-                  <div style={{
-                    fontWeight: 700, fontSize: '1rem', whiteSpace: 'nowrap',
-                    color: t.type === 'income' ? '#059669' : t.type === 'expense' ? '#dc2626' : 'var(--color-text-muted)',
-                  }}>
-                    {t.type === 'income' ? '+' : t.type === 'expense' ? '−' : '↔'} {fmtEur(t.amount, true)}
-                  </div>
-                </button>
+                    <span className={`sl-row-amount${t.type === 'income' ? ' sl-in' : ''}`} style={t.type === 'transfer' ? { color: 'var(--sl-muted)' } : undefined}>
+                      {t.type === 'income' ? '+' : t.type === 'expense' ? '−' : '↔ '}{fmtEur(t.amount, true)}
+                    </span>
+                  </button>
+                </Fragment>
               );
             })}
           </div>
@@ -198,25 +177,18 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
 
       <Modal open={!!editing} onClose={() => setEditing(null)} title={editing?.id ? 'Uredi transakcijo' : 'Nova transakcija'}>
         {editing && (
-          <form onSubmit={save} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4, padding: 4, background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 8 }}>
+          <form onSubmit={save} className="sl-form">
+            <div className="sl-seg" role="group" aria-label="Vrsta" style={{ display: 'flex' }}>
               {TYPES.map((t) => (
-                <button key={t.id} type="button" onClick={() => setEditing({ ...editing, type: t.id, categoryId: '' })}
-                  style={{
-                    padding: '0.5rem', borderRadius: 6, fontSize: '0.85rem', fontWeight: 600,
-                    border: 'none', cursor: 'pointer',
-                    background: editing.type === t.id ? 'var(--color-surface)' : 'transparent',
-                    color: editing.type === t.id ? 'var(--color-text)' : 'var(--color-text-muted)',
-                    boxShadow: editing.type === t.id ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-                  }}>
+                <button key={t.id} type="button" aria-pressed={editing.type === t.id} onClick={() => setEditing({ ...editing, type: t.id, categoryId: '' })}>
                   {t.label}
                 </button>
               ))}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="sl-form-2">
               <Field label="Znesek (€)">
-                <Input type="number" step="0.01" min="0" required value={editing.amount}
+                <Input type="number" step="0.01" min="0" required inputMode="decimal" value={editing.amount} className="sl-num"
                   onChange={(e) => setEditing({ ...editing, amount: e.target.value })} />
               </Field>
               <Field label="Datum">
@@ -253,7 +225,7 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
               </Field>
             )}
 
-            <Field label="Plačnik / prejemnik">
+            <Field label="Plačnik ali prejemnik">
               <Input value={editing.payee} placeholder="npr. Mercator, Plača Acme d.o.o." list="tracker-payees"
                 onChange={(e) => {
                   // Znana trgovina prinese svojo kategorijo, enako kot pri hitrem vnosu.
@@ -271,11 +243,11 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
                 onChange={(e) => setEditing({ ...editing, notes: e.target.value })} />
             </Field>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4 }}>
+            <div className="sl-form-actions">
               {editing.id ? (
                 <Button type="button" variant="danger" onClick={() => remove(editing.id)}>Izbriši</Button>
               ) : <span />}
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div>
                 <Button type="button" variant="secondary" onClick={() => setEditing(null)}>Prekliči</Button>
                 <Button type="submit">Shrani</Button>
               </div>

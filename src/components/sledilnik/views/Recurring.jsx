@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Card, Button, Input, Select, Field, Modal, SectionHeader, Empty, Tag } from '../ui.jsx';
+import { Card, Button, Input, Select, Field, Modal, PageHeader, Empty, Notice, Tag } from '../ui.jsx';
+import { CatIcon } from '../ikone.jsx';
 import { blockedRecurring, fmtEur, fmtDate, isoDay, nextOccurrence, todayIso, uid } from '../store.js';
 
 const FREQS = [
@@ -91,83 +92,70 @@ export default function Recurring({ state, dispatch }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <SectionHeader
-        title="Redni stroški in prihodki"
-        subtitle={`${state.recurring.length} pravil · mesečno neto: ${fmtEur(-monthlyTotal)} · vpišejo se sami na svoj dan`}
-        action={<Button onClick={() => open(emptyRule(accounts[0]?.id))}>+ Novo pravilo</Button>}
+      <PageHeader
+        title="Redni stroški"
+        subtitle={`${state.recurring.length} pravil · mesečno neto ${fmtEur(-monthlyTotal)} · vpišejo se sami na svoj dan`}
+        action={<Button size="sm" onClick={() => open(emptyRule(accounts[0]?.id))}>Novo pravilo</Button>}
       />
 
       {blocked.length > 0 && (
-        <Card style={{ borderLeft: '3px solid #d97706' }}>
-          <strong style={{ fontSize: '0.95rem' }}>Teh pravil ni bilo mogoče vpisati ({blocked.length})</strong>
-          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <Notice tone="warn">
+          <strong>Teh pravil ni bilo mogoče vpisati ({blocked.length})</strong>
+          <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
             {blocked.map((r) => (
               <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                <div style={{ fontSize: '0.9rem' }}>
-                  <strong>{r.name}</strong>{' '}
-                  <span style={{ color: 'var(--color-text-muted)' }}>
-                    ({fmtDate(r.nextDate)}): {Number(r.amount) > 0 ? 'račun ne obstaja več' : 'znesek ni vpisan'}
-                  </span>
-                </div>
-                <Button size="sm" onClick={() => open({ ...r, amount: String(r.amount) })}>Uredi</Button>
+                <span>
+                  <strong>{r.name}</strong> ({fmtDate(r.nextDate)}): {Number(r.amount) > 0 ? 'račun ne obstaja več' : 'znesek ni vpisan'}
+                </span>
+                <Button size="sm" variant="secondary" onClick={() => open({ ...r, amount: String(r.amount) })}>Uredi</Button>
               </div>
             ))}
           </div>
-        </Card>
+        </Notice>
       )}
 
       {state.recurring.length === 0 ? (
         <Empty
           title="Še ni rednih stroškov"
           description="Najemnina, naročnine, zavarovanje, kredit, plača: vpišeš enkrat, potem se vpisujejo sami na svoj dan."
-          action={<Button onClick={() => open(emptyRule(accounts[0]?.id))}>+ Novo pravilo</Button>}
+          action={<Button onClick={() => open(emptyRule(accounts[0]?.id))}>Novo pravilo</Button>}
         />
       ) : (
-        <Card padding="0">
-          {rules.map((r, i) => {
-            const acc = state.accounts.find((a) => a.id === r.accountId);
-            const cat = state.categories.find((c) => c.id === r.categoryId);
-            return (
-              <button key={r.id} onClick={() => open({ ...r, amount: String(r.amount) })}
-                style={{
-                  display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.85rem',
-                  width: '100%', padding: '0.85rem 1.25rem',
-                  background: 'transparent', border: 'none',
-                  borderBottom: i < rules.length - 1 ? '1px solid var(--color-border)' : 'none',
-                  color: 'inherit', cursor: 'pointer',
-                  textAlign: 'left', fontFamily: 'inherit', alignItems: 'center',
-                  opacity: r.active ? 1 : 0.5,
-                }}>
-                <div>
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 3, flexWrap: 'wrap' }}>
-                    <strong style={{ fontSize: '0.95rem' }}>{r.name}</strong>
-                    <Tag color={cat?.color}>{FREQS.find((f) => f.id === r.frequency)?.label}</Tag>
-                    {!r.active && <Tag>Pavza</Tag>}
+        <Card padding="0" style={{ overflow: 'hidden' }}>
+          <div className="sl-list">
+            {rules.map((r) => {
+              const acc = state.accounts.find((a) => a.id === r.accountId);
+              const cat = state.categories.find((c) => c.id === r.categoryId);
+              return (
+                <button key={r.id} type="button" className="sl-row" onClick={() => open({ ...r, amount: String(r.amount) })} style={{ opacity: r.active ? 1 : 0.55 }}>
+                  <CatIcon category={cat} type={r.type} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', minWidth: 0 }}>
+                      <span className="sl-row-title">{r.name}</span>
+                      {!r.active && <Tag>Pavza</Tag>}
+                    </div>
+                    <div className="sl-row-sub">
+                      {FREQS.find((f) => f.id === r.frequency)?.label} · {r.active ? `naslednjič ${fmtDate(r.nextDate)}` : 'se ne vpisuje'} · {acc?.name || 'brez računa'}{cat ? ` · ${cat.name}` : ''}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)' }}>
-                    {r.active ? `Naslednjič: ${fmtDate(r.nextDate)}` : 'Se ne vpisuje'} · {acc?.name || 'brez računa'} {cat ? `· ${cat.name}` : ''}
-                  </div>
-                </div>
-                <div style={{
-                  fontWeight: 700, fontSize: '0.95rem',
-                  color: r.type === 'income' ? '#059669' : '#dc2626',
-                }}>
-                  {r.type === 'income' ? '+' : '−'}{fmtEur(r.amount, true)}
-                </div>
-              </button>
-            );
-          })}
+                  <span className={`sl-row-amount${r.type === 'income' ? ' sl-in' : ''}`}>
+                    {r.type === 'income' ? '+' : '−'}{fmtEur(r.amount, true)}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </Card>
       )}
 
       <Modal open={!!editing} onClose={() => setEditing(null)} title={editing?.id ? 'Uredi pravilo' : 'Nov redni strošek ali prihodek'}>
         {editing && (
-          <form onSubmit={save} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          <form onSubmit={save} className="sl-form">
             <Field label="Ime">
               <Input required autoFocus={!editing.id} value={editing.name} placeholder="npr. Najemnina, Plača, Spotify"
                 onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
             </Field>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="sl-form-2">
               <Field label="Vrsta">
                 <Select value={editing.type} onChange={(e) => setEditing({ ...editing, type: e.target.value, categoryId: '' })}>
                   <option value="expense">Odhodek</option>
@@ -175,11 +163,11 @@ export default function Recurring({ state, dispatch }) {
                 </Select>
               </Field>
               <Field label="Znesek (€)">
-                <Input type="number" step="0.01" min="0" required value={editing.amount}
+                <Input type="number" step="0.01" min="0" required inputMode="decimal" className="sl-num" value={editing.amount}
                   onChange={(e) => setEditing({ ...editing, amount: e.target.value })} />
               </Field>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div className="sl-form-2">
               <Field label="Kako pogosto">
                 <Select value={editing.frequency} onChange={(e) => setEditing({ ...editing, frequency: e.target.value })}>
                   {FREQS.map((f) => <option key={f.id} value={f.id}>{f.label}</option>)}
@@ -190,7 +178,7 @@ export default function Recurring({ state, dispatch }) {
                   onChange={(e) => setEditing({ ...editing, nextDate: e.target.value })} />
               </Field>
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-subtle)', lineHeight: 1.5, marginTop: -4 }}>
+            <div className="sl-hint" style={{ marginTop: -4 }}>
               Na ta dan se vpiše samo, potem po izbranem ritmu. Če izbereš datum v preteklosti, se vpišejo tudi zamujeni, največ za leto nazaj.
             </div>
             <Field label="Račun">
@@ -207,20 +195,20 @@ export default function Recurring({ state, dispatch }) {
                 {cats.filter((c) => c.type === editing.type).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </Select>
             </Field>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.9rem' }}>
-              <input type="checkbox" checked={editing.active}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.9rem' }}>
+              <input type="checkbox" checked={editing.active} style={{ width: 18, height: 18, accentColor: 'var(--sl-accent)' }}
                 onChange={(e) => setEditing({ ...editing, active: e.target.checked })} />
               Aktivno (odkljukaj za pavzo)
             </label>
-            {error && <div role="alert" style={{ color: '#d97706', fontSize: '0.85rem', fontWeight: 600 }}>{error}</div>}
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
+            {error && <div role="alert" style={{ color: 'var(--sl-warn)', fontSize: '0.85rem', fontWeight: 600 }}>{error}</div>}
+            <div className="sl-form-actions">
               {editing.id ? (
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div>
                   <Button type="button" variant="danger" onClick={() => remove(editing.id)}>Izbriši</Button>
                   <Button type="button" variant="ghost" onClick={() => skipNext(editing)}>Preskoči naslednji vpis</Button>
                 </div>
               ) : <span />}
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div>
                 <Button type="button" variant="secondary" onClick={() => setEditing(null)}>Prekliči</Button>
                 <Button type="submit">Shrani</Button>
               </div>

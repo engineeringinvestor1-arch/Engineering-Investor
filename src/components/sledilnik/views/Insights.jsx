@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Card, SectionHeader } from '../ui.jsx';
+import { Card, SectionHeader, PageHeader, Notice } from '../ui.jsx';
 import { ProgressBar } from '../charts.jsx';
 import { fmtEur, lastNMonths, monthRange, sumByType, sumByCategory, totalBalance, totalDebt, monthKey, todayIso } from '../store.js';
 
@@ -92,12 +92,8 @@ function tipsBasedOn(state, monthIncome, monthExpense, savingsRate, debt) {
   return out;
 }
 
-const SEVERITY_STYLE = {
-  danger:  { bg: 'rgba(248,113,113,0.08)', border: 'rgba(248,113,113,0.3)', color: '#fca5a5' },
-  warning: { bg: 'rgba(217,119,6,0.06)', border: 'rgba(217,119,6,0.3)', color: '#d97706' },
-  success: { bg: 'rgba(5,150,105,0.06)', border: 'rgba(5,150,105,0.3)', color: '#059669' },
-  info:    { bg: 'rgba(37,99,235,0.06)', border: 'rgba(37,99,235,0.3)', color: '#2563eb' },
-};
+// Resnost nasveta kot ton obvestila (sledilnik.css).
+const TONE = { danger: 'bad', warning: 'warn', success: 'good', info: 'info' };
 
 export default function Insights({ state }) {
   const today = todayIso();
@@ -141,101 +137,79 @@ export default function Insights({ state }) {
     ? Math.log((fireNumber * 0.07 / annualSavings) + 1) / Math.log(1.07)
     : null;
 
+  // Ena vrstica razdelitve 50/30/20: ime, črta in delež s ciljem.
+  const split = (label, pct, cilj, color) => (
+    <div style={{ display: 'grid', gridTemplateColumns: '110px minmax(0, 1fr) 92px', gap: '0.75rem', alignItems: 'center' }}>
+      <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>{label}</span>
+      <ProgressBar value={pct} max={100} color={color} height={6} />
+      <span style={{ textAlign: 'right', fontSize: '0.84rem' }}>
+        <span className="sl-num" style={{ fontWeight: 500 }}>{pct.toFixed(0)} %</span> <span className="sl-subtle" style={{ fontSize: '0.74rem' }}>cilj {cilj}</span>
+      </span>
+    </div>
+  );
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <SectionHeader title="Vpogledi & nasveti" subtitle="Personalizirano glede na tvoje podatke" />
+      <PageHeader title="Vpogledi" subtitle="Nasveti glede na tvoje podatke" />
 
       {personalTips.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '0.85rem' }}>
-          {personalTips.map((t, i) => {
-            const s = SEVERITY_STYLE[t.severity];
-            return (
-              <div key={i} style={{
-                padding: '1rem 1.2rem',
-                background: s.bg, border: `1px solid ${s.border}`,
-                borderLeft: `3px solid ${s.color}`,
-                borderRadius: 8,
-              }}>
-                <div style={{ fontWeight: 700, color: s.color, marginBottom: 6 }}>{t.title}</div>
-                <div style={{ fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>{t.body}</div>
-              </div>
-            );
-          })}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0.75rem' }}>
+          {personalTips.map((t, i) => (
+            <Notice key={i} tone={TONE[t.severity]}>
+              <strong>{t.title}</strong>
+              <div style={{ marginTop: 3 }}>{t.body}</div>
+            </Notice>
+          ))}
         </div>
       )}
 
       <Card>
         <SectionHeader title="Pravilo 50/30/20" subtitle="Ocena razdelitve na podlagi imen kategorij ta mesec" />
-        <div style={{ marginTop: 10 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: '0.75rem', alignItems: 'center', marginBottom: 8 }}>
-            <strong style={{ width: 120 }}>Nujne potrebe</strong>
-            <ProgressBar value={needsPct} max={100} color="#3b82f6" height={10} />
-            <span style={{ width: 90, textAlign: 'right' }}><strong>{needsPct.toFixed(0)}%</strong> <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.78rem' }}>(cilj 50%)</span></span>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: '0.75rem', alignItems: 'center', marginBottom: 8 }}>
-            <strong style={{ width: 120 }}>Želje</strong>
-            <ProgressBar value={wantsPct} max={100} color="#a855f7" height={10} />
-            <span style={{ width: 90, textAlign: 'right' }}><strong>{wantsPct.toFixed(0)}%</strong> <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.78rem' }}>(cilj 30%)</span></span>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: '0.75rem', alignItems: 'center' }}>
-            <strong style={{ width: 120 }}>Varčevanje</strong>
-            <ProgressBar value={savingsPct} max={100} color="#10b981" height={10} />
-            <span style={{ width: 90, textAlign: 'right' }}><strong>{savingsPct.toFixed(0)}%</strong> <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.78rem' }}>(cilj 20%)</span></span>
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {split('Nujne potrebe', needsPct, '50 %', 'var(--sl-accent)')}
+          {split('Želje', wantsPct, '30 %', '#a855f7')}
+          {split('Varčevanje', savingsPct, '20 %', 'var(--sl-in)')}
         </div>
-        <div style={{ marginTop: 14, fontSize: '0.8rem', color: 'var(--color-text-subtle)', lineHeight: 1.6 }}>
+        <div className="sl-hint" style={{ marginTop: 14 }}>
           Razdelitev je groba ocena na podlagi imen kategorij. Za točno sliko razporedi kategorije skladno z razredom (nujno/želje/varčevanje).
         </div>
       </Card>
 
-      <Card>
-        <SectionHeader title="FIRE projekcija" subtitle="Financial Independence, predpostavka 7% letni donos, 4% pravilo" />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginTop: 10 }}>
-          <div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>FIRE številka</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{fmtEur(fireNumber)}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>25× letnih odhodkov</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Trenutno</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{fmtEur(balance)}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>Vsa sredstva</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Letno varčevanje</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700, color: annualSavings >= 0 ? '#059669' : '#dc2626' }}>{fmtEur(annualSavings)}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>(prihodek − odhodek) × 12</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Čas do FIRE</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>
-              {yearsToFire == null ? '-' : balance >= fireNumber ? 'Doseženo' : `${yearsToFire.toFixed(0)} let`}
-            </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)' }}>predpostavka 7% donos</div>
+      <Card padding="1.15rem 1.15rem 0">
+        <SectionHeader title="FIRE projekcija" subtitle="Finančna neodvisnost: predpostavka 7 % letnega donosa in pravilo 4 %" />
+        <div style={{ margin: '0 -1.15rem' }}>
+          <div className="sl-stats" style={{ borderTop: '1px solid var(--sl-line)' }}>
+            {[
+              { label: 'FIRE številka', value: fmtEur(fireNumber), sub: '25× letnih odhodkov' },
+              { label: 'Trenutno', value: fmtEur(balance), sub: 'Vsa sredstva' },
+              { label: 'Letno varčevanje', value: fmtEur(annualSavings), sub: '(prihodek − odhodek) × 12', color: annualSavings >= 0 ? 'var(--sl-in)' : 'var(--sl-bad)' },
+              { label: 'Čas do FIRE', value: yearsToFire == null ? '-' : balance >= fireNumber ? 'Doseženo' : `${yearsToFire.toFixed(0)} let`, sub: 'predpostavka 7 % donos' },
+            ].map((s) => (
+              <div key={s.label} className="sl-stat">
+                <div className="sl-stat-label">{s.label}</div>
+                <div className="sl-stat-value" style={s.color ? { color: s.color } : undefined}>{s.value}</div>
+                <div className="sl-stat-sub">{s.sub}</div>
+              </div>
+            ))}
           </div>
         </div>
-        <div style={{ marginTop: 14, fontSize: '0.78rem', color: 'var(--color-text-subtle)', lineHeight: 1.6 }}>
+        <div className="sl-hint" style={{ padding: '0.9rem 0 1.1rem', borderTop: '1px solid var(--sl-line)' }}>
           Projekcija je teoretična. Pravi rezultat odvisen od stroškov, davkov, inflacije in volatilnosti trgov.
           Ni finančni nasvet.
         </div>
       </Card>
 
-      <Card>
+      <div>
         <SectionHeader title="Nasveti" subtitle="Splošna pravila zdravih osebnih financ" />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
           {TIPS.map((t) => (
-            <div key={t.title} style={{
-              padding: '1rem',
-              background: 'var(--color-bg)',
-              border: '1px solid var(--color-border)',
-              borderRadius: 6,
-            }}>
-              <div style={{ fontWeight: 700, marginBottom: 6, fontSize: '0.95rem' }}>{t.title}</div>
-              <div style={{ fontSize: '0.85rem', lineHeight: 1.6, color: 'var(--color-text-muted)' }}>{t.body}</div>
-            </div>
+            <Card key={t.title} padding="1rem 1.05rem">
+              <div style={{ fontWeight: 600, marginBottom: 6, fontSize: '0.94rem', letterSpacing: '-0.01em' }}>{t.title}</div>
+              <div style={{ fontSize: '0.85rem', lineHeight: 1.6, color: 'var(--sl-muted)' }}>{t.body}</div>
+            </Card>
           ))}
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

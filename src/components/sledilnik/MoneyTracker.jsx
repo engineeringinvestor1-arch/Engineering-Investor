@@ -1,8 +1,9 @@
 import { useEffect, useReducer, useState } from 'react';
+import './sledilnik.css';
 import { loadState, saveState, fmtEur, postDueRecurring, todayIso, exportJson, zadnjaKopija, potrebnaKopija, fmtDate } from './store.js';
 import { reducer } from './reducer.js';
-import QuickAdd from './QuickAdd.jsx';
 import { hasDemo } from './demo.js';
+import { Button, Modal, Notice } from './ui.jsx';
 import Dashboard from './views/Dashboard.jsx';
 import Transactions from './views/Transactions.jsx';
 import Accounts from './views/Accounts.jsx';
@@ -14,11 +15,12 @@ import Insights from './views/Insights.jsx';
 import Settings from './views/Settings.jsx';
 
 // Vsakdanji pogledi so spredaj, redkeje rabljeni pod "Več" (avtor, 3. 10. 2026: sledilnik naj bo enostaven;
-// devet enakovrednih pogledov je bilo preveč). Nič ni odstranjeno, samo razvrščeno.
+// devet enakovrednih pogledov je bilo preveč). Nič ni odstranjeno, samo razvrščeno. Na telefonu so
+// vsakdanji v spodnji vrstici (prenova videza 18. 10. 2026), short je njihov napis tam.
 const NAV = [
   { id: 'pregled',     label: 'Pregled',     icon: 'dashboard' },
   { id: 'transakcije', label: 'Transakcije', icon: 'list' },
-  { id: 'ponavljajoce', label: 'Redni stroški', icon: 'repeat' },
+  { id: 'ponavljajoce', label: 'Redni stroški', short: 'Redni', icon: 'repeat' },
   { id: 'proracun',    label: 'Proračun',    icon: 'budget' },
   { id: 'porocila',    label: 'Poročila',    icon: 'chart',     more: true },
   { id: 'racuni',      label: 'Računi',      icon: 'card',      more: true },
@@ -28,20 +30,23 @@ const NAV = [
 ];
 
 const ICONS = {
-  dashboard: <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />,
-  list:      <><path d="M8 6h13" /><path d="M8 12h13" /><path d="M8 18h13" /><circle cx="3.5" cy="6" r="1.5" /><circle cx="3.5" cy="12" r="1.5" /><circle cx="3.5" cy="18" r="1.5" /></>,
-  card:      <><rect x="2" y="5" width="20" height="14" rx="2" /><path d="M2 10h20" /></>,
-  budget:    <><path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></>,
-  target:    <><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></>,
-  chart:     <><path d="M3 3v18h18" /><path d="M7 14l3-3 4 4 5-5" /></>,
-  repeat:    <><polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" /></>,
-  lightbulb: <><path d="M9 18h6" /><path d="M10 22h4" /><path d="M12 2a7 7 0 0 0-4 12.7 4 4 0 0 1 1.5 3.3h5a4 4 0 0 1 1.5-3.3A7 7 0 0 0 12 2z" /></>,
-  settings:  <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></>,
+  dashboard: <><rect x="3.5" y="3.5" width="7" height="8.5" rx="1.8" /><rect x="13.5" y="3.5" width="7" height="5" rx="1.8" /><rect x="13.5" y="11.5" width="7" height="9" rx="1.8" /><rect x="3.5" y="15" width="7" height="5.5" rx="1.8" /></>,
+  list:      <><path d="M9 6.5h11" /><path d="M9 12h11" /><path d="M9 17.5h11" /><circle cx="4.75" cy="6.5" r="1.1" /><circle cx="4.75" cy="12" r="1.1" /><circle cx="4.75" cy="17.5" r="1.1" /></>,
+  card:      <><rect x="2.75" y="5.5" width="18.5" height="13" rx="2.5" /><path d="M2.75 10h18.5" /><path d="M6.5 15h3" /></>,
+  budget:    <><circle cx="12" cy="12" r="8.75" /><path d="M12 3.25V12l6.2 6.2" /></>,
+  target:    <><circle cx="12" cy="12" r="8.75" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.25" /></>,
+  chart:     <><path d="M4 20V10" /><path d="M10 20V4" /><path d="M16 20v-7" /><path d="M21 20H3" /></>,
+  repeat:    <><path d="M17 2.5 20.5 6 17 9.5" /><path d="M3.5 11.5V10A4 4 0 0 1 7.5 6h13" /><path d="M7 21.5 3.5 18 7 14.5" /><path d="M20.5 12.5V14a4 4 0 0 1-4 4h-13" /></>,
+  lightbulb: <><path d="M9 18h6" /><path d="M10 21.5h4" /><path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.5 1.3 2.5v1.2h5v-1.2c0-1 .5-1.9 1.3-2.5A6.5 6.5 0 0 0 12 2.5z" /></>,
+  settings:  <><path d="M4 6.5h9" /><path d="M17 6.5h3" /><circle cx="15" cy="6.5" r="2" /><path d="M4 12h3" /><path d="M11 12h9" /><circle cx="9" cy="12" r="2" /><path d="M4 17.5h11" /><path d="M19 17.5h1" /><circle cx="17" cy="17.5" r="2" /></>,
+  more:      <><circle cx="6" cy="12" r="1.4" /><circle cx="12" cy="12" r="1.4" /><circle cx="18" cy="12" r="1.4" /></>,
+  lock:      <><rect x="5" y="10.5" width="14" height="10" rx="2.2" /><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" /></>,
+  chevron:   <path d="m9.5 6 6 6-6 6" />,
 };
 
-function NavIcon({ name }) {
+function NavIcon({ name, size = 20 }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {ICONS[name]}
     </svg>
   );
@@ -53,26 +58,12 @@ export default function MoneyTracker() {
   return <MoneyTrackerInner />;
 }
 
-// Telefon: ista meja kot v slogu spodaj. Komponenta teče samo v brskalniku (client:only), zato je okno vedno na voljo.
-const MOBILE_QUERY = '(max-width: 760px)';
-function useIsMobile() {
-  const [mobile, setMobile] = useState(() => window.matchMedia(MOBILE_QUERY).matches);
-  useEffect(() => {
-    const mq = window.matchMedia(MOBILE_QUERY);
-    const onChange = () => setMobile(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-  return mobile;
-}
-
 function MoneyTrackerInner() {
   const [state, dispatch] = useReducer(reducer, null, () => loadState());
   const [view, setView] = useState('pregled');
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [autoPosted, setAutoPosted] = useState([]);
   const [kopija, setKopija] = useState(() => zadnjaKopija());
-  const isMobile = useIsMobile();
 
   // Brskalnik sme podatke spletne strani ob pomanjkanju prostora izbrisati; trajna shramba to prepreči.
   // Nameščena aplikacija jo na Androidu običajno dobi brez vprašanja.
@@ -81,6 +72,13 @@ function MoneyTrackerInner() {
   function shraniKopijo() {
     exportJson(state);
     setKopija(zadnjaKopija());
+  }
+
+  // Nov pogled se odpre na vrhu, kot v aplikaciji; brez tega bi ostal na višini prejšnjega.
+  function go(id) {
+    setView(id);
+    setMoreOpen(false);
+    window.scrollTo({ top: 0 });
   }
 
   // Redni stroški se vpišejo sami: ob odprtju in ob vsaki spremembi pravil (avtor, 3. 10. 2026).
@@ -99,9 +97,9 @@ function MoneyTrackerInner() {
 
   function renderView() {
     switch (view) {
-      // Na telefonu je hiter vnos čisto na vrhu strani (spodaj), zato ga pogleda ne ponovita.
-      case 'pregled':      return <Dashboard state={state} dispatch={dispatch} onNav={setView} quickAdd={!isMobile} />;
-      case 'transakcije':  return <Transactions state={state} dispatch={dispatch} quickAdd={!isMobile} />;
+      // Hiter vnos je na vrhu pregleda in transakcij (avtor, 3. 10. 2026: na telefonu pred vsem drugim).
+      case 'pregled':      return <Dashboard state={state} dispatch={dispatch} onNav={go} />;
+      case 'transakcije':  return <Transactions state={state} dispatch={dispatch} />;
       case 'racuni':       return <Accounts state={state} dispatch={dispatch} />;
       case 'proracun':     return <Budget state={state} dispatch={dispatch} />;
       case 'cilji':        return <Goals state={state} dispatch={dispatch} />;
@@ -113,151 +111,96 @@ function MoneyTrackerInner() {
     }
   }
 
+  const daily = NAV.filter((n) => !n.more);
+  const more = NAV.filter((n) => n.more);
+  const inMore = more.some((n) => n.id === view);
+  const kopijaBesedilo = `Zadnja varnostna kopija: ${kopija ? fmtDate(kopija) : 'še nobene'}.`;
+
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg)', paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      {/* Telefon: hiter vnos pred vsem drugim (avtor, 3. 10. 2026). Brez samodejnega fokusa, da tipkovnica
-          ne prekrije zaslona, še preden uporabnik kaj pritisne. */}
-      {isMobile && (
-        <div style={{ padding: '0.75rem 1rem 0' }}>
-          <QuickAdd state={state} dispatch={dispatch} autoFocus={false} />
-        </div>
-      )}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(200px, 230px) 1fr',
-        maxWidth: 1400,
-        margin: '0 auto',
-        gap: 0,
-      }} className="tracker-shell">
-        {/* Sidebar */}
-        <aside style={{
-          padding: '2rem 1rem',
-          borderRight: '1px solid var(--color-border)',
-          background: 'var(--color-surface)',
-          minHeight: '85vh',
-        }} className="tracker-sidebar">
-          <div style={{ marginBottom: '1.5rem', padding: '0 0.5rem' }} className="tracker-sidebar-title">
-            <div style={{ fontSize: '0.68rem', color: 'var(--color-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
-              Sledilnik
+    <div className="sl">
+      <div className="sl-shell">
+        <aside className="sl-side">
+          <div className="sl-brand">
+            <span className="sl-brand-mark"><NavIcon name="chart" size={18} /></span>
+            <div>
+              <div className="sl-brand-name">Sledilnik financ</div>
+              <div className="sl-brand-sub">Engineering Investor</div>
             </div>
-            <div style={{ fontSize: '0.98rem', fontWeight: 700, marginTop: 2, letterSpacing: '-0.015em', color: 'var(--color-text)' }}>Osebne finance</div>
           </div>
-          <nav style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {NAV.map((n, i) => {
-              const active = view === n.id;
-              const firstMore = n.more && !NAV[i - 1]?.more;
-              return (
-                <button key={n.id} onClick={() => { setView(n.id); setMobileNavOpen(false); }}
-                  className={firstMore ? 'tracker-nav-more' : undefined}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '0.55rem 0.8rem', borderRadius: 6,
-                    fontSize: '0.88rem', fontWeight: 500,
-                    background: active ? 'var(--color-accent-bg)' : 'transparent',
-                    color: active ? 'var(--color-accent)' : 'var(--color-text-muted)',
-                    border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-                    textAlign: 'left',
-                    transition: 'all 0.12s',
-                  }}>
-                  <NavIcon name={n.icon} />
-                  {n.label}
-                </button>
-              );
-            })}
+          <nav aria-label="Pogledi">
+            {daily.map((n) => (
+              <button key={n.id} className="sl-side-link" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
+                <NavIcon name={n.icon} />{n.label}
+              </button>
+            ))}
+            <div className="sl-side-group">Več</div>
+            {more.map((n) => (
+              <button key={n.id} className="sl-side-link" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
+                <NavIcon name={n.icon} />{n.label}
+              </button>
+            ))}
           </nav>
-          <div className="tracker-sync" style={{
-            marginTop: '2rem',
-            padding: '0.85rem',
-            background: 'var(--color-bg)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 6,
-            fontSize: '0.76rem',
-            color: 'var(--color-text-muted)',
-            lineHeight: 1.55,
-          }}>
-            <div style={{ fontWeight: 600, color: 'var(--color-text)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
-              Samo na tej napravi
+          <div className="sl-side-foot sl-card" style={{ padding: '0.8rem 0.85rem', fontSize: '0.78rem', color: 'var(--sl-muted)', lineHeight: 1.5 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600, color: 'var(--sl-ink)', marginBottom: 2 }}>
+              <NavIcon name="lock" size={15} />Samo na tej napravi
             </div>
-            <span>Zadnja varnostna kopija: {kopija ? fmtDate(kopija) : 'še nobene'}. </span>
-            <button onClick={shraniKopijo} style={{ color: 'var(--color-accent)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline' }}>Shrani kopijo</button>
+            {kopijaBesedilo}{' '}
+            <button className="sl-link" onClick={shraniKopijo}>Shrani kopijo</button>
           </div>
         </aside>
 
-        {/* Main */}
-        <main style={{ padding: '2.5rem 2rem', minWidth: 0 }} className="tracker-main">
-          {potrebnaKopija(state, kopija) && (
-            <div role="status" style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-              marginBottom: '1rem', padding: '0.65rem 1rem', borderRadius: 8,
-              background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderLeft: '3px solid #d97706',
-              fontSize: '0.88rem', color: 'var(--color-text)', lineHeight: 1.5,
-            }}>
-              <span><strong>Podatki so samo na tem telefonu.</strong> {kopija ? `Zadnja varnostna kopija je bila ${fmtDate(kopija)}.` : 'Varnostne kopije še nisi shranil.'}</span>
-              <button onClick={shraniKopijo} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-strong)', borderRadius: 6, padding: '0.35rem 0.75rem', cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>
-                Shrani kopijo
-              </button>
-            </div>
-          )}
-          {hasDemo(state) && (
-            <div role="status" style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-              marginBottom: '1rem', padding: '0.65rem 1rem', borderRadius: 8,
-              background: 'var(--color-accent-bg)', border: '1px solid var(--color-accent-border)',
-              fontSize: '0.88rem', color: 'var(--color-text)', lineHeight: 1.5,
-            }}>
-              <span><strong>Prikazani so testni podatki.</strong> Tvoji vnosi so med njimi in ostanejo, ko testne odstraniš.</span>
-              <button onClick={() => dispatch({ type: 'demo/remove' })} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border-strong)', borderRadius: 6, padding: '0.35rem 0.75rem', cursor: 'pointer', fontFamily: 'inherit', fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>
-                Odstrani testne podatke
-              </button>
-            </div>
-          )}
-          {autoPosted.length > 0 && (
-            <div role="status" style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12,
-              marginBottom: '1rem', padding: '0.75rem 1rem', borderRadius: 8,
-              background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderLeft: '3px solid #059669',
-              fontSize: '0.88rem', color: 'var(--color-text-muted)', lineHeight: 1.55,
-            }}>
-              <div>
-                <strong style={{ color: 'var(--color-text)' }}>Redni stroški so vpisani sami ({autoPosted.length}):</strong>{' '}
+        <main className="sl-main">
+          <div className="sl-content">
+            {potrebnaKopija(state, kopija) && (
+              <Notice tone="warn" action={<Button variant="secondary" size="sm" onClick={shraniKopijo}>Shrani kopijo</Button>}>
+                <strong>Podatki so samo na tem telefonu.</strong> {kopija ? `Zadnja varnostna kopija je bila ${fmtDate(kopija)}.` : 'Varnostne kopije še nisi shranil.'}
+              </Notice>
+            )}
+            {hasDemo(state) && (
+              <Notice tone="info" action={<Button variant="secondary" size="sm" onClick={() => dispatch({ type: 'demo/remove' })}>Odstrani</Button>}>
+                <strong>Prikazani so testni podatki.</strong> Tvoji vnosi so med njimi in ostanejo, ko testne odstraniš.
+              </Notice>
+            )}
+            {autoPosted.length > 0 && (
+              <Notice tone="good" onClose={() => setAutoPosted([])}>
+                <strong>Redni stroški so vpisani sami ({autoPosted.length}):</strong>{' '}
                 {autoPosted.slice(0, 6).map((t) => `${t.payee} ${fmtEur(t.amount, true)} (${Number(t.date.slice(8, 10))}. ${Number(t.date.slice(5, 7))}.)`).join(', ')}
                 {autoPosted.length > 6 && ` in še ${autoPosted.length - 6}`}.{' '}
-                <button onClick={() => { setView('ponavljajoce'); setAutoPosted([]); }} style={{ color: 'var(--color-accent)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit', textDecoration: 'underline' }}>Uredi pravila</button>
-              </div>
-              <button onClick={() => setAutoPosted([])} aria-label="Zapri obvestilo" style={{ background: 'transparent', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1, padding: 2 }}>×</button>
-            </div>
-          )}
-          {renderView()}
+                <button className="sl-link" onClick={() => { go('ponavljajoce'); setAutoPosted([]); }}>Uredi pravila</button>
+              </Notice>
+            )}
+            {renderView()}
+          </div>
         </main>
       </div>
 
-      <style>{`
-        /* Ločnica pred redkeje rabljenimi pogledi: napis "Več" na širokem zaslonu, tanka črta na telefonu. */
-        .tracker-nav-more { margin-top: 1.4rem; position: relative; }
-        .tracker-nav-more::before {
-          content: 'Več'; position: absolute; top: -1.15rem; left: 0.8rem;
-          font-size: 0.66rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-subtle);
-        }
-        @media (max-width: 760px) {
-          .tracker-nav-more { margin-top: 0; margin-left: 10px; }
-          .tracker-nav-more::before { content: ''; top: 20%; bottom: 20%; left: -6px; width: 1px; background: var(--color-border-strong); }
-          /* minmax(0, ...): brez tega meni v eni vrstici razširi stolpec čez rob zaslona in vsebina je odrezana. */
-          .tracker-shell { grid-template-columns: minmax(0, 1fr) !important; }
-          .tracker-sidebar {
-            min-height: 0 !important;
-            border-right: none !important;
-            border-bottom: 1px solid var(--color-border);
-            padding: 1rem !important;
-          }
-          /* Meni v eni vrstici, ki se pomika vstran: na telefonu naj prostor dobi vsebina, ne meni. */
-          .tracker-sidebar { padding: 0.5rem 1rem !important; }
-          .tracker-sidebar-title, .tracker-sync { display: none !important; }
-          .tracker-sidebar nav { flex-direction: row !important; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-          .tracker-sidebar nav::-webkit-scrollbar { display: none; }
-          .tracker-sidebar nav button { padding: 0.45rem 0.7rem !important; font-size: 0.82rem !important; white-space: nowrap; flex: 0 0 auto; }
-          .tracker-main { padding: 1.25rem 1rem !important; }
-        }
-      `}</style>
+      <nav className="sl-tabs" aria-label="Pogledi">
+        {daily.map((n) => (
+          <button key={n.id} className="sl-tab" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
+            <NavIcon name={n.icon} size={22} />{n.short || n.label}
+          </button>
+        ))}
+        <button className="sl-tab" aria-current={inMore ? 'page' : undefined} aria-haspopup="dialog" onClick={() => setMoreOpen(true)}>
+          <NavIcon name="more" size={22} />Več
+        </button>
+      </nav>
+
+      <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title="Več">
+        <div className="sl-card sl-list">
+          {more.map((n) => (
+            <button key={n.id} className="sl-row" onClick={() => go(n.id)} style={view === n.id ? { color: 'var(--sl-accent)' } : undefined}>
+              <span className="sl-ico" style={{ background: 'var(--sl-field)', color: view === n.id ? 'var(--sl-accent)' : 'var(--sl-ink)' }}><NavIcon name={n.icon} /></span>
+              <span className="sl-row-title" style={{ color: 'inherit' }}>{n.label}</span>
+              <span className="sl-subtle"><NavIcon name="chevron" size={18} /></span>
+            </button>
+          ))}
+        </div>
+        <div style={{ marginTop: '0.9rem', display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.82rem', color: 'var(--sl-muted)', lineHeight: 1.5 }}>
+          <NavIcon name="lock" size={16} />
+          <span style={{ flex: 1 }}>Podatki so samo na tej napravi. {kopijaBesedilo}</span>
+          <Button variant="secondary" size="sm" onClick={shraniKopijo}>Shrani kopijo</Button>
+        </div>
+      </Modal>
     </div>
   );
 }

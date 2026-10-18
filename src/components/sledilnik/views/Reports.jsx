@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Card, SectionHeader, Select, Field, KpiCard } from '../ui.jsx';
+import { Card, SectionHeader, PageHeader, Select, Stats } from '../ui.jsx';
 import { PieChart, BarChart, LineChart, FlowChart, StackedBar } from '../charts.jsx';
-import { fmtEur, lastNMonths, monthRange, sumByCategory, sumByType } from '../store.js';
+import { CatIcon } from '../ikone.jsx';
+import { fmtEur, lastNMonths, monthName, monthRange, sumByCategory, sumByType } from '../store.js';
 
 const RANGE_OPTIONS = [
   { v: 3,  label: 'Zadnji 3 meseci' },
@@ -9,6 +10,39 @@ const RANGE_OPTIONS = [
   { v: 12, label: 'Zadnjih 12 mesecev' },
   { v: 24, label: 'Zadnjih 24 mesecev' },
 ];
+
+// Prihodki zeleni, odhodki v barvi besedila, neto v poudarjeni barvi (sledilnik.css).
+const IN = 'var(--sl-in)';
+const OUT = 'var(--sl-out)';
+const NET = 'var(--sl-accent)';
+
+function Legend({ items }) {
+  return (
+    <div style={{ display: 'flex', gap: 16, marginTop: 10, fontSize: '0.78rem', color: 'var(--sl-muted)', flexWrap: 'wrap' }}>
+      {items.map(([label, color]) => (
+        <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ width: 10, height: 10, borderRadius: 3, background: color }} />{label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// Seznam delov ob tortnem grafu: ikona kategorije, ime, znesek in delež.
+function Breakdown({ items, total }) {
+  return (
+    <div style={{ flex: 1, minWidth: 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {items.map((c) => (
+        <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.86rem' }}>
+          <CatIcon category={{ name: c.label, color: c.color }} type={c.type} size={28} />
+          <span className="sl-row-title" style={{ flex: 1 }}>{c.label}</span>
+          <span className="sl-row-amount" style={{ fontSize: '0.86rem' }}>{fmtEur(c.value)}</span>
+          <span className="sl-subtle" style={{ width: 38, textAlign: 'right', fontSize: '0.78rem' }}>{total > 0 ? ((c.value / total) * 100).toFixed(0) : 0} %</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Reports({ state }) {
   const [range, setRange] = useState(6);
@@ -45,7 +79,7 @@ export default function Reports({ state }) {
     return [...m.entries()]
       .map(([cid, v]) => {
         const cat = state.categories.find((c) => c.id === cid);
-        return { id: cid, label: cat?.name || 'Brez kategorije', value: v, color: cat?.color || '#64748b' };
+        return { id: cid, label: cat?.name || 'Brez kategorije', value: v, color: cat?.color || '#64748b', type: 'expense' };
       })
       .sort((a, b) => b.value - a.value);
   }, [allTx, state.categories]);
@@ -55,7 +89,7 @@ export default function Reports({ state }) {
     return [...m.entries()]
       .map(([cid, v]) => {
         const cat = state.categories.find((c) => c.id === cid);
-        return { id: cid, label: cat?.name || 'Brez kategorije', value: v, color: cat?.color || '#10b981' };
+        return { id: cid, label: cat?.name || 'Brez kategorije', value: v, color: cat?.color || '#10b981', type: 'income' };
       })
       .sort((a, b) => b.value - a.value);
   }, [allTx, state.categories]);
@@ -70,93 +104,77 @@ export default function Reports({ state }) {
     });
   }, [monthlyData]);
 
+  const header = (
+    <PageHeader
+      title="Poročila"
+      subtitle="Trend, kategorije in denarni tok"
+      action={state.transactions.length > 0 && (
+        <Select value={range} aria-label="Obdobje" onChange={(e) => setRange(Number(e.target.value))} style={{ width: 'auto', height: 38 }}>
+          {RANGE_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+        </Select>
+      )}
+    />
+  );
+
   if (state.transactions.length === 0) {
     return (
-      <div>
-        <SectionHeader title="Poročila" subtitle="Detajlne analize tvojih financ" />
-        <Card padding="3rem 2rem" style={{ textAlign: 'center', color: 'var(--color-text-muted)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {header}
+        <Card padding="2.75rem 1.5rem" style={{ textAlign: 'center', color: 'var(--sl-muted)' }}>
           Vnesi nekaj transakcij, da vidiš poročila.
         </Card>
       </div>
     );
   }
 
+  const varcevanje = avgSavingsRate >= 20 ? 'Odlično' : avgSavingsRate >= 0 ? 'V redu' : 'Pod ničlo';
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <SectionHeader
-        title="Poročila"
-        subtitle="Trend, kategorije, denarni tok"
-        action={
-          <Select value={range} onChange={(e) => setRange(Number(e.target.value))} style={{ width: 'auto' }}>
-            {RANGE_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
-          </Select>
-        }
-      />
+      {header}
 
-      {/* KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.85rem' }}>
-        <KpiCard label="Skupni prihodki" value={fmtEur(totalIncome)} sub={`${range} mes.`} color="#059669" />
-        <KpiCard label="Skupni odhodki" value={fmtEur(totalExpense)} sub={`${range} mes.`} color="#dc2626" />
-        <KpiCard label="Neto" value={fmtEur(totalNet)} color={totalNet >= 0 ? '#059669' : '#dc2626'} />
-        <KpiCard label="Povp. mesečno" value={fmtEur(avgIncome - avgExpense)} sub="prihodek − odhodek" />
-        <KpiCard label="Stopnja varčevanja" value={`${avgSavingsRate.toFixed(0)}%`}
-          color={avgSavingsRate >= 20 ? '#059669' : avgSavingsRate >= 0 ? '#d97706' : '#dc2626'}
-          sub={avgSavingsRate >= 20 ? 'Odlično' : avgSavingsRate >= 0 ? 'OK' : 'Pod ničlo'} />
-      </div>
+      <Stats items={[
+        { label: 'Prihodki', value: fmtEur(totalIncome), sub: `${range} mesecev skupaj`, color: IN },
+        { label: 'Odhodki', value: fmtEur(totalExpense), sub: `${range} mesecev skupaj` },
+        { label: 'Neto', value: fmtEur(totalNet), color: totalNet >= 0 ? IN : 'var(--sl-warn)' },
+        { label: 'Povprečno na mesec', value: fmtEur(avgIncome - avgExpense), sub: 'prihodki manj odhodki' },
+        { label: 'Stopnja varčevanja', value: `${avgSavingsRate.toFixed(0)} %`, sub: varcevanje, color: avgSavingsRate >= 20 ? IN : avgSavingsRate >= 0 ? undefined : 'var(--sl-warn)' },
+      ]} />
 
-      {/* Trends */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1rem' }}>
+      <div className="sl-grid2">
         <Card>
-          <SectionHeader title="Mesečni prihodki/odhodki" />
-          <BarChart data={monthlyData} height={220} />
+          <SectionHeader title="Prihodki in odhodki po mesecih" />
+          <BarChart data={monthlyData} height={200} />
+          <Legend items={[['Prihodki', IN], ['Odhodki', OUT]]} />
         </Card>
         <Card>
-          <SectionHeader title="Kumulativno" subtitle="Zbir prihodkov, odhodkov in neto" />
+          <SectionHeader title="Skupaj od začetka obdobja" subtitle="Seštevek prihodkov, odhodkov in neto" />
           <LineChart series={[
-            { points: cumulativeBalance.map((c) => ({ y: c.incomeY, label: c.label })), color: '#10b981' },
-            { points: cumulativeBalance.map((c) => ({ y: c.expenseY, label: c.label })), color: '#ef4444' },
-            { points: cumulativeBalance.map((c) => ({ y: c.netY, label: c.label })), color: '#3b82f6', fill: true },
-          ]} height={220} />
-          <div style={{ display: 'flex', gap: 16, marginTop: 8, fontSize: '0.8rem', color: 'var(--color-text-muted)', justifyContent: 'center' }}>
-            <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#10b981', borderRadius: 2, marginRight: 6 }} />Prihodki</span>
-            <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#ef4444', borderRadius: 2, marginRight: 6 }} />Odhodki</span>
-            <span><span style={{ display: 'inline-block', width: 10, height: 10, background: '#3b82f6', borderRadius: 2, marginRight: 6 }} />Neto</span>
-          </div>
+            { points: cumulativeBalance.map((c) => ({ y: c.incomeY, label: c.label })), color: IN },
+            { points: cumulativeBalance.map((c) => ({ y: c.expenseY, label: c.label })), color: OUT },
+            { points: cumulativeBalance.map((c) => ({ y: c.netY, label: c.label })), color: NET, fill: true },
+          ]} height={200} />
+          <Legend items={[['Prihodki', IN], ['Odhodki', OUT], ['Neto', NET]]} />
         </Card>
       </div>
 
-      {/* Sankey */}
       {(incomeBreakdown.length > 0 || categorySpend.length > 0) && (
         <Card>
-          <SectionHeader title="Denarni tok" subtitle={`Vsi ${range} meseci skupaj`} />
-          <FlowChart incomes={incomeBreakdown} expenses={categorySpend} height={Math.max(280, Math.max(incomeBreakdown.length, categorySpend.length) * 30)} />
+          <SectionHeader title="Denarni tok" subtitle={`Vsi meseci obdobja skupaj (${range})`} />
+          <FlowChart incomes={incomeBreakdown} expenses={categorySpend} height={Math.max(260, Math.max(incomeBreakdown.length, categorySpend.length) * 30)} />
         </Card>
       )}
 
-      {/* Category breakdowns */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '1rem' }}>
+      <div className="sl-grid2">
         <Card>
-          <SectionHeader title="Razporeditev odhodkov" subtitle="Po kategorijah" />
+          <SectionHeader title="Odhodki po kategorijah" />
           {categorySpend.length === 0 ? (
-            <div style={{ color: 'var(--color-text-muted)' }}>Ni podatkov.</div>
+            <div className="sl-muted">Ni podatkov.</div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <PieChart data={categorySpend.map((c) => ({ value: c.value, color: c.color }))}
-                size={200} thickness={32} centerValue={fmtEur(totalExpense)} centerLabel="skupaj" />
-              <div style={{ flex: 1, minWidth: 200, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {categorySpend.slice(0, 10).map((c) => {
-                  const pct = totalExpense > 0 ? (c.value / totalExpense) * 100 : 0;
-                  return (
-                    <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '4px 0' }}>
-                      <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
-                        <span style={{ width: 10, height: 10, borderRadius: 2, background: c.color }} />
-                        {c.label}
-                      </span>
-                      <span><strong>{fmtEur(c.value)}</strong> <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.78rem' }}>{pct.toFixed(0)}%</span></span>
-                    </div>
-                  );
-                })}
-              </div>
+                size={180} thickness={22} centerValue={fmtEur(totalExpense)} centerLabel="skupaj" />
+              <Breakdown items={categorySpend.slice(0, 10)} total={totalExpense} />
             </div>
           )}
         </Card>
@@ -164,34 +182,20 @@ export default function Reports({ state }) {
         <Card>
           <SectionHeader title="Viri prihodkov" />
           {incomeBreakdown.length === 0 ? (
-            <div style={{ color: 'var(--color-text-muted)' }}>Ni podatkov.</div>
+            <div className="sl-muted">Ni podatkov.</div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <PieChart data={incomeBreakdown.map((c) => ({ value: c.value, color: c.color }))}
-                size={200} thickness={32} centerValue={fmtEur(totalIncome)} centerLabel="skupaj" />
-              <div style={{ flex: 1, minWidth: 200, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {incomeBreakdown.map((c) => {
-                  const pct = totalIncome > 0 ? (c.value / totalIncome) * 100 : 0;
-                  return (
-                    <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '4px 0' }}>
-                      <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
-                        <span style={{ width: 10, height: 10, borderRadius: 2, background: c.color }} />
-                        {c.label}
-                      </span>
-                      <span><strong>{fmtEur(c.value)}</strong> <span style={{ color: 'var(--color-text-subtle)', fontSize: '0.78rem' }}>{pct.toFixed(0)}%</span></span>
-                    </div>
-                  );
-                })}
-              </div>
+                size={180} thickness={22} centerValue={fmtEur(totalIncome)} centerLabel="skupaj" />
+              <Breakdown items={incomeBreakdown} total={totalIncome} />
             </div>
           )}
         </Card>
       </div>
 
-      {/* Monthly stacked breakdown */}
       <Card>
-        <SectionHeader title="Mesečno po kategorijah" subtitle="Vsak mesec, struktura odhodkov" />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <SectionHeader title="Mesečno po kategorijah" subtitle="Sestava odhodkov v vsakem mesecu" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {monthlyData.map((m) => {
             const monthTx = state.transactions.filter((t) => t.date >= monthRange(m.key).from && t.date <= monthRange(m.key).to);
             const segs = [...sumByCategory(monthTx, 'expense').entries()]
@@ -200,13 +204,14 @@ export default function Reports({ state }) {
                 return { value: v, color: cat?.color || '#64748b', label: cat?.name || 'Brez kat.' };
               })
               .sort((a, b) => b.value - a.value);
+            const ime = monthName(m.key);
             return (
               <div key={m.key}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: '0.85rem' }}>
-                  <span>{m.key}</span>
-                  <span><span style={{ color: '#059669' }}>+{fmtEur(m.income)}</span> · <span style={{ color: '#dc2626' }}>−{fmtEur(m.expense)}</span></span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 6, fontSize: '0.84rem' }}>
+                  <span>{ime.charAt(0).toUpperCase() + ime.slice(1)} {m.key.slice(0, 4)}</span>
+                  <span className="sl-num" style={{ fontSize: '0.8rem' }}><span className="sl-in">+{fmtEur(m.income)}</span> <span className="sl-subtle">·</span> −{fmtEur(m.expense)}</span>
                 </div>
-                <StackedBar segments={segs} height={12} />
+                <StackedBar segments={segs} height={10} />
               </div>
             );
           })}
