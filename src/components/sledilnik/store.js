@@ -240,6 +240,9 @@ export function importJson(file) {
 // "  HOFER " in "Hofer" sta ista trgovina.
 export const payeeKey = (name) => String(name ?? '').trim().toLocaleLowerCase('sl-SI').replace(/\s+/g, ' ');
 
+// Ime, kot se shrani: brez presledkov na robovih, notranji strnjeni v enega.
+export const cistoIme = (name) => String(name ?? '').trim().replace(/\s+/g, ' ');
+
 export function findPayee(payees, name, type = 'expense') {
   const key = payeeKey(name);
   if (!key) return null;

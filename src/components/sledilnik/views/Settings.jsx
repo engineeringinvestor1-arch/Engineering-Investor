@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Card, Button, Input, Select, Field, Modal, PageHeader, SectionHeader } from '../ui.jsx';
 import { CatIcon } from '../ikone.jsx';
 import { Swatches } from '../QuickAdd.jsx';
-import { fmtEur, exportJson, exportCsv, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
+import { cistoIme, fmtEur, exportJson, exportCsv, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
 import { hasDemo } from '../demo.js';
 
 function emptyCategory(type = 'expense') {
@@ -61,7 +61,7 @@ export default function Settings({ state, dispatch }) {
 
   function savePayee(e) {
     e.preventDefault();
-    const name = editingPayee.name.trim().replace(/s+/g, ' ');
+    const name = cistoIme(editingPayee.name);
     if (!name) return;
     dispatch({ type: 'payee/update', payee: { ...editingPayee, name } });
     setEditingPayee(null);

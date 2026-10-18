@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  blockedRecurring, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
+  blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees,
   categoryBreakdown, cumulativeSpend, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
@@ -239,4 +239,13 @@ test('opomnik za varnostno kopijo: ob prvem vnosu in po tednu dni brez kopije', 
   assert.equal(potrebnaKopija(zVnosom, null, '2026-10-18'), true);
   assert.equal(potrebnaKopija(zVnosom, '2026-10-12', '2026-10-18'), false);
   assert.equal(potrebnaKopija(zVnosom, '2026-10-11', '2026-10-18'), true);
+});
+
+// Najdeno 18. 10. 2026: preimenovanje trgovine v Nastavitvah je imelo /s+/g namesto /\s+/g in je vsako
+// malo črko "s" zamenjalo s presledkom ("Lekarna Moste" je postala "Lekarna Mo te").
+test('18. 10. 2026: čisto ime trgovine ohrani črke s in strne presledke', () => {
+  assert.equal(cistoIme('  Lekarna   Moste '), 'Lekarna Moste');
+  assert.equal(cistoIme('Spar\tSupermarket'), 'Spar Supermarket');
+  assert.equal(cistoIme(''), '');
+  assert.equal(cistoIme(undefined), '');
 });
