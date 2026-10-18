@@ -11,6 +11,7 @@ Tedenske analize pripravlja agent v zasebnem repozitoriju `engineering-investor-
 | Domača | `/` | `src/pages/index.astro`, `src/components/home/` |
 | Analize | `/analize`, `/analize/<ime>` | `src/pages/analize/`, članki v `src/content/analize/*.md` |
 | Koledar | `/koledar` | `src/components/calendar/EkonomskiKoledar.astro`, podatki v `src/data/koledar-events.json` |
+| Aplikacija Sledilnik financ (skrita) | `/aplikacija/` | `src/components/sledilnik/` (React), stran `src/pages/aplikacija/index.astro`, za namestitev in delovanje brez povezave `public/aplikacija/` (manifest, `sw.js`, ikone iz `scripts/aplikacija/ikone.mjs`). Podatki so samo v brskalniku telefona. Ni v meniju ne v zemljevidu strani; avtorjev poskusni mesec od 18. 10. 2026 |
 | Kalkulatorji | `/kalkulatorji`, `/investicijski-kalkulator`, `/kalkulator-vrednotenja` | `src/components/calculators/`, račun v `src/lib/` |
 | Angleška različica | `/en/...` | `src/pages/en/`, slovarja v `src/i18n/`, prevodi člankov v `src/content/analize-en/` |
 

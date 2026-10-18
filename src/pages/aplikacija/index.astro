@@ -1,0 +1,53 @@
+---
+// Aplikacija Sledilnik financ za telefon (avtor, 18. 10. 2026: "en mesec poskusne dobe, da vidim, kaj je v
+// redu in kaj bi spremenil, preden ponudim produkt na trg"). Spletna aplikacija, ki se namesti na domači
+// zaslon in deluje brez povezave; podatki ostanejo v brskalniku telefona.
+//
+// Stran je skrita: ni v meniju, ne v zemljevidu strani (astro.config.mjs) in iskalnikom je prepovedana.
+// Nima glave in noge strani, ker je nameščena aplikacija samostojna. Besedila so za poskusni mesec samo
+// v slovenščini; prevod pride, ko gre izdelek na trg.
+import '../../styles/global.css';
+import MoneyTracker from '../../components/sledilnik/MoneyTracker.jsx';
+---
+
+<!doctype html>
+<html lang="sl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Sledilnik financ</title>
+    <meta name="description" content="Osebne finance na telefonu. Podatki ostanejo na napravi." />
+    <meta name="theme-color" content="#F4F2EC" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E0E0E" media="(prefers-color-scheme: dark)" />
+    <link rel="manifest" href="/aplikacija/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/aplikacija/ikona-192.png" />
+    <!-- Tema kot na strani: izbira iz shrambe ali nastavitev telefona, brez utripa ob odprtju. -->
+    <script is:inline>
+      (function () {
+        let shranjena = null;
+        try { shranjena = localStorage.getItem('theme'); } catch (e) { /* zasebno okno */ }
+        const temna = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', shranjena || (temna ? 'dark' : 'light'));
+      })();
+    </script>
+  </head>
+  <body>
+    <MoneyTracker client:only="react" />
+    {import.meta.env.PROD && (
+      <script is:inline>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/aplikacija/sw.js', { scope: '/aplikacija/' }).catch(function () {});
+            // Ko je delovanje brez povezave pripravljeno, mu sporočimo vse naložene datoteke aplikacije.
+            navigator.serviceWorker.ready.then(function (reg) {
+              const urls = performance.getEntriesByType('resource').map(function (e) { return e.name; }).filter(function (u) { return u.indexOf('/_astro/') !== -1; });
+              if (reg.active) reg.active.postMessage({ type: 'shrani', urls: urls });
+            });
+          });
+        }
+      </script>
+    )}
+  </body>
+</html>
