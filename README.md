@@ -37,7 +37,7 @@ scripts/            robot za koledar in preizkusi (clanki/, i18n/, koledar/)
 npm install            samo prvič
 npm run dev            lokalni predogled (naslov izpiše terminal)
 npm test               preizkusi koledarja in člankov
-npm run test:prevodi   preizkusi slovarjev, prevoda koledarja in zapisa števil
+npm run test:prevodi   preizkusi slovarjev, prevoda koledarja, zapisa števil in prevodov člankov
 npm run build          zgradi stran v dist/
 ```
 
@@ -69,7 +69,7 @@ Grafi `.svg` iz `public/images/articles/` se vstavijo naravnost v stran, da sled
 Prvotni jezik je slovenščina na dosedanjih naslovih (`/analize`, `/koledar` ...). Angleška različica je na `/en/...` (`/en/analysis`, `/en/calendar`, `/en/calculators`). Gumb SL | EN v glavi vodi na isto stran v drugem jeziku.
 
 - **Besedila vmesnika** so v slovarjih `src/i18n/sl.ts` (izvirnik) in `src/i18n/en.ts` z enakimi ključi. Novo besedilo dodaj v oba.
-- **Članki**: izvirnik je v `src/content/analize/`, angleški prevod v `src/content/analize-en/`. Ime angleške datoteke je njen naslov strani, polje `izvirnik` v glavi pa ime slovenske datoteke brez končnice. Članek brez prevoda je viden samo v slovenščini; gumb EN na njem vodi na angleški seznam analiz.
+- **Članki**: izvirnik je v `src/content/analize/`, angleški prevod v `src/content/analize-en/`. Ime angleške datoteke je njen naslov strani, polje `izvirnik` v glavi pa ime slovenske datoteke brez končnice. Članek brez prevoda je viden samo v slovenščini; gumb EN na njem vodi na angleški seznam analiz. Od 18. 10. 2026 dobi prevod vsak nov članek: `scripts/i18n/clanki.test.mjs` članka brez prevoda ali z manjkajočim angleškim grafom ne spusti, starejši članki samo v slovenščini so v seznamu `SAMO_SLOVENSKO`.
 - **Grafi** v angleškem članku so ločene datoteke `.svg` z angleškim besedilom v svoji mapi pod `public/images/articles/`.
 - **Koledar** ima ene podatke za vse jezike (`src/data/koledar-events.json`, v slovenščini). Vrednosti prevede `src/i18n/koledar.ts`: robotove predloge po vzorcih, ročno napisane opombe po seznamu `NATANCNO_EN`. Nova ročna opomba potrebuje nov vnos v tem seznamu.
 - **Kalkulatorja** vzameta besedila iz slovarja, zapis števil pa iz `src/lib/stevilke.ts` (slovensko `1.234,50 €`, angleško `€1,234.50`).

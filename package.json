@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "node --test scripts/koledar/pricakovanja.test.mjs scripts/koledar/objave.test.mjs scripts/koledar/tedni.test.mjs scripts/clanki/nelomljivo.test.mjs src/components/sledilnik/store.test.js src/components/sledilnik/demo.test.js",
-    "test:prevodi": "node --test scripts/i18n/slovar.test.mjs scripts/i18n/koledar.test.mjs scripts/i18n/stevilke.test.mjs"
+    "test:prevodi": "node --test scripts/i18n/slovar.test.mjs scripts/i18n/koledar.test.mjs scripts/i18n/stevilke.test.mjs scripts/i18n/clanki.test.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.7",

@@ -31,7 +31,7 @@ Remote mora v naslovu vsebovati `engineeringinvestor1-arch@github.com`, sicer Gi
 - Novo besedilo vmesnika gre v oba slovarja (`src/i18n/sl.ts`, `src/i18n/en.ts`), nikoli naravnost v predlogo.
 - Račun brez vmesnika gre v `src/lib/` in dobi preizkus; komponenta ga samo prikaže.
 - Najdena napaka dobi preizkus, preden se popravi.
-- Nov članek dobi angleški prevod in angleške grafe pred objavo (razen starejših tedenskih pregledov, ki ostanejo samo v slovenščini).
+- Vsak nov članek, tudi tedenski pregled, dobi angleški prevod in angleške grafe pred objavo (avtor 18. 10. 2026: prevod napiše Claude ob članku). Brez prevoda `npm run test:prevodi` pade (`scripts/i18n/clanki.test.mjs`); starejši članki samo v slovenščini so našteti v seznamu `SAMO_SLOVENSKO`, ki se ne daljša.
 - Koda naj bere kot okoliška: ista imena, ista gostota komentarjev.
 
 ## Povezani repozitoriji
