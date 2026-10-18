@@ -73,7 +73,7 @@ export default function Dashboard({ state, dispatch, onNav, quickAdd = true }) {
         {quick}
         <Empty
           title="Začni s prvim nakupom"
-          description="Zgoraj vpiši znesek in izberi kategorijo. Če dodaš še trgovino, si jo sledilnik zapomni in jo naslednjič izbereš z enim dotikom."
+          description="Na telefonu pritisni gumb + spodaj, na računalniku vpiši znesek zgoraj, nato izberi kategorijo. Če dodaš še trgovino, si jo sledilnik zapomni in jo naslednjič izbereš z enim dotikom."
           action={<Button variant="secondary" onClick={() => dispatch({ type: 'demo/load', today })}>Poglej s testnimi podatki</Button>}
         />
       </div>

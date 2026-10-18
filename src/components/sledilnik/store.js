@@ -502,6 +502,55 @@ export function monthOverview(state, ym, today) {
   };
 }
 
+/* ---------- analiza: koledar porabe, tedni, meseci (avtor, 18. 10. 2026) ---------- */
+
+const round2 = (v) => Math.round(v * 100) / 100;
+
+// Odhodki po dnevih izbranega meseca: [1. dan, 2. dan, ...]. Prihodki in prenosi niso poraba.
+export function dnevnaPoraba(transactions, ym) {
+  const dni = new Array(daysInMonthKey(ym)).fill(0);
+  for (const t of transactions) {
+    if (t.type !== 'expense' || !inMonth(t, ym)) continue;
+    dni[Number(t.date.slice(8, 10)) - 1] += amountOf(t);
+  }
+  return dni.map(round2);
+}
+
+// Stopnja barve v koledarju: 0 za dan brez porabe, 1 do 4 po četrtinah dni s porabo istega meseca.
+// Meje iz četrtin namesto deleža največjega dne: sicer bi najemnina vse druge dni obarvala najsvetleje.
+// Kadar so vsi zneski enaki, med njimi ni razlike in dobijo srednjo stopnjo.
+export function stopnjePorabe(values) {
+  const pos = values.filter((v) => v > 0).sort((a, b) => a - b);
+  if (!pos.length) return values.map(() => 0);
+  if (pos[0] === pos[pos.length - 1]) return values.map((v) => (v > 0 ? 2 : 0));
+  const q = (p) => pos[Math.floor(p * (pos.length - 1))];
+  const [a, b, c] = [q(0.25), q(0.5), q(0.75)];
+  return values.map((v) => (v <= 0 ? 0 : v <= a ? 1 : v <= b ? 2 : v <= c ? 3 : 4));
+}
+
+// Tedni od ponedeljka do nedelje, ki sežejo v mesec, obrezani na mesec: [{ od, do, dni, value }].
+export function tedenskaPoraba(transactions, ym) {
+  const dni = dnevnaPoraba(transactions, ym);
+  const [y, m] = ym.split('-').map(Number);
+  const tedni = [];
+  for (let d = 1; d <= dni.length; d++) {
+    const ponedeljek = new Date(Date.UTC(y, m - 1, d)).getUTCDay() === 1;
+    if (d === 1 || ponedeljek) tedni.push({ od: d, do: d, value: 0 });
+    const t = tedni[tedni.length - 1];
+    t.do = d;
+    t.value += dni[d - 1];
+  }
+  return tedni.map((t) => ({ ...t, dni: t.do - t.od + 1, value: round2(t.value) }));
+}
+
+// Odhodki zadnjih n mesecev do vključno ym, od najstarejšega: [{ ym, value }].
+export function mesecnaPoraba(transactions, ym, n = 6) {
+  return Array.from({ length: n }, (_, i) => {
+    const k = shiftMonth(ym, i - n + 1);
+    return { ym: k, value: round2(monthTotals(transactions, k).expense) };
+  });
+}
+
 /* ---------- formatters ---------- */
 
 const eurFmt = new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });

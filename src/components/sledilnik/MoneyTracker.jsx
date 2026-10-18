@@ -4,6 +4,8 @@ import { loadState, saveState, fmtEur, postDueRecurring, todayIso, exportJson, z
 import { reducer } from './reducer.js';
 import { hasDemo } from './demo.js';
 import { Button, Modal, Notice } from './ui.jsx';
+import { VnosList } from './QuickAdd.jsx';
+import Analysis from './views/Analysis.jsx';
 import Dashboard from './views/Dashboard.jsx';
 import Transactions from './views/Transactions.jsx';
 import Accounts from './views/Accounts.jsx';
@@ -15,12 +17,14 @@ import Insights from './views/Insights.jsx';
 import Settings from './views/Settings.jsx';
 
 // Vsakdanji pogledi so spredaj, redkeje rabljeni pod "Več" (avtor, 3. 10. 2026: sledilnik naj bo enostaven;
-// devet enakovrednih pogledov je bilo preveč). Nič ni odstranjeno, samo razvrščeno. Na telefonu so
-// vsakdanji v spodnji vrstici (prenova videza 18. 10. 2026), short je njihov napis tam.
+// devet enakovrednih pogledov je bilo preveč). Nič ni odstranjeno, samo razvrščeno.
+// Na telefonu je v spodnji vrstici TABS z gumbom + za vnos na sredini; vse drugo je pod "Več", Redni
+// stroški in Proračun na vrhu (avtor, 18. 10. 2026: "kot na predlogu").
 const NAV = [
   { id: 'pregled',     label: 'Pregled',     icon: 'dashboard' },
   { id: 'transakcije', label: 'Transakcije', icon: 'list' },
-  { id: 'ponavljajoce', label: 'Redni stroški', short: 'Redni', icon: 'repeat' },
+  { id: 'analiza',     label: 'Analiza',     icon: 'calendar' },
+  { id: 'ponavljajoce', label: 'Redni stroški', icon: 'repeat' },
   { id: 'proracun',    label: 'Proračun',    icon: 'budget' },
   { id: 'porocila',    label: 'Poročila',    icon: 'chart',     more: true },
   { id: 'racuni',      label: 'Računi',      icon: 'card',      more: true },
@@ -28,6 +32,7 @@ const NAV = [
   { id: 'vpogledi',    label: 'Vpogledi',    icon: 'lightbulb', more: true },
   { id: 'nastavitve',  label: 'Nastavitve',  icon: 'settings',  more: true },
 ];
+const TABS = ['pregled', 'transakcije', 'analiza'];
 
 const ICONS = {
   dashboard: <><rect x="3.5" y="3.5" width="7" height="8.5" rx="1.8" /><rect x="13.5" y="3.5" width="7" height="5" rx="1.8" /><rect x="13.5" y="11.5" width="7" height="9" rx="1.8" /><rect x="3.5" y="15" width="7" height="5.5" rx="1.8" /></>,
@@ -40,6 +45,8 @@ const ICONS = {
   lightbulb: <><path d="M9 18h6" /><path d="M10 21.5h4" /><path d="M12 2.5a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.5 1.3 2.5v1.2h5v-1.2c0-1 .5-1.9 1.3-2.5A6.5 6.5 0 0 0 12 2.5z" /></>,
   settings:  <><path d="M4 6.5h9" /><path d="M17 6.5h3" /><circle cx="15" cy="6.5" r="2" /><path d="M4 12h3" /><path d="M11 12h9" /><circle cx="9" cy="12" r="2" /><path d="M4 17.5h11" /><path d="M19 17.5h1" /><circle cx="17" cy="17.5" r="2" /></>,
   more:      <><circle cx="6" cy="12" r="1.4" /><circle cx="12" cy="12" r="1.4" /><circle cx="18" cy="12" r="1.4" /></>,
+  calendar:  <><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M3.5 10h17" /><path d="M8 3v4M16 3v4" /><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17.25h2M11 17.25h2" /></>,
+  plus:      <><path d="M12 5v14" /><path d="M5 12h14" /></>,
   lock:      <><rect x="5" y="10.5" width="14" height="10" rx="2.2" /><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" /></>,
   chevron:   <path d="m9.5 6 6 6-6 6" />,
 };
@@ -62,6 +69,8 @@ function MoneyTrackerInner() {
   const [state, dispatch] = useReducer(reducer, null, () => loadState());
   const [view, setView] = useState('pregled');
   const [moreOpen, setMoreOpen] = useState(false);
+  const [vnosOpen, setVnosOpen] = useState(false);
+  const [vnos, setVnos] = useState(null);
   const [autoPosted, setAutoPosted] = useState([]);
   const [kopija, setKopija] = useState(() => zadnjaKopija());
 
@@ -95,11 +104,19 @@ function MoneyTrackerInner() {
   // Vsaka sprememba se takoj shrani na napravo.
   useEffect(() => { saveState(state); }, [state]);
 
+  // Obvestilo po vnosu s telefona izgine samo po nekaj sekundah.
+  useEffect(() => {
+    if (!vnos) return undefined;
+    const t = setTimeout(() => setVnos(null), 6000);
+    return () => clearTimeout(t);
+  }, [vnos]);
+
   function renderView() {
     switch (view) {
       // Hiter vnos je na vrhu pregleda in transakcij (avtor, 3. 10. 2026: na telefonu pred vsem drugim).
       case 'pregled':      return <Dashboard state={state} dispatch={dispatch} onNav={go} />;
       case 'transakcije':  return <Transactions state={state} dispatch={dispatch} />;
+      case 'analiza':      return <Analysis state={state} />;
       case 'racuni':       return <Accounts state={state} dispatch={dispatch} />;
       case 'proracun':     return <Budget state={state} dispatch={dispatch} />;
       case 'cilji':        return <Goals state={state} dispatch={dispatch} />;
@@ -113,7 +130,9 @@ function MoneyTrackerInner() {
 
   const daily = NAV.filter((n) => !n.more);
   const more = NAV.filter((n) => n.more);
-  const inMore = more.some((n) => n.id === view);
+  const tabs = TABS.map((id) => NAV.find((n) => n.id === id));
+  const vec = NAV.filter((n) => !TABS.includes(n.id));
+  const inMore = !TABS.includes(view);
   const kopijaBesedilo = `Zadnja varnostna kopija: ${kopija ? fmtDate(kopija) : 'še nobene'}.`;
 
   return (
@@ -175,10 +194,17 @@ function MoneyTrackerInner() {
       </div>
 
       <nav className="sl-tabs" aria-label="Pogledi">
-        {daily.map((n) => (
-          <button key={n.id} className="sl-tab" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
-            <NavIcon name={n.icon} size={22} />{n.short || n.label}
-          </button>
+        {tabs.map((n, i) => (
+          <span key={n.id} style={{ display: 'contents' }}>
+            {i === 2 && (
+              <button className="sl-tab sl-tab-add" aria-label="Nov vnos" aria-haspopup="dialog" onClick={() => setVnosOpen(true)}>
+                <span className="sl-fab"><NavIcon name="plus" size={26} /></span>
+              </button>
+            )}
+            <button className="sl-tab" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
+              <NavIcon name={n.icon} size={22} />{n.label}
+            </button>
+          </span>
         ))}
         <button className="sl-tab" aria-current={inMore ? 'page' : undefined} aria-haspopup="dialog" onClick={() => setMoreOpen(true)}>
           <NavIcon name="more" size={22} />Več
@@ -187,7 +213,7 @@ function MoneyTrackerInner() {
 
       <Modal open={moreOpen} onClose={() => setMoreOpen(false)} title="Več">
         <div className="sl-card sl-list">
-          {more.map((n) => (
+          {vec.map((n) => (
             <button key={n.id} className="sl-row" onClick={() => go(n.id)} style={view === n.id ? { color: 'var(--sl-accent)' } : undefined}>
               <span className="sl-ico" style={{ background: 'var(--sl-field)', color: view === n.id ? 'var(--sl-accent)' : 'var(--sl-ink)' }}><NavIcon name={n.icon} /></span>
               <span className="sl-row-title" style={{ color: 'inherit' }}>{n.label}</span>
@@ -201,6 +227,17 @@ function MoneyTrackerInner() {
           <Button variant="secondary" size="sm" onClick={shraniKopijo}>Shrani kopijo</Button>
         </div>
       </Modal>
+
+      {vnosOpen && <VnosList state={state} dispatch={dispatch} onClose={() => setVnosOpen(false)} onAdded={setVnos} />}
+      {vnos && (
+        <div className="sl-toast" role="status">
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <strong style={{ fontWeight: 600 }}>Dodano:</strong>{' '}
+            {[vnos.payee, state.categories.find((c) => c.id === vnos.categoryId)?.name, fmtEur(vnos.amount, true)].filter(Boolean).join(' · ')}
+          </span>
+          <button className="sl-link" onClick={() => { dispatch({ type: 'tx/remove', id: vnos.id }); setVnos(null); }}>Razveljavi</button>
+        </div>
+      )}
     </div>
   );
 }

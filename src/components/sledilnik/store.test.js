@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees,
-  categoryBreakdown, cumulativeSpend, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
+  categoryBreakdown, cumulativeSpend, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
 
@@ -248,4 +248,36 @@ test('18. 10. 2026: čisto ime trgovine ohrani črke s in strne presledke', () =
   assert.equal(cistoIme('Spar\tSupermarket'), 'Spar Supermarket');
   assert.equal(cistoIme(''), '');
   assert.equal(cistoIme(undefined), '');
+});
+
+test('koledar porabe: odhodki po dnevih meseca, brez prihodkov, prenosov in drugih mesecev', () => {
+  const dni = dnevnaPoraba([
+    tx({ date: '2026-10-03', amount: 10 }), tx({ date: '2026-10-03', amount: 2.5 }), tx({ date: '2026-10-05', amount: 7 }),
+    tx({ date: '2026-10-05', type: 'income', amount: 1000 }), tx({ date: '2026-10-06', type: 'transfer', amount: 300 }),
+    tx({ date: '2026-09-30', amount: 99 }),
+  ], '2026-10');
+  assert.equal(dni.length, 31);
+  assert.equal(dni[2], 12.5);
+  assert.equal(dni[4], 7);
+  assert.equal(dni[5], 0);
+  assert.equal(dni.reduce((s, v) => s + v, 0), 19.5);
+});
+
+test('stopnje barve v koledarju: četrtine dni s porabo, en velik strošek ne zatemni ostalih', () => {
+  assert.deepEqual(stopnjePorabe([0, 10, 20, 30, 40]), [0, 1, 2, 3, 4]);
+  assert.deepEqual(stopnjePorabe([650, 10, 12, 15, 0]), [4, 1, 2, 3, 0], 'najemnina je najtemnejša, drugi dnevi ostanejo ločeni');
+  assert.deepEqual(stopnjePorabe([0, 0, 0]), [0, 0, 0]);
+  assert.deepEqual(stopnjePorabe([0, 25, 25]), [0, 2, 2], 'enaki zneski dobijo srednjo stopnjo');
+});
+
+test('tedni v mesecu: od ponedeljka do nedelje, robna tedna obrezana na mesec', () => {
+  // 1. 10. 2026 je četrtek, 31. 10. 2026 sobota.
+  const tedni = tedenskaPoraba([tx({ date: '2026-10-02', amount: 20 }), tx({ date: '2026-10-05', amount: 5 }), tx({ date: '2026-10-31', amount: 8 })], '2026-10');
+  assert.deepEqual(tedni.map((t) => [t.od, t.do, t.dni]), [[1, 4, 4], [5, 11, 7], [12, 18, 7], [19, 25, 7], [26, 31, 6]]);
+  assert.deepEqual(tedni.map((t) => t.value), [20, 5, 0, 0, 8]);
+});
+
+test('meseci za primerjavo: zadnjih n mesecev do izbranega, od najstarejšega', () => {
+  const meseci = mesecnaPoraba([tx({ date: '2026-08-10', amount: 100 }), tx({ date: '2026-10-01', amount: 40 }), tx({ date: '2026-10-02', type: 'income', amount: 900 })], '2026-10', 3);
+  assert.deepEqual(meseci, [{ ym: '2026-08', value: 100 }, { ym: '2026-09', value: 0 }, { ym: '2026-10', value: 40 }]);
 });
