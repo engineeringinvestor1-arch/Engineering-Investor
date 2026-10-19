@@ -827,8 +827,7 @@
       "date": "2026-10-29",
       "ticker": "AMZN",
       "name": "Amazon",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance",
+      "when": "po zaprtju",
       "quarter": 3,
       "year": 2026
     },
@@ -846,8 +845,7 @@
       "date": "2026-10-30",
       "ticker": "XOM",
       "name": "Exxon Mobil",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance",
+      "when": "pred odprtjem",
       "quarter": 3,
       "year": 2026
     },
