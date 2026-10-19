@@ -198,16 +198,16 @@ function MoneyTrackerInner() {
           <span key={n.id} style={{ display: 'contents' }}>
             {i === 2 && (
               <button className="sl-tab sl-tab-add" aria-label="Nov vnos" aria-haspopup="dialog" onClick={() => setVnosOpen(true)}>
-                <span className="sl-fab"><NavIcon name="plus" size={26} /></span>
+                <span className="sl-fab"><NavIcon name="plus" size={24} /></span>
               </button>
             )}
             <button className="sl-tab" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
-              <NavIcon name={n.icon} size={22} />{n.label}
+              <NavIcon name={n.icon} size={21} />{n.label}
             </button>
           </span>
         ))}
         <button className="sl-tab" aria-current={inMore ? 'page' : undefined} aria-haspopup="dialog" onClick={() => setMoreOpen(true)}>
-          <NavIcon name="more" size={22} />Več
+          <NavIcon name="more" size={21} />Več
         </button>
       </nav>
 

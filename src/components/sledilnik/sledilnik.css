@@ -98,12 +98,12 @@
 .sl-tab {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
   padding: 8px 2px 6px; border: none; background: transparent; cursor: pointer;
-  font-size: 0.68rem; font-weight: 500; color: var(--sl-subtle); letter-spacing: 0.01em;
+  font-size: 0.66rem; font-weight: 500; color: var(--sl-subtle); letter-spacing: 0.01em;
 }
 .sl-tab[aria-current='page'] { color: var(--sl-accent); }
 .sl-tab-add { justify-content: flex-start; padding-top: 0; }
 .sl-fab {
-  width: 54px; height: 54px; margin-top: -20px; border-radius: 50%; background: var(--sl-accent); color: #fff;
+  width: 50px; height: 50px; margin-top: -18px; border-radius: 50%; background: var(--sl-accent); color: #fff;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 16px color-mix(in srgb, var(--sl-accent) 38%, transparent), 0 0 0 4px var(--sl-bg);
   transition: transform 0.1s;
@@ -114,7 +114,7 @@
 .sl-toast {
   position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 60;
   display: flex; align-items: center; gap: 10px; padding: 0.7rem 0.9rem; border-radius: 14px;
-  background: var(--sl-ink); color: var(--sl-bg); font-size: 0.86rem; line-height: 1.4;
+  background: var(--sl-ink); color: var(--sl-bg); font-size: 0.82rem; line-height: 1.4;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22); animation: sl-up 0.2s ease-out;
 }
 .sl-toast .sl-link { color: color-mix(in srgb, var(--sl-accent) 55%, #fff); white-space: nowrap; }
@@ -137,21 +137,21 @@
 /* ---------- naslovi ---------- */
 
 .sl-pagehead { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.25rem; }
-.sl-pagetitle { margin: 0; font-size: 1.7rem; font-weight: 650; letter-spacing: -0.035em; line-height: 1.15; color: var(--sl-ink); }
-.sl-pagesub { margin-top: 5px; font-size: 0.85rem; color: var(--sl-muted); line-height: 1.5; }
-.sl-sechead { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem; }
-.sl-sectitle { margin: 0; font-size: 1rem; font-weight: 600; letter-spacing: -0.015em; color: var(--sl-ink); }
-.sl-secsub { margin-top: 3px; font-size: 0.8rem; color: var(--sl-muted); line-height: 1.5; }
-.sl-label { font-size: 0.78rem; font-weight: 500; color: var(--sl-muted); }
+.sl-pagetitle { margin: 0; font-size: 1.5rem; font-weight: 650; letter-spacing: -0.035em; line-height: 1.15; color: var(--sl-ink); }
+.sl-pagesub { margin-top: 4px; font-size: 0.8rem; color: var(--sl-muted); line-height: 1.5; }
+.sl-sechead { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
+.sl-sectitle { margin: 0; font-size: 0.93rem; font-weight: 600; letter-spacing: -0.015em; color: var(--sl-ink); }
+.sl-secsub { margin-top: 2px; font-size: 0.75rem; color: var(--sl-muted); line-height: 1.5; }
+.sl-label { font-size: 0.74rem; font-weight: 500; color: var(--sl-muted); }
 
 /* ---------- ploskve ---------- */
 
 .sl-card { background: var(--sl-card); border: 1px solid var(--sl-line); border-radius: var(--sl-r); }
 .sl-list { display: flex; flex-direction: column; }
 .sl-row {
-  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px;
-  width: 100%; padding: 0.75rem 1rem; background: transparent; border: none; border-bottom: 1px solid var(--sl-line);
-  color: inherit; text-align: left; font-family: inherit; font-size: 0.92rem;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  width: 100%; padding: 0.6rem 1rem; background: transparent; border: none; border-bottom: 1px solid var(--sl-line);
+  color: inherit; text-align: left; font-family: inherit; font-size: 0.86rem;
 }
 .sl-row:last-child { border-bottom: none; }
 .sl-row-wrap { border-bottom: 1px solid var(--sl-line); }
@@ -160,13 +160,13 @@
 button.sl-row { cursor: pointer; transition: background 0.12s; }
 button.sl-row:hover { background: var(--sl-field); }
 .sl-row-title { font-weight: 500; color: var(--sl-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sl-row-sub { margin-top: 2px; font-size: 0.78rem; color: var(--sl-subtle); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sl-row-amount { font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 0.92rem; font-weight: 500; white-space: nowrap; }
-.sl-daygroup { padding: 1rem 1rem 0.15rem; font-size: 0.76rem; font-weight: 550; color: var(--sl-subtle); }
+.sl-row-sub { margin-top: 1px; font-size: 0.73rem; color: var(--sl-subtle); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-row-amount { font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
+.sl-daygroup { padding: 0.85rem 1rem 0.1rem; font-size: 0.72rem; font-weight: 550; color: var(--sl-subtle); }
 
 .sl-ico {
   display: inline-flex; align-items: center; justify-content: center; flex: none;
-  width: 36px; height: 36px; border-radius: 11px;
+  width: 32px; height: 32px; border-radius: 10px;
 }
 .sl-ico--tint { background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--c); }
 [data-theme='dark'] .sl .sl-ico--tint { background: color-mix(in srgb, var(--c) 24%, transparent); color: color-mix(in srgb, var(--c) 70%, #fff); }
@@ -174,10 +174,10 @@ button.sl-row:hover { background: var(--sl-field); }
 
 /* Skupina številk v eni ploskvi, ločenih s tankimi črtami. */
 .sl-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-.sl-stat { padding: 0.9rem 1rem; box-shadow: -1px 0 0 var(--sl-line), 0 -1px 0 var(--sl-line); min-width: 0; }
-.sl-stat-label { font-size: 0.76rem; font-weight: 500; color: var(--sl-muted); }
-.sl-stat-value { margin-top: 3px; font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 1.2rem; font-weight: 500; color: var(--sl-ink); }
-.sl-stat-sub { margin-top: 3px; font-size: 0.74rem; color: var(--sl-muted); line-height: 1.45; }
+.sl-stat { padding: 0.75rem 0.9rem; box-shadow: -1px 0 0 var(--sl-line), 0 -1px 0 var(--sl-line); min-width: 0; }
+.sl-stat-label { font-size: 0.72rem; font-weight: 500; color: var(--sl-muted); }
+.sl-stat-value { margin-top: 3px; font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 1.05rem; font-weight: 500; color: var(--sl-ink); }
+.sl-stat-sub { margin-top: 2px; font-size: 0.71rem; color: var(--sl-muted); line-height: 1.45; }
 .sl-stats-wrap { overflow: hidden; }
 
 /* ---------- gumbi in polja ---------- */
@@ -188,9 +188,9 @@ button.sl-row:hover { background: var(--sl-field); }
   border: 1px solid transparent; transition: background 0.12s, border-color 0.12s, transform 0.08s;
 }
 .sl-btn:active { transform: scale(0.98); }
-.sl-btn--sm { height: 32px; padding: 0 0.75rem; font-size: 0.8rem; border-radius: 9px; }
-.sl-btn--md { height: 40px; padding: 0 1rem; font-size: 0.88rem; }
-.sl-btn--lg { height: 48px; padding: 0 1.3rem; font-size: 0.95rem; }
+.sl-btn--sm { height: 30px; padding: 0 0.7rem; font-size: 0.77rem; border-radius: 8px; }
+.sl-btn--md { height: 38px; padding: 0 0.95rem; font-size: 0.84rem; }
+.sl-btn--lg { height: 44px; padding: 0 1.2rem; font-size: 0.9rem; }
 .sl-btn--primary { background: var(--sl-accent); color: #fff; }
 .sl-btn--primary:hover { background: color-mix(in srgb, var(--sl-accent) 88%, #000); }
 .sl-btn--secondary { background: var(--sl-field); color: var(--sl-ink); }
@@ -202,9 +202,9 @@ button.sl-row:hover { background: var(--sl-field); }
 .sl-link { background: none; border: none; padding: 0; color: var(--sl-accent); cursor: pointer; font: inherit; font-weight: 500; }
 
 .sl-input, .sl-select {
-  width: 100%; height: 44px; padding: 0 0.85rem; border-radius: var(--sl-r-sm);
+  width: 100%; height: 40px; padding: 0 0.8rem; border-radius: var(--sl-r-sm);
   background: var(--sl-field); border: 1px solid transparent; color: var(--sl-ink);
-  font-family: inherit; font-size: 0.95rem; outline: none; transition: border-color 0.12s, background 0.12s;
+  font-family: inherit; font-size: 0.88rem; outline: none; transition: border-color 0.12s, background 0.12s;
 }
 .sl-input::placeholder { color: var(--sl-subtle); }
 .sl-input:focus, .sl-select:focus { border-color: var(--sl-accent); background: var(--sl-card); box-shadow: 0 0 0 3px var(--sl-accent-soft); }
@@ -215,29 +215,29 @@ button.sl-row:hover { background: var(--sl-field); }
 }
 .sl-input[type='date'], .sl-input[type='month'] { min-width: 0; }
 .sl-field { display: flex; flex-direction: column; gap: 6px; }
-.sl-hint { font-size: 0.75rem; color: var(--sl-subtle); line-height: 1.45; }
+.sl-hint { font-size: 0.72rem; color: var(--sl-subtle); line-height: 1.45; }
 
 /* Preklopnik z dvema ali tremi možnostmi. */
-.sl-seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--sl-field); border-radius: 11px; }
+.sl-seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--sl-field); border-radius: 10px; }
 .sl-seg button {
-  flex: 1; height: 32px; padding: 0 0.85rem; border: none; border-radius: 8px; background: transparent;
-  font-size: 0.82rem; font-weight: 550; color: var(--sl-muted); cursor: pointer; white-space: nowrap;
+  flex: 1; height: 28px; padding: 0 0.75rem; border: none; border-radius: 7px; background: transparent;
+  font-size: 0.78rem; font-weight: 550; color: var(--sl-muted); cursor: pointer; white-space: nowrap;
 }
 .sl-seg button[aria-pressed='true'] { background: var(--sl-card); color: var(--sl-ink); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--sl-line); }
 
 .sl-chip {
-  display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 0.8rem 0 0.55rem;
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 0.7rem 0 0.45rem;
   border-radius: 999px; border: 1px solid var(--sl-line); background: var(--sl-card);
-  font-size: 0.84rem; font-weight: 500; color: var(--sl-ink); cursor: pointer; white-space: nowrap;
+  font-size: 0.79rem; font-weight: 500; color: var(--sl-ink); cursor: pointer; white-space: nowrap;
   transition: background 0.12s, border-color 0.12s;
 }
 .sl-chip:hover { background: var(--sl-field); }
 .sl-chip[aria-pressed='true'] { background: var(--sl-accent-soft); border-color: var(--sl-accent); color: var(--sl-accent); }
-.sl-chip--plain { padding: 0 0.85rem; }
-.sl-chip--dashed { border-style: dashed; color: var(--sl-muted); padding: 0 0.85rem; }
+.sl-chip--plain { padding: 0 0.75rem; }
+.sl-chip--dashed { border-style: dashed; color: var(--sl-muted); padding: 0 0.75rem; }
 .sl-chiprow { display: flex; flex-wrap: wrap; gap: 7px; }
 /* Vrstica, ki se na telefonu pomika vstran, namesto da bi se lomila v več vrst. */
-.sl-scrollrow { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; margin: 0 -1.1rem; padding: 0 1.1rem; }
+.sl-scrollrow { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -1rem; padding: 0 1rem; }
 .sl-scrollrow::-webkit-scrollbar { display: none; }
 
 .sl-tag {
@@ -246,8 +246,8 @@ button.sl-row:hover { background: var(--sl-field); }
 }
 
 .sl-iconbtn {
-  display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
-  border-radius: 10px; border: none; background: transparent; color: var(--sl-muted); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+  border-radius: 9px; border: none; background: transparent; color: var(--sl-muted); cursor: pointer;
 }
 .sl-iconbtn:hover { background: var(--sl-field); color: var(--sl-ink); }
 .sl-iconbtn:disabled { opacity: 0.35; cursor: default; background: transparent; }
@@ -255,11 +255,11 @@ button.sl-row:hover { background: var(--sl-field); }
 /* ---------- obvestila ---------- */
 
 .sl-notice {
-  display: flex; align-items: center; gap: 12px; padding: 0.75rem 0.9rem; border-radius: 14px;
-  background: var(--sl-card); border: 1px solid var(--sl-line); font-size: 0.86rem; line-height: 1.5; color: var(--sl-muted);
+  display: flex; align-items: center; gap: 10px; padding: 0.6rem 0.8rem; border-radius: 13px;
+  background: var(--sl-card); border: 1px solid var(--sl-line); font-size: 0.8rem; line-height: 1.5; color: var(--sl-muted);
 }
 .sl-notice strong { color: var(--sl-ink); font-weight: 600; }
-.sl-notice-ico { flex: none; width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.sl-notice-ico { flex: none; width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
 .sl-notice-body { flex: 1; min-width: 0; }
 .sl-notice--warn .sl-notice-ico { background: color-mix(in srgb, var(--sl-warn) 14%, transparent); color: var(--sl-warn); }
 .sl-notice--good .sl-notice-ico { background: color-mix(in srgb, var(--sl-in) 14%, transparent); color: var(--sl-in); }
@@ -279,8 +279,8 @@ button.sl-row:hover { background: var(--sl-field); }
 }
 .sl-dialog-handle { display: none; }
 .sl-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
-.sl-dialog-title { margin: 0; font-size: 1.1rem; font-weight: 650; letter-spacing: -0.02em; color: var(--sl-ink); }
-.sl-form { display: flex; flex-direction: column; gap: 0.9rem; }
+.sl-dialog-title { margin: 0; font-size: 1rem; font-weight: 650; letter-spacing: -0.02em; color: var(--sl-ink); }
+.sl-form { display: flex; flex-direction: column; gap: 0.75rem; }
 .sl-form-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .sl-form-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 0.35rem; }
 .sl-form-actions > div { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -288,14 +288,14 @@ button.sl-row:hover { background: var(--sl-field); }
 @media (max-width: 760px) {
   .sl-overlay { align-items: flex-end; padding: 2.5rem 0 0; }
   .sl-dialog {
-    border-radius: 22px 22px 0 0; max-height: 92vh; overflow-y: auto; border: none;
+    border-radius: 22px 22px 0 0; max-height: 92vh; max-height: 92dvh; overflow-y: auto; border: none;
     padding: 0.6rem 1.1rem calc(1.25rem + env(safe-area-inset-bottom));
     animation: sl-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .sl-dialog-handle { display: block; width: 40px; height: 5px; border-radius: 3px; background: var(--sl-line-strong); margin: 0 auto 0.75rem; }
   .sl-form-actions { flex-direction: column-reverse; align-items: stretch; }
   .sl-form-actions > div { flex-direction: column-reverse; }
-  .sl-form-actions .sl-btn { width: 100%; height: 46px; }
+  .sl-form-actions .sl-btn { width: 100%; height: 44px; }
 }
 
 @keyframes sl-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -303,23 +303,23 @@ button.sl-row:hover { background: var(--sl-field); }
 
 /* ---------- hiter vnos ---------- */
 
-.sl-qa { padding: 1.1rem; display: flex; flex-direction: column; gap: 0.95rem; }
+.sl-qa { padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
 .sl-qa-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.sl-qa-title { font-size: 0.98rem; font-weight: 600; letter-spacing: -0.015em; }
+.sl-qa-title { font-size: 0.92rem; font-weight: 600; letter-spacing: -0.015em; }
 .sl-qa-amount { position: relative; }
 .sl-qa-amount input {
-  width: 100%; height: 64px; padding: 0 2.6rem 0 1rem; border-radius: 14px; border: 1px solid transparent;
+  width: 100%; height: 54px; padding: 0 2.4rem 0 0.9rem; border-radius: 13px; border: 1px solid transparent;
   background: var(--sl-field); color: var(--sl-ink); outline: none;
-  font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; font-size: 2rem; font-weight: 500;
+  font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; font-size: 1.7rem; font-weight: 500;
 }
 .sl-qa-amount input::placeholder { color: var(--sl-subtle); }
 .sl-qa-amount input:focus { border-color: var(--sl-accent); background: var(--sl-card); box-shadow: 0 0 0 3px var(--sl-accent-soft); }
-.sl-qa-amount span { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-family: var(--sl-num); font-size: 1.25rem; color: var(--sl-subtle); pointer-events: none; }
+.sl-qa-amount span { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-family: var(--sl-num); font-size: 1.1rem; color: var(--sl-subtle); pointer-events: none; }
 .sl-qa-payee { display: flex; gap: 8px; }
 .sl-qa-payee > div { position: relative; flex: 1; min-width: 0; }
 .sl-qa-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.sl-qa-meta .sl-input, .sl-qa-meta .sl-select { height: 36px; font-size: 0.84rem; width: auto; }
-.sl-qa-msg { min-height: 1.3rem; font-size: 0.84rem; line-height: 1.45; }
+.sl-qa-meta .sl-input, .sl-qa-meta .sl-select { height: 34px; font-size: 0.8rem; width: auto; }
+.sl-qa-msg { min-height: 1.2rem; font-size: 0.8rem; line-height: 1.45; }
 
 .sl-suggest {
   position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20; overflow: hidden;
@@ -336,53 +336,42 @@ button.sl-row:hover { background: var(--sl-field); }
 .sl-monthbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .sl-monthbar-nav { display: flex; align-items: center; gap: 2px; }
 .sl-hero { padding: 0.5rem 0.15rem 0.25rem; }
-.sl-hero-value { font-family: var(--sl-num); font-variant-numeric: tabular-nums; font-size: 2.9rem; font-weight: 500; letter-spacing: -0.05em; line-height: 1.05; margin-top: 4px; color: var(--sl-ink); }
-.sl-hero-delta { margin-top: 8px; font-size: 0.86rem; color: var(--sl-muted); line-height: 1.5; }
+.sl-hero-value { font-family: var(--sl-num); font-variant-numeric: tabular-nums; font-size: 2.4rem; font-weight: 500; letter-spacing: -0.05em; line-height: 1.05; margin-top: 4px; color: var(--sl-ink); }
+.sl-hero-delta { margin-top: 6px; font-size: 0.8rem; color: var(--sl-muted); line-height: 1.5; }
 .sl-bar { height: 4px; border-radius: 2px; margin-top: 8px; background: var(--sl-field); overflow: hidden; }
 .sl-bar > div { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
 .sl-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; align-items: start; }
 
 /* ---------- vnos na telefonu: okno s številčnico ---------- */
 
-.sl-vnos { background: var(--sl-bg); display: flex; flex-direction: column; gap: 0.7rem; max-width: 480px; margin: 0 auto; }
+.sl-vnos { background: var(--sl-bg); display: flex; flex-direction: column; gap: 0.6rem; max-width: 480px; margin: 0 auto; }
 /* Okno se raje pomakne, kot da bi stisnilo vrstice (vrstica trgovin bi se sicer odrezala). */
 .sl-vnos > * { flex-shrink: 0; }
-.sl-vnos-amount {
-  display: flex; align-items: baseline; justify-content: center; gap: 0.45rem; padding: 0.2rem 0;
-  font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.05em; font-size: 3rem; font-weight: 500; line-height: 1.1;
-}
-.sl-vnos-eur { font-size: 1.6rem; color: var(--sl-subtle); letter-spacing: 0; }
+.sl-vnos-amount input { background: var(--sl-card); }
 .sl-vnos-cats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .sl-tile {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 60px; padding: 6px 4px;
-  border-radius: 13px; border: 1px solid transparent; background: var(--sl-card); color: var(--sl-ink); cursor: pointer;
-  font-size: 0.72rem; font-weight: 500; line-height: 1.15; touch-action: manipulation;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; padding: 5px 3px;
+  border-radius: 12px; border: 1px solid transparent; background: var(--sl-card); color: var(--sl-ink); cursor: pointer;
+  font-size: 0.68rem; font-weight: 500; line-height: 1.15; touch-action: manipulation;
 }
 .sl-tile > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sl-tile[aria-pressed='true'] { background: var(--sl-accent-soft); border-color: var(--sl-accent); color: var(--sl-accent); }
 .sl-tile--dashed { border: 1px dashed var(--sl-line-strong); background: transparent; color: var(--sl-muted); }
-.sl-keypad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-.sl-key {
-  height: 48px; border-radius: 13px; border: none; background: var(--sl-card); color: var(--sl-ink); cursor: pointer;
-  font-family: var(--sl-num); font-size: 1.4rem; display: flex; align-items: center; justify-content: center;
-  touch-action: manipulation; transition: background 0.08s;
-}
-.sl-key:active { background: var(--sl-field-hover); }
 .sl-vnos-meta { display: flex; align-items: center; gap: 6px; }
 
 /* Na telefonu vnos odpre gumb +, zato kartice hitrega vnosa v pogledih ni (avtor, 18. 10. 2026). */
 @media (max-width: 760px) {
   .sl-qa-inline { display: none; }
-  .sl-dialog.sl-vnos { padding: 0.6rem 1.1rem calc(1rem + env(safe-area-inset-bottom)); max-height: 96vh; }
+  .sl-dialog.sl-vnos { padding: 0.6rem 1rem calc(1rem + env(safe-area-inset-bottom)); max-height: 94vh; max-height: 94dvh; }
 }
 
 /* ---------- analiza ---------- */
 
-.sl-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.sl-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
 .sl-cal-head { text-align: center; font-size: 0.74rem; font-weight: 500; color: var(--sl-subtle); padding-bottom: 2px; }
 .sl-cal-day {
-  aspect-ratio: 1 / 1; border-radius: 10px; border: 1px solid transparent; display: flex; align-items: center; justify-content: center;
-  font-family: var(--sl-num); font-size: 0.84rem; color: var(--sl-muted); background: var(--sl-field); cursor: pointer; padding: 0;
+  aspect-ratio: 1 / 1; border-radius: 8px; border: 1px solid transparent; display: flex; align-items: center; justify-content: center;
+  font-family: var(--sl-num); font-size: 0.76rem; color: var(--sl-muted); background: var(--sl-field); cursor: pointer; padding: 0;
   touch-action: manipulation;
 }
 .sl-cal-day--future { background: transparent; border: 1px dashed var(--sl-line-strong); color: var(--sl-subtle); cursor: default; }
@@ -391,7 +380,7 @@ button.sl-row:hover { background: var(--sl-field); }
 .sl-cal-day[aria-pressed='true'] { box-shadow: 0 0 0 2px var(--sl-bg), 0 0 0 4px var(--sl-accent); }
 .sl-legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 0.74rem; color: var(--sl-subtle); }
 .sl-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-.sl-months { display: flex; align-items: flex-end; gap: 8px; height: 170px; }
+.sl-months { display: flex; align-items: flex-end; gap: 8px; height: 150px; }
 .sl-month { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; background: none; border: none; padding: 0; cursor: pointer; color: inherit; }
 .sl-month-bar { width: 100%; max-width: 46px; border-radius: 6px 6px 2px 2px; min-height: 3px; transition: height 0.3s ease; }
 .sl-month-val { font-family: var(--sl-num); font-size: 0.7rem; color: var(--sl-muted); letter-spacing: -0.03em; white-space: nowrap; }
@@ -401,7 +390,43 @@ button.sl-row:hover { background: var(--sl-field); }
   /* Na telefonu dva stolpca številk; liha zadnja zasede vso širino, da ne ostane prazen kot. */
   .sl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sl-stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .sl-pagetitle { font-size: 1.6rem; }
-  .sl-hero-value { font-size: 2.6rem; }
+  .sl-pagetitle { font-size: 1.4rem; }
+  .sl-hero-value { font-size: 2.2rem; }
   .sl-form-2 { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- pripomočki pregleda in okno za izbiro (avtor, 19. 10. 2026) ---------- */
+
+.sl-widgets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.sl-widget { min-width: 0; }
+.sl-widget--wide { grid-column: 1 / -1; }
+.sl-katalog { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.sl-kat {
+  display: flex; flex-direction: column; gap: 8px; padding: 0.7rem; border-radius: 14px; cursor: pointer; outline: none;
+  border: 1px solid var(--sl-line); background: var(--sl-card); transition: border-color 0.12s, background 0.12s;
+}
+.sl-kat:focus-visible { box-shadow: 0 0 0 3px var(--sl-accent-soft); }
+.sl-kat[aria-checked='true'] { border-color: var(--sl-accent); background: color-mix(in srgb, var(--sl-accent) 5%, var(--sl-card)); }
+.sl-kat-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.sl-kat-title { font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em; }
+.sl-kat-sub { margin-top: 2px; font-size: 0.72rem; color: var(--sl-muted); line-height: 1.4; }
+.sl-check {
+  flex: none; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--sl-line-strong);
+  display: flex; align-items: center; justify-content: center; color: #fff;
+}
+.sl-kat[aria-checked='true'] .sl-check { background: var(--sl-accent); border-color: var(--sl-accent); }
+/* Predogled: pravi pripomoček s tvojimi podatki, pomanjšan na polovico. */
+.sl-kat-preview { position: relative; height: 150px; overflow: hidden; border-radius: 10px; background: var(--sl-bg); pointer-events: none; }
+.sl-kat-preview::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 34px; background: linear-gradient(transparent, var(--sl-bg)); }
+.sl-kat-scale { width: 200%; padding: 12px; transform: scale(0.5); transform-origin: top left; }
+
+/* Filtri transakcij: obdobje Od / Do v svoji vrstici (avtor, 19. 10. 2026). */
+.sl-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.sl-filters .sl-span { grid-column: 1 / -1; }
+.sl-od-do { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
+.sl-od-do > span { font-size: 0.78rem; color: var(--sl-muted); }
+
+@media (max-width: 760px) {
+  .sl-widgets, .sl-katalog { grid-template-columns: minmax(0, 1fr); }
+  .sl-kat-scale { width: 166.67%; transform: scale(0.6); }
 }

@@ -29,6 +29,10 @@ export function reducer(state, action) {
     case 'demo/remove':
       return removeDemo(state);
 
+    // Nastavitve, na primer izbira pripomočkov na pregledu (settings.pregled).
+    case 'settings/update':
+      return { ...state, settings: { ...state.settings, ...action.settings } };
+
     case 'payee/update':
       return { ...state, payees: (state.payees ?? []).map((p) => p.id === action.payee.id ? action.payee : p) };
     case 'payee/remove':

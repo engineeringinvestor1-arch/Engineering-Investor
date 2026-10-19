@@ -54,7 +54,7 @@ export function ikonaKategorije(category, type = category?.type) {
 }
 
 // Ikona v zaobljenem kvadratu, obarvana z barvo kategorije. kind: 'transfer' za prenos med računi.
-export function CatIcon({ category, type, kind, size = 36 }) {
+export function CatIcon({ category, type, kind, size = 32 }) {
   const color = kind === 'transfer' ? 'var(--sl-muted)' : category?.color || 'var(--sl-muted)';
   const ikona = kind === 'transfer' ? 'prenos' : ikonaKategorije(category, type);
   // Barva gre v spremenljivko --c; ozadje in odtenek ikone za svetlo in temno temo določi sledilnik.css.

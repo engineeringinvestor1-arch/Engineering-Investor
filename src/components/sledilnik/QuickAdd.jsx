@@ -12,8 +12,9 @@ import { cistoIme, fmtEur, findPayee, PALETTE, parseAmount, payeeKey, suggestPay
  *  - brez trgovine (gotovina, kava): znesek in klik na kategorijo
  * Klik na trgovino ali kategorijo ob veljavnem znesku shrani takoj; zadnji vnos se da razveljaviti.
  *
- * Postopek je v useVnos; prikaza sta dva: kartica na računalniku (QuickAdd) in na telefonu okno
- * s številčnico, ki ga odpre gumb + v spodnji vrstici (VnosList, avtor 18. 10. 2026).
+ * Postopek je v useVnos; prikaza sta dva: kartica na računalniku (QuickAdd) in na telefonu okno, ki ga
+ * odpre gumb + v spodnji vrstici (VnosList, avtor 18. 10. 2026). Znesek se v oknu vpiše s tipkovnico
+ * telefona, kot v obrazcu za redni strošek (avtor, 19. 10. 2026: lastna številčnica je zasedla preveč prostora).
  */
 const TELEFON = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
@@ -320,38 +321,19 @@ export default function QuickAdd({ state, dispatch, autoFocus = !TELEFON }) {
   );
 }
 
-const TIPKE = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'briši'];
-
-// Znesek se piše s številčnico: največ dve decimalki, ena vejica, do sedem mest pred vejico.
-function pritisni(text, k) {
-  if (k === 'briši') return text.slice(0, -1);
-  if (k === ',') return text.includes(',') ? text : `${text || '0'},`;
-  const [cela, dec] = text.split(',');
-  if (dec !== undefined && dec.length >= 2) return text;
-  if (dec === undefined && cela.length >= 7) return text;
-  if (text === '0') return k;
-  return text + k;
-}
-
 // Kratko ime za ploščico: del pred "&" ali "/" ("Hrana & gospodinjstvo" -> "Hrana").
 const kratko = (name) => name.split(/\s*[&/]\s*/)[0];
 
-const BRISI = <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5h10.5A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5H9l-6-7z" /><path d="m12.5 9.5 5 5" /><path d="m17.5 9.5-5 5" /></svg>;
 const KOLEDAR = <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M3.5 10h17" /><path d="M8 3v4M16 3v4" /></svg>;
 
-// Vnos na telefonu: okno od spodaj z znesekom, trgovinami, kategorijami in številčnico (avtor, 18. 10. 2026).
-// Tipkovnica telefona se odpre samo, kadar uporabnik tipka ime nove trgovine.
+// Vnos na telefonu: okno od spodaj z znesekom, trgovinami in kategorijami (avtor, 18. 10. 2026). Polje za
+// znesek je ob odprtju izbrano, zato se takoj pokaže številčna tipkovnica telefona.
 export function VnosList({ state, dispatch, onClose, onAdded }) {
-  const v = useVnos({ state, dispatch, onAdded: (tx) => { onAdded?.(tx); onClose(); } });
+  const amountRef = useRef(null);
+  const v = useVnos({ state, dispatch, onAdded: (tx) => { onAdded?.(tx); onClose(); }, focusAmount: () => amountRef.current?.focus() });
   const today = todayIso();
   const yesterday = yesterdayIso();
   const account = v.accounts.find((a) => a.id === v.accountId);
-
-  function tipka(k) {
-    v.setHint('');
-    v.setAmountText((t) => pritisni(t, k));
-    navigator.vibrate?.(8);
-  }
 
   return (
     <>
@@ -368,9 +350,13 @@ export function VnosList({ state, dispatch, onClose, onAdded }) {
           </button>
         </div>
 
-        <div className="sl-vnos-amount" aria-live="polite" aria-label={`Znesek ${v.amountText || '0'} evrov`}>
-          <span className={v.amountText ? undefined : 'sl-subtle'}>{v.amountText || '0'}</span>
-          <span className="sl-vnos-eur">€</span>
+        <div className="sl-qa-amount sl-vnos-amount">
+          <input
+            ref={amountRef} autoFocus inputMode="decimal" autoComplete="off" enterKeyHint="done" aria-label="Znesek v evrih" placeholder="0,00"
+            value={v.amountText} onChange={(e) => { v.setAmountText(e.target.value); v.setHint(''); }}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }}
+          />
+          <span aria-hidden="true">€</span>
         </div>
 
         <PayeeInput v={v} />
@@ -380,24 +366,16 @@ export function VnosList({ state, dispatch, onClose, onAdded }) {
           {v.cats.map((c) => (
             <button key={c.id} type="button" className="sl-tile" onClick={() => v.pickCategory(c)} data-category={c.name}
               aria-pressed={v.shownCategoryId === c.id} aria-label={c.name} title={c.name}>
-              <CatIcon category={c} size={28} />
+              <CatIcon category={c} size={24} />
               <span>{kratko(c.name)}</span>
             </button>
           ))}
           <button type="button" className="sl-tile sl-tile--dashed" onClick={v.openNewCategory} aria-label="Dodaj novo kategorijo">
-            <span className="sl-ico" style={{ width: 28, height: 28 }}>
+            <span className="sl-ico" style={{ width: 24, height: 24 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
             </span>
             <span>Nova</span>
           </button>
-        </div>
-
-        <div className="sl-keypad">
-          {TIPKE.map((k) => (
-            <button key={k} type="button" className="sl-key" onClick={() => tipka(k)} aria-label={k === 'briši' ? 'Briši zadnjo številko' : k}>
-              {k === 'briši' ? BRISI : k}
-            </button>
-          ))}
         </div>
 
         <div className="sl-vnos-meta">

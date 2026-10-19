@@ -112,12 +112,12 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
 
       <Card padding="0.75rem">
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Input type="search" placeholder="Išči po trgovini, opombi, kategoriji" aria-label="Iskanje" value={filter.search} onChange={(e) => setFilter({ ...filter, search: e.target.value })} />
+          <Input type="search" placeholder="Išči po vnosih" aria-label="Iskanje po trgovini, opombi ali kategoriji" value={filter.search} onChange={(e) => setFilter({ ...filter, search: e.target.value })} />
           {anyFilter && <Button variant="ghost" size="sm" onClick={() => setFilter(PRAZEN_FILTER)}>Počisti</Button>}
         </div>
         <details open={moreFilters || undefined} style={{ marginTop: 8 }}>
           <summary className="sl-label" style={{ cursor: 'pointer', padding: '0.2rem 0.25rem' }}>Več filtrov</summary>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 8, marginTop: 8 }}>
+          <div className="sl-filters">
             <Select value={filter.type} aria-label="Vrsta" onChange={(e) => setFilter({ ...filter, type: e.target.value })}>
               <option value="all">Vse vrste</option>
               {TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
@@ -126,12 +126,17 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
               <option value="all">Vsi računi</option>
               {accountsAlive.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
             </Select>
-            <Select value={filter.categoryId} aria-label="Kategorija" onChange={(e) => setFilter({ ...filter, categoryId: e.target.value })}>
+            <Select className="sl-span" value={filter.categoryId} aria-label="Kategorija" onChange={(e) => setFilter({ ...filter, categoryId: e.target.value })}>
               <option value="all">Vse kategorije</option>
               {cats.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.type === 'income' ? 'P' : 'O'})</option>)}
             </Select>
-            <Input type="date" value={filter.from} aria-label="Od" onChange={(e) => setFilter({ ...filter, from: e.target.value })} />
-            <Input type="date" value={filter.to} aria-label="Do" onChange={(e) => setFilter({ ...filter, to: e.target.value })} />
+            {/* Obdobje v svoji vrstici z napisoma (avtor, 19. 10. 2026): prazno polje za datum na telefonu ne pokaže ničesar. */}
+            <div className="sl-od-do">
+              <span>Od</span>
+              <Input type="date" value={filter.from} aria-label="Od datuma" max={filter.to || undefined} onChange={(e) => setFilter({ ...filter, from: e.target.value })} />
+              <span>do</span>
+              <Input type="date" value={filter.to} aria-label="Do datuma" min={filter.from || undefined} onChange={(e) => setFilter({ ...filter, to: e.target.value })} />
+            </div>
           </div>
         </details>
       </Card>

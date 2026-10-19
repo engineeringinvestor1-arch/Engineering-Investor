@@ -5,7 +5,7 @@
 
 const cx = (...names) => names.filter(Boolean).join(' ');
 
-export function Card({ children, padding = '1.15rem', style = {}, className, ...rest }) {
+export function Card({ children, padding = '1rem', style = {}, className, ...rest }) {
   return (
     <div className={cx('sl-card', className)} style={{ padding, ...style }} {...rest}>
       {children}

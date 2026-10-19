@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
-  postDueRecurring, rememberPayee, suggestPayees, topPayees,
+  postDueRecurring, rememberPayee, suggestPayees, topPayees, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
   categoryBreakdown, cumulativeSpend, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
@@ -280,4 +280,28 @@ test('tedni v mesecu: od ponedeljka do nedelje, robna tedna obrezana na mesec', 
 test('meseci za primerjavo: zadnjih n mesecev do izbranega, od najstarejšega', () => {
   const meseci = mesecnaPoraba([tx({ date: '2026-08-10', amount: 100 }), tx({ date: '2026-10-01', amount: 40 }), tx({ date: '2026-10-02', type: 'income', amount: 900 })], '2026-10', 3);
   assert.deepEqual(meseci, [{ ym: '2026-08', value: 100 }, { ym: '2026-09', value: 0 }, { ym: '2026-10', value: 40 }]);
+});
+
+// Avtor, 19. 10. 2026: "Ker sem v aplikacijo že vpisoval številke, pri posodobitvi nočem, da se mi vse izbriše."
+test('posodobitev ohrani shranjene vnose: stari zapis brez izbire pregleda dobi privzeto izbiro', () => {
+  const star = { ...freshState(), transactions: [tx(), tx({ id: 't2', amount: 8 })], settings: { currency: 'EUR', locale: 'sl-SI', firstDayOfMonth: 1, onboarded: true } };
+  delete star.payees;
+  const nalozen = stanjeIzShrambe(JSON.stringify(star));
+  assert.equal(nalozen.transactions.length, 2);
+  assert.deepEqual(nalozen.transactions.map((t) => t.id), ['t', 't2']);
+  assert.equal(nalozen.settings.onboarded, true, 'obstoječe nastavitve ostanejo');
+  assert.deepEqual(pregledPripomockov(nalozen.settings), PRIVZETI_PREGLED);
+  assert.equal(nalozen.payees.length, 1, 'trgovine se sestavijo iz vnosov');
+  assert.equal(stanjeIzShrambe('ni json').transactions.length, 0, 'pokvarjen zapis da prazno stanje, ne napake');
+  assert.equal(stanjeIzShrambe(null).transactions.length, 0);
+});
+
+test('pripomočki na pregledu: vklop in izklop v stalnem vrstnem redu, neznani se izpustijo', () => {
+  assert.deepEqual(pregledPripomockov({ pregled: ['zadnji', 'neobstojec', 'poraba'] }), ['poraba', 'zadnji']);
+  assert.deepEqual(pregledPripomockov({ pregled: [] }), [], 'prazen pregled je dovoljen');
+  assert.deepEqual(pregledPripomockov({}), PRIVZETI_PREGLED);
+  const z = preklopiPripomocek(['poraba', 'zadnji'], 'koledar');
+  assert.deepEqual(z, ['poraba', 'zadnji', 'koledar']);
+  assert.deepEqual(preklopiPripomocek(z, 'poraba'), ['zadnji', 'koledar']);
+  assert.ok(PRIVZETI_PREGLED.every((id) => PRIPOMOCKI.includes(id)));
 });

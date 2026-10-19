@@ -80,18 +80,40 @@ export function freshState() {
 export function loadState() {
   if (typeof window === 'undefined') return freshState();
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return freshState();
-    const parsed = JSON.parse(raw);
-    if (!parsed || parsed.version !== 1) return freshState();
-    return withPayees({
-      ...freshState(),
-      ...parsed,
-      settings: { ...freshState().settings, ...(parsed.settings || {}) },
-    }, parsed.payees);
+    return stanjeIzShrambe(localStorage.getItem(STORAGE_KEY));
   } catch {
     return freshState();
   }
+}
+
+// Shranjeni zapis v stanje. Nova polja dobijo privzete vrednosti, obstoječi vnosi ostanejo, kot so bili
+// (avtor, 19. 10. 2026: posodobitev aplikacije ne sme izbrisati vpisanega). Preizkus v store.test.js.
+export function stanjeIzShrambe(raw) {
+  if (!raw) return freshState();
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch { return freshState(); }
+  if (!parsed || parsed.version !== 1) return freshState();
+  return withPayees({
+    ...freshState(),
+    ...parsed,
+    settings: { ...freshState().settings, ...(parsed.settings || {}) },
+  }, parsed.payees);
+}
+
+// Pripomočki na pregledu (avtor, 19. 10. 2026: "kot widgeti na Androidu"). Vrstni red na pregledu je ta;
+// prvih šest je dosedanji pregled in so izbrani, dokler uporabnik izbire ne spremeni (settings.pregled).
+export const PRIPOMOCKI = ['poraba', 'stevilke', 'skozi-mesec', 'kategorije', 'trgovine', 'zadnji', 'koledar', 'tedni', 'meseci', 'razporeditev', 'proracun', 'cilji', 'redni', 'racuni'];
+export const PRIVZETI_PREGLED = PRIPOMOCKI.slice(0, 6);
+
+export function pregledPripomockov(settings) {
+  const izbira = settings?.pregled;
+  if (!Array.isArray(izbira)) return PRIVZETI_PREGLED;
+  return PRIPOMOCKI.filter((id) => izbira.includes(id));
+}
+
+export function preklopiPripomocek(izbira, id) {
+  const nova = izbira.includes(id) ? izbira.filter((x) => x !== id) : [...izbira, id];
+  return PRIPOMOCKI.filter((x) => nova.includes(x));
 }
 
 export function saveState(state) {
