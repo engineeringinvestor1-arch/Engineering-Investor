@@ -188,7 +188,8 @@ function MoneyTrackerInner() {
                 <button className="sl-link" onClick={() => { go('ponavljajoce'); setAutoPosted([]); }}>Uredi pravila</button>
               </Notice>
             )}
-            {renderView()}
+            {/* Nov pogled se pokaže z rahlim prehodom (ključ: ob menjavi se izriše na novo). */}
+            <div key={view} className="sl-view">{renderView()}</div>
           </div>
         </main>
       </div>
@@ -228,9 +229,9 @@ function MoneyTrackerInner() {
         </div>
       </Modal>
 
-      {vnosOpen && <VnosList state={state} dispatch={dispatch} onClose={() => setVnosOpen(false)} onAdded={setVnos} />}
+      <VnosList open={vnosOpen} state={state} dispatch={dispatch} onClose={() => setVnosOpen(false)} onAdded={setVnos} />
       {vnos && (
-        <div className="sl-toast" role="status">
+        <div key={vnos.id} className="sl-toast" role="status">
           <span style={{ flex: 1, minWidth: 0 }}>
             <strong style={{ fontWeight: 600 }}>Dodano:</strong>{' '}
             {[vnos.payee, state.categories.find((c) => c.id === vnos.categoryId)?.name, fmtEur(vnos.amount, true)].filter(Boolean).join(' · ')}

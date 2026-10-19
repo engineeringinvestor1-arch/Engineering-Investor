@@ -3,6 +3,9 @@
  * in razredi, da so vsi pogledi enotni.
  */
 
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
 const cx = (...names) => names.filter(Boolean).join(' ');
 
 export function Card({ children, padding = '1rem', style = {}, className, ...rest }) {
@@ -103,20 +106,126 @@ export function KpiCard({ label, value, sub, trend, color }) {
 
 const ZAPRI = <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12" /><path d="M18 6 6 18" /></svg>;
 
-// Na telefonu se okno odpre kot list od spodaj (sledilnik.css), na računalniku na sredini zaslona.
-export function Modal({ open, onClose, title, children, width = 520 }) {
-  if (!open) return null;
-  return (
-    <div className="sl-overlay" onClick={onClose}>
-      <div className="sl-dialog" role="dialog" aria-modal="true" aria-label={title} style={{ maxWidth: width }} onClick={(e) => e.stopPropagation()}>
+// Koliko oken je odprtih: dokler je katero, se stran pod njim ne pomika.
+let odprtaOkna = 0;
+const ZAPIRANJE_MS = 260;
+
+/**
+ * Okno: na telefonu list od spodaj, na računalniku na sredini zaslona (sledilnik.css).
+ * Ob zaprtju zdrsne navzdol, ne izgine naenkrat: še ZAPIRANJE_MS kaže zadnjo vsebino. Na telefonu se
+ * zapre tudi s potegom navzdol (avtor, 19. 10. 2026), kadar je vsebina na vrhu ali uporabnik prime ročaj.
+ * Okno se izriše v koren aplikacije (.sl), da je nad vsem drugim in ima njene barve.
+ */
+export function Sheet({ open, onClose, label, width = 520, className, children }) {
+  const [mounted, setMounted] = useState(open);
+  const [leaving, setLeaving] = useState(false);
+  const zadnja = useRef(children);
+  const dialogRef = useRef(null);
+  const overlayRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  if (open) zadnja.current = children;
+
+  useEffect(() => {
+    if (open) {
+      // Ponovno odprto med zapiranjem: počisti zamik od potega, sicer bi okno ostalo pod robom zaslona.
+      if (dialogRef.current) dialogRef.current.style.transform = '';
+      if (overlayRef.current) overlayRef.current.style.backgroundColor = '';
+      setMounted(true); setLeaving(false);
+      return undefined;
+    }
+    if (!mounted) return undefined;
+    setLeaving(true);
+    const t = setTimeout(() => { setMounted(false); setLeaving(false); }, ZAPIRANJE_MS);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  useEffect(() => {
+    if (!mounted) return undefined;
+    odprtaOkna += 1;
+    document.documentElement.classList.add('sl-zaklep');
+    return () => {
+      odprtaOkna -= 1;
+      if (odprtaOkna === 0) document.documentElement.classList.remove('sl-zaklep');
+    };
+  }, [mounted]);
+
+  // Poteg navzdol: okno sledi prstu; dovolj dolg ali hiter poteg ga zapre, kratek ga vrne nazaj.
+  useEffect(() => {
+    const el = dialogRef.current;
+    if (!el || !mounted || leaving) return undefined;
+    let y0 = 0, x0 = 0, dy = 0, zadnjiY = 0, zadnjiT = 0, hitrost = 0, vlecem = false, smem = false;
+    const zacetek = (e) => {
+      if (e.touches.length !== 1) { smem = false; return; }
+      const t = e.touches[0];
+      y0 = t.clientY; x0 = t.clientX; zadnjiY = y0; zadnjiT = e.timeStamp; dy = 0; hitrost = 0; vlecem = false;
+      smem = el.scrollTop <= 0 || Boolean(e.target.closest?.('.sl-dialog-handle, .sl-dialog-head'));
+    };
+    const premik = (e) => {
+      if (!smem) return;
+      const t = e.touches[0];
+      const ddy = t.clientY - y0;
+      const ddx = t.clientX - x0;
+      if (!vlecem) {
+        if (ddy < -4 || Math.abs(ddx) > Math.abs(ddy)) { smem = false; return; }
+        if (ddy < 8) return;
+        vlecem = true;
+        el.style.transition = 'none';
+      }
+      e.preventDefault();
+      dy = Math.max(0, ddy - 8);
+      hitrost = (t.clientY - zadnjiY) / Math.max(1, e.timeStamp - zadnjiT);
+      zadnjiY = t.clientY; zadnjiT = e.timeStamp;
+      el.style.transform = `translateY(${dy}px)`;
+      if (overlayRef.current) overlayRef.current.style.backgroundColor = `rgba(12, 12, 12, ${(0.42 * Math.max(0, 1 - dy / el.offsetHeight)).toFixed(3)})`;
+    };
+    const konec = () => {
+      if (!vlecem) return;
+      vlecem = false;
+      el.style.transition = '';
+      if (dy > 110 || (dy > 30 && hitrost > 0.5)) {
+        el.style.transform = 'translateY(100%)';
+        onCloseRef.current?.();
+      } else {
+        el.style.transform = '';
+        if (overlayRef.current) overlayRef.current.style.backgroundColor = '';
+      }
+    };
+    el.addEventListener('touchstart', zacetek, { passive: true });
+    el.addEventListener('touchmove', premik, { passive: false });
+    el.addEventListener('touchend', konec);
+    el.addEventListener('touchcancel', konec);
+    return () => {
+      el.removeEventListener('touchstart', zacetek);
+      el.removeEventListener('touchmove', premik);
+      el.removeEventListener('touchend', konec);
+      el.removeEventListener('touchcancel', konec);
+    };
+  }, [mounted, leaving]);
+
+  if (!mounted) return null;
+  const root = document.querySelector('.sl') || document.body;
+  return createPortal(
+    <div ref={overlayRef} className={cx('sl-overlay', leaving && 'sl-leave')} onClick={() => !leaving && onClose?.()}>
+      <div ref={dialogRef} className={cx('sl-dialog', className)} role="dialog" aria-modal="true" aria-label={label} style={{ maxWidth: width }} onClick={(e) => e.stopPropagation()}>
         <div className="sl-dialog-handle" aria-hidden="true" />
-        <div className="sl-dialog-head">
-          <h3 className="sl-dialog-title">{title}</h3>
-          <button type="button" className="sl-iconbtn" onClick={onClose} aria-label="Zapri">{ZAPRI}</button>
-        </div>
-        {children}
+        {open ? children : zadnja.current}
       </div>
-    </div>
+    </div>,
+    root,
+  );
+}
+
+export function Modal({ open, onClose, title, children, width = 520 }) {
+  return (
+    <Sheet open={open} onClose={onClose} label={title} width={width}>
+      <div className="sl-dialog-head">
+        <h3 className="sl-dialog-title">{title}</h3>
+        <button type="button" className="sl-iconbtn" onClick={onClose} aria-label="Zapri">{ZAPRI}</button>
+      </div>
+      {children}
+    </Sheet>
   );
 }
 

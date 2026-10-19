@@ -90,7 +90,7 @@ export function KoledarPorabe({ state, ym, today, title = 'Poraba po dnevih', su
       </div>
 
       {dan ? (
-        <div style={{ marginTop: 12, borderTop: '1px solid var(--sl-line)', paddingTop: 10 }}>
+        <div key={dan} className="sl-fadein" style={{ marginTop: 12, borderTop: '1px solid var(--sl-line)', paddingTop: 10 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, marginBottom: 4 }}>
             <strong style={{ fontSize: '0.88rem', fontWeight: 600 }}>{imeDne(ym, dan)}</strong>
             <span className="sl-row-amount">{fmtEur(dni[dan - 1], true)}</span>
@@ -314,9 +314,16 @@ function SkoziMesec({ o, ym }) {
 function Kategorije({ state, o, ym }) {
   const [openCat, setOpenCat] = useState(null);
   const catById = useMemo(() => Object.fromEntries(state.categories.map((c) => [c.id, c])), [state.categories]);
-  const catTx = openCat === null ? [] : state.transactions
-    .filter((t) => t.type === 'expense' && t.date.slice(0, 7) === ym && (t.categoryId || '') === openCat)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  // Vnosi vseh kategorij meseca naenkrat: seznam se razpre in zapre s prehodom, zato mora biti izrisan vedno.
+  const poKategoriji = useMemo(() => {
+    const out = {};
+    for (const t of state.transactions) {
+      if (t.type !== 'expense' || t.date.slice(0, 7) !== ym) continue;
+      (out[t.categoryId || ''] ||= []).push(t);
+    }
+    for (const k of Object.keys(out)) out[k].sort((a, b) => b.date.localeCompare(a.date));
+    return out;
+  }, [state.transactions, ym]);
   const maxCat = o.categories[0]?.value || 1;
   return (
     <Card padding="1rem 1rem 0.25rem">
@@ -348,16 +355,18 @@ function Kategorije({ state, o, ym }) {
                     <div className="sl-row-sub">{(c.share * 100).toFixed(0)} %</div>
                   </div>
                 </button>
-                {open && (
-                  <div style={{ padding: '0 1rem 0.7rem 58px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    {catTx.map((t) => (
-                      <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontSize: '0.82rem', color: 'var(--sl-muted)' }}>
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{dayMonth(t.date)} {t.payee || t.notes || 'brez opisa'}</span>
-                        <span className="sl-row-amount" style={{ color: 'var(--sl-ink)', fontSize: '0.82rem' }}>{fmtEur(t.amount, true)}</span>
-                      </div>
-                    ))}
+                <div className="sl-expand" data-open={open}>
+                  <div>
+                    <div style={{ padding: '0 1rem 0.7rem 58px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {(poKategoriji[c.id || ''] || []).map((t) => (
+                        <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontSize: '0.82rem', color: 'var(--sl-muted)' }}>
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{dayMonth(t.date)} {t.payee || t.notes || 'brez opisa'}</span>
+                          <span className="sl-row-amount" style={{ color: 'var(--sl-ink)', fontSize: '0.82rem' }}>{fmtEur(t.amount, true)}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}

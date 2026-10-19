@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
-import { Button, Field, Input, Modal } from './ui.jsx';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Field, Input, Modal, Sheet } from './ui.jsx';
 import { CatIcon } from './ikone.jsx';
 import { cistoIme, fmtEur, findPayee, PALETTE, parseAmount, payeeKey, suggestPayees, todayIso, topPayees, uid, yesterdayIso } from './store.js';
 
@@ -327,8 +327,19 @@ const kratko = (name) => name.split(/\s*[&/]\s*/)[0];
 const KOLEDAR = <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M3.5 10h17" /><path d="M8 3v4M16 3v4" /></svg>;
 
 // Vnos na telefonu: okno od spodaj z znesekom, trgovinami in kategorijami (avtor, 18. 10. 2026). Polje za
-// znesek je ob odprtju izbrano, zato se takoj pokaže številčna tipkovnica telefona.
-export function VnosList({ state, dispatch, onClose, onAdded }) {
+// znesek je ob odprtju izbrano, zato se takoj pokaže številčna tipkovnica telefona. Okno je Sheet: zapre se
+// s potegom navzdol in ob zaprtju zdrsne dol. Vsako odprtje začne s praznim vnosom (nov ključ vsebine).
+export function VnosList({ open, onClose, ...rest }) {
+  const [odprtje, setOdprtje] = useState(0);
+  useEffect(() => { if (open) setOdprtje((n) => n + 1); }, [open]);
+  return (
+    <Sheet open={open} onClose={onClose} label="Nov vnos" width={480} className="sl-vnos">
+      <VnosVsebina key={odprtje} onClose={onClose} {...rest} />
+    </Sheet>
+  );
+}
+
+function VnosVsebina({ state, dispatch, onClose, onAdded }) {
   const amountRef = useRef(null);
   const v = useVnos({ state, dispatch, onAdded: (tx) => { onAdded?.(tx); onClose(); }, focusAmount: () => amountRef.current?.focus() });
   const today = todayIso();
@@ -337,10 +348,7 @@ export function VnosList({ state, dispatch, onClose, onAdded }) {
 
   return (
     <>
-    <div className="sl-overlay" onClick={onClose}>
-      <div className="sl-dialog sl-vnos" role="dialog" aria-modal="true" aria-label="Nov vnos" onClick={(e) => e.stopPropagation()}>
-        <div className="sl-dialog-handle" aria-hidden="true" />
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="sl-dialog-head" style={{ marginBottom: 0 }}>
           <div className="sl-seg" role="group" aria-label="Vrsta vnosa" style={{ display: 'flex', flex: 1 }}>
             <button type="button" aria-pressed={v.type === 'expense'} onClick={() => v.switchType('expense')}>Odhodek</button>
             <button type="button" aria-pressed={v.type === 'income'} onClick={() => v.switchType('income')}>Prihodek</button>
@@ -396,11 +404,9 @@ export function VnosList({ state, dispatch, onClose, onAdded }) {
 
         {v.hint && <div role="alert" style={{ color: 'var(--sl-warn)', fontWeight: 600, fontSize: '0.86rem', textAlign: 'center' }}>{v.hint}</div>}
 
-        <Button size="lg" onClick={v.submit} style={{ width: '100%', height: 52 }}>
+        <Button size="lg" onClick={v.submit} style={{ width: '100%', height: 48 }}>
           Shrani · {dayLabel(v.date)}{account ? `, ${account.name}` : ''}
         </Button>
-      </div>
-    </div>
     <NovaKategorija v={v} amount={v.amount} />
     </>
   );

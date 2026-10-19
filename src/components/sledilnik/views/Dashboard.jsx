@@ -72,7 +72,7 @@ export default function Dashboard({ state, dispatch, onNav, quickAdd = true }) {
       {izbira.length === 0 ? (
         <Empty title="Pregled je prazen" description="Izberi, kaj želiš videti takoj ob odprtju aplikacije." action={<Button onClick={() => setPrilagodi(true)}>Prilagodi pregled</Button>} />
       ) : (
-        <div className="sl-widgets">
+        <div key={ym} className="sl-widgets sl-fadein">
           {izbira.map((id) => {
             const w = KATALOG[id];
             return <div key={id} className={w.wide ? 'sl-widget sl-widget--wide' : 'sl-widget'}><w.C {...p} /></div>;

@@ -100,6 +100,9 @@
   padding: 8px 2px 6px; border: none; background: transparent; cursor: pointer;
   font-size: 0.66rem; font-weight: 500; color: var(--sl-subtle); letter-spacing: 0.01em;
 }
+.sl-tab { transition: color 0.18s; }
+.sl-tab svg { transition: transform 0.12s; }
+.sl-tab:active svg { transform: scale(0.9); }
 .sl-tab[aria-current='page'] { color: var(--sl-accent); }
 .sl-tab-add { justify-content: flex-start; padding-top: 0; }
 .sl-fab {
@@ -115,7 +118,7 @@
   position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 60;
   display: flex; align-items: center; gap: 10px; padding: 0.7rem 0.9rem; border-radius: 14px;
   background: var(--sl-ink); color: var(--sl-bg); font-size: 0.82rem; line-height: 1.4;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22); animation: sl-up 0.2s ease-out;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22); animation: sl-up 0.22s ease-out, sl-toast-out 0.3s ease-in 5.7s forwards;
 }
 .sl-toast .sl-link { color: color-mix(in srgb, var(--sl-accent) 55%, #fff); white-space: nowrap; }
 @media (min-width: 761px) { .sl-toast { left: auto; right: 24px; bottom: 24px; max-width: 420px; } }
@@ -159,6 +162,7 @@
 .sl-row-wrap > .sl-row { border-bottom: none; }
 button.sl-row { cursor: pointer; transition: background 0.12s; }
 button.sl-row:hover { background: var(--sl-field); }
+button.sl-row:active { background: var(--sl-field-hover); }
 .sl-row-title { font-weight: 500; color: var(--sl-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sl-row-sub { margin-top: 1px; font-size: 0.73rem; color: var(--sl-subtle); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sl-row-amount { font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
@@ -188,6 +192,8 @@ button.sl-row:hover { background: var(--sl-field); }
   border: 1px solid transparent; transition: background 0.12s, border-color 0.12s, transform 0.08s;
 }
 .sl-btn:active { transform: scale(0.98); }
+.sl-chip, .sl-tile, .sl-cal-day, .sl-month { transition: transform 0.1s, background 0.12s, border-color 0.12s; }
+.sl-chip:active, .sl-tile:active, .sl-cal-day:active:not(:disabled), .sl-month:active { transform: scale(0.96); }
 .sl-btn--sm { height: 30px; padding: 0 0.7rem; font-size: 0.77rem; border-radius: 8px; }
 .sl-btn--md { height: 38px; padding: 0 0.95rem; font-size: 0.84rem; }
 .sl-btn--lg { height: 44px; padding: 0 1.2rem; font-size: 0.9rem; }
@@ -276,7 +282,13 @@ button.sl-row:hover { background: var(--sl-field); }
 .sl-dialog {
   width: 100%; background: var(--sl-card); border-radius: 20px; padding: 1.25rem 1.35rem 1.4rem;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18); border: 1px solid var(--sl-line);
+  overscroll-behavior: contain; animation: sl-pop 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity 0.2s, transform 0.2s;
 }
+.sl-overlay.sl-leave { animation: sl-fade-out 0.26s ease-in forwards; }
+.sl-leave .sl-dialog { opacity: 0; transform: translateY(10px) scale(0.98); }
+/* Dokler je okno odprto, se stran pod njim ne pomika. */
+html.sl-zaklep, html.sl-zaklep body { overflow: hidden; }
 .sl-dialog-handle { display: none; }
 .sl-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 1rem; }
 .sl-dialog-title { margin: 0; font-size: 1rem; font-weight: 650; letter-spacing: -0.02em; color: var(--sl-ink); }
@@ -290,8 +302,11 @@ button.sl-row:hover { background: var(--sl-field); }
   .sl-dialog {
     border-radius: 22px 22px 0 0; max-height: 92vh; max-height: 92dvh; overflow-y: auto; border: none;
     padding: 0.6rem 1.1rem calc(1.25rem + env(safe-area-inset-bottom));
-    animation: sl-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: sl-sheet-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: transform 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+  .sl-leave .sl-dialog { opacity: 1; transform: translateY(100%); transition: transform 0.26s cubic-bezier(0.4, 0, 1, 1); }
+  .sl-dialog-handle { touch-action: none; }
   .sl-dialog-handle { display: block; width: 40px; height: 5px; border-radius: 3px; background: var(--sl-line-strong); margin: 0 auto 0.75rem; }
   .sl-form-actions { flex-direction: column-reverse; align-items: stretch; }
   .sl-form-actions > div { flex-direction: column-reverse; }
@@ -299,6 +314,11 @@ button.sl-row:hover { background: var(--sl-field); }
 }
 
 @keyframes sl-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sl-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes sl-pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes sl-sheet-in { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes sl-view-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes sl-toast-out { to { opacity: 0; transform: translateY(12px); } }
 @keyframes sl-up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
 
 /* ---------- hiter vnos ---------- */
@@ -414,6 +434,7 @@ button.sl-row:hover { background: var(--sl-field); }
   flex: none; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--sl-line-strong);
   display: flex; align-items: center; justify-content: center; color: #fff;
 }
+.sl-check { transition: background 0.15s, border-color 0.15s; }
 .sl-kat[aria-checked='true'] .sl-check { background: var(--sl-accent); border-color: var(--sl-accent); }
 /* Predogled: pravi pripomoček s tvojimi podatki, pomanjšan na polovico. */
 .sl-kat-preview { position: relative; height: 150px; overflow: hidden; border-radius: 10px; background: var(--sl-bg); pointer-events: none; }
@@ -429,4 +450,21 @@ button.sl-row:hover { background: var(--sl-field); }
 @media (max-width: 760px) {
   .sl-widgets, .sl-katalog { grid-template-columns: minmax(0, 1fr); }
   .sl-kat-scale { width: 166.67%; transform: scale(0.6); }
+}
+
+/* ---------- prehodi med pogledi in razpiranje (avtor, 19. 10. 2026: "bolj smooth") ---------- */
+
+/* Nov pogled, nov mesec in podrobnosti dneva se pokažejo z rahlim dvigom namesto naenkrat. */
+.sl-view { display: flex; flex-direction: column; gap: 1rem; animation: sl-view-in 0.22s ease-out; }
+.sl-fadein { animation: sl-view-in 0.2s ease-out; }
+/* Seznam vnosov kategorije se razpre in zapre z višino (mreža 0fr do 1fr). */
+.sl-expand { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.24s ease; }
+.sl-expand[data-open='true'] { grid-template-rows: 1fr; }
+.sl-expand > div { overflow: hidden; min-height: 0; }
+button.sl-row[aria-expanded] { transition: background 0.12s; }
+
+/* Kdor ima v telefonu izklopljene animacije, jih tudi tu ne dobi. */
+@media (prefers-reduced-motion: reduce) {
+  .sl *, .sl *::before, .sl *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+  .sl-toast { animation: none !important; }
 }

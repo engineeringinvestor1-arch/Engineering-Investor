@@ -37,8 +37,8 @@ export default function Analysis({ state }) {
           </div>
         )}
       />
-      <KoledarPorabe key={ym} state={state} ym={ym} today={today} />
-      <div className="sl-grid2">
+      <div key={`koledar-${ym}`} className="sl-fadein"><KoledarPorabe state={state} ym={ym} today={today} /></div>
+      <div key={`tedni-${ym}`} className="sl-grid2 sl-fadein">
         <TedniMeseca state={state} ym={ym} today={today} />
         <ZadnjiMeseci state={state} ym={ym} o={o} onPick={changeMonth} />
       </div>
