@@ -35,10 +35,17 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Brskalnik naj polja (datum, izbirnik, drsnik) riše v izbrani temi aplikacije, ne v temi telefona;
-   skupaj z oznako color-scheme v aplikacija/index.astro to prepreči samodejno temnjenje strani. */
-html[data-theme='light'] { color-scheme: light; }
-html[data-theme='dark'] { color-scheme: dark; }
+/* Brskalnik naj stran in polja (datum, izbirnik) riše v izbrani temi aplikacije, ne v temi telefona.
+   "only" brskalniku prepove, da stran sam potemni: samo "light" je Chromu s temnim načinom telefona še
+   dovolil samodejno temnjenje (avtor, 19. 10. 2026: svetla tema je ostala siva). */
+html[data-theme='light'] { color-scheme: only light; }
+html[data-theme='dark'] { color-scheme: only dark; }
+
+/* Samsung Internet ne temni strani sam, kadar ima stran v slogih pravilo za temni način telefona. To pravilo
+   velja samo prvi trenutek, preden zagonski skript v aplikacija/index.astro nastavi temo. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) { color-scheme: dark; background: #0e0e0e; }
+}
 
 [data-theme='dark'] .sl {
   --sl-field: color-mix(in srgb, var(--color-text) 7%, var(--color-surface));

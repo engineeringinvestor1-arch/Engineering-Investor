@@ -10,6 +10,19 @@ function emptyCategory(type = 'expense') {
   return { id: '', name: '', type, color: PALETTE[0], archived: false };
 }
 
+// Različica aplikacije: ob vsaki objavi enaka številki predpomnilnika v public/aplikacija/sw.js.
+const RAZLICICA = '6 (19. 10. 2026)';
+
+// Brskalnik, v katerem teče aplikacija. Samsung Internet in Edge se predstavita tudi kot Chrome, zato najprej.
+function brskalnik() {
+  const ua = navigator.userAgent;
+  for (const [vzorec, ime] of [[/SamsungBrowser\/(\d+)/, 'Samsung Internet'], [/EdgA?\/(\d+)/, 'Edge'], [/Firefox\/(\d+)/, 'Firefox'], [/Chrome\/(\d+)/, 'Chrome']]) {
+    const m = ua.match(vzorec);
+    if (m) return `${ime} ${m[1]}`;
+  }
+  return 'neznan brskalnik';
+}
+
 export default function Settings({ state, dispatch }) {
   const fileRef = useRef(null);
   const [editingCat, setEditingCat] = useState(null);
@@ -179,6 +192,13 @@ export default function Settings({ state, dispatch }) {
         <SectionHeader title="Ponastavitev" subtitle="Izbriše vse podatke na tej napravi. Pred tem shrani varnostno kopijo." />
         <Button variant="danger" onClick={handleReset}>Ponastavi vse</Button>
       </Card>
+
+      {/* Za iskanje napak na telefonu (19. 10. 2026): katera različica je naložena in v katerem brskalniku teče. */}
+      <div className="sl-hint" style={{ textAlign: 'center', lineHeight: 1.7 }}>
+        Različica {RAZLICICA} · {brskalnik()}<br />
+        Telefon: {window.matchMedia('(prefers-color-scheme: dark)').matches ? 'temni način' : 'svetli način'} · tema aplikacije: {document.documentElement.dataset.theme === 'dark' ? 'temna' : 'svetla'}
+        {window.matchMedia('(display-mode: standalone)').matches ? ' · nameščena' : ' · v brskalniku'}
+      </div>
 
       <Modal open={!!editingPayee} onClose={() => setEditingPayee(null)} title="Trgovina ali storitev">
         {editingPayee && (
