@@ -24,13 +24,17 @@ import MoneyTracker from '../../components/sledilnik/MoneyTracker.jsx';
     <link rel="manifest" href="/aplikacija/manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/aplikacija/ikona-192.png" />
-    <!-- Tema kot na strani: izbira iz shrambe ali nastavitev telefona, brez utripa ob odprtju. -->
+    <!-- Tema brez utripa ob odprtju: izbira v Nastavitvah aplikacije (svetla, temna, sistemska), sicer
+         tema strani, sicer telefon. Isto pravilo je temaZaPrikaz v src/components/sledilnik/store.js. -->
     <script is:inline>
       (function () {
-        let shranjena = null;
-        try { shranjena = localStorage.getItem('theme'); } catch (e) { /* zasebno okno */ }
+        let izbira = null, stran = null;
+        try { izbira = localStorage.getItem('sledilnik-tema'); stran = localStorage.getItem('theme'); } catch (e) { /* zasebno okno */ }
         const temna = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', shranjena || (temna ? 'dark' : 'light'));
+        let tema = temna ? 'dark' : 'light';
+        if (izbira === 'light' || izbira === 'dark') tema = izbira;
+        else if (izbira !== 'system' && (stran === 'light' || stran === 'dark')) tema = stran;
+        document.documentElement.setAttribute('data-theme', tema);
       })();
     </script>
   </head>

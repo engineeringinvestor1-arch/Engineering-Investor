@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
-  postDueRecurring, rememberPayee, suggestPayees, topPayees, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
+  postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
   categoryBreakdown, cumulativeSpend, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
@@ -304,4 +304,14 @@ test('pripomočki na pregledu: vklop in izklop v stalnem vrstnem redu, neznani s
   assert.deepEqual(z, ['poraba', 'zadnji', 'koledar']);
   assert.deepEqual(preklopiPripomocek(z, 'poraba'), ['zadnji', 'koledar']);
   assert.ok(PRIVZETI_PREGLED.every((id) => PRIPOMOCKI.includes(id)));
+});
+
+test('tema aplikacije: svetla in temna veljata vedno, sistemska sledi telefonu, brez izbire velja tema strani', () => {
+  assert.equal(temaZaPrikaz('light', 'dark', true), 'light');
+  assert.equal(temaZaPrikaz('dark', 'light', false), 'dark');
+  assert.equal(temaZaPrikaz('system', 'light', true), 'dark', 'sistemska prezre temo strani');
+  assert.equal(temaZaPrikaz('system', null, false), 'light');
+  assert.equal(temaZaPrikaz(null, 'dark', false), 'dark', 'brez izbire kot doslej: tema strani');
+  assert.equal(temaZaPrikaz(null, null, true), 'dark');
+  assert.equal(temaZaPrikaz('neznano', null, false), 'light');
 });

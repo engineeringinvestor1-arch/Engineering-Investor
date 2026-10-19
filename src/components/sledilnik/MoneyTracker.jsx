@@ -15,6 +15,7 @@ import Reports from './views/Reports.jsx';
 import Recurring from './views/Recurring.jsx';
 import Insights from './views/Insights.jsx';
 import Settings from './views/Settings.jsx';
+import { spremljajSistem } from './tema.js';
 
 // Vsakdanji pogledi so spredaj, redkeje rabljeni pod "Več" (avtor, 3. 10. 2026: sledilnik naj bo enostaven;
 // devet enakovrednih pogledov je bilo preveč). Nič ni odstranjeno, samo razvrščeno.
@@ -77,6 +78,9 @@ function MoneyTrackerInner() {
   // Brskalnik sme podatke spletne strani ob pomanjkanju prostora izbrisati; trajna shramba to prepreči.
   // Nameščena aplikacija jo na Androidu običajno dobi brez vprašanja.
   useEffect(() => { navigator.storage?.persist?.().catch(() => {}); }, []);
+
+  // Tema po izbiri v Nastavitvah; pri sistemski sledi telefonu tudi med uporabo (tema.js).
+  useEffect(() => spremljajSistem(), []);
 
   function shraniKopijo() {
     exportJson(state);

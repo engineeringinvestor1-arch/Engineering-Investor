@@ -4,6 +4,7 @@ import { CatIcon } from '../ikone.jsx';
 import { Swatches } from '../QuickAdd.jsx';
 import { cistoIme, fmtEur, exportJson, exportCsv, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
 import { hasDemo } from '../demo.js';
+import { izbranaTema, nastaviTemo } from '../tema.js';
 
 function emptyCategory(type = 'expense') {
   return { id: '', name: '', type, color: PALETTE[0], archived: false };
@@ -13,6 +14,12 @@ export default function Settings({ state, dispatch }) {
   const fileRef = useRef(null);
   const [editingCat, setEditingCat] = useState(null);
   const [editingPayee, setEditingPayee] = useState(null);
+  const [tema, setTema] = useState(() => izbranaTema());
+
+  function izberiTemo(izbira) {
+    nastaviTemo(izbira);
+    setTema(izbira);
+  }
 
   function handleExport() {
     exportJson(state);
@@ -92,7 +99,17 @@ export default function Settings({ state, dispatch }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <PageHeader title="Nastavitve" subtitle="Kategorije, trgovine, varnostna kopija in izvoz" />
+      <PageHeader title="Nastavitve" subtitle="Videz, kategorije, trgovine, varnostna kopija in izvoz" />
+
+      {/* Tema (avtor, 19. 10. 2026): sistemska sledi nastavitvi telefona, tudi ko se ta zvečer sama preklopi. */}
+      <Card>
+        <SectionHeader title="Videz" subtitle={tema === 'system' ? 'Tema sledi nastavitvi telefona.' : 'Tema ostane taka, ne glede na nastavitev telefona.'} />
+        <div className="sl-seg" role="group" aria-label="Tema" style={{ display: 'flex' }}>
+          {[['light', 'Svetla'], ['dark', 'Temna'], ['system', 'Sistemska']].map(([id, ime]) => (
+            <button key={id} type="button" aria-pressed={tema === id} onClick={() => izberiTemo(id)}>{ime}</button>
+          ))}
+        </div>
+      </Card>
 
       <Card>
         <SectionHeader title="Podatki" subtitle="Vsi podatki so shranjeni samo na tej napravi. Nič ne pošljemo na strežnik. Redno shrani varnostno kopijo (datoteka JSON): ob brisanju podatkov brskalnika ali na novem telefonu jo uvoziš nazaj." />

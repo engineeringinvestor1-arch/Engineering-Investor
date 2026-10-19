@@ -111,6 +111,14 @@ export function pregledPripomockov(settings) {
   return PRIPOMOCKI.filter((id) => izbira.includes(id));
 }
 
+// Tema aplikacije (avtor, 19. 10. 2026): svetla, temna ali sistemska (kot telefon). Dokler je uporabnik ne
+// izbere, velja kot doslej tema strani, sicer telefon. Ista pravila ima zagonski skript v aplikacija/index.astro.
+export function temaZaPrikaz(izbira, temaStrani, sistemTemna) {
+  if (izbira === 'light' || izbira === 'dark') return izbira;
+  if (izbira !== 'system' && (temaStrani === 'light' || temaStrani === 'dark')) return temaStrani;
+  return sistemTemna ? 'dark' : 'light';
+}
+
 export function preklopiPripomocek(izbira, id) {
   const nova = izbira.includes(id) ? izbira.filter((x) => x !== id) : [...izbira, id];
   return PRIPOMOCKI.filter((x) => nova.includes(x));
