@@ -35,6 +35,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Brskalnik naj polja (datum, izbirnik, drsnik) riše v izbrani temi aplikacije, ne v temi telefona;
+   skupaj z oznako color-scheme v aplikacija/index.astro to prepreči samodejno temnjenje strani. */
+html[data-theme='light'] { color-scheme: light; }
+html[data-theme='dark'] { color-scheme: dark; }
+
 [data-theme='dark'] .sl {
   --sl-field: color-mix(in srgb, var(--color-text) 7%, var(--color-surface));
   --sl-field-hover: color-mix(in srgb, var(--color-text) 11%, var(--color-surface));

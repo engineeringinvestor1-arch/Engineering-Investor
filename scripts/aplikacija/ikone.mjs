@@ -1,10 +1,12 @@
 // Ikone aplikacije Sledilnik financ (PNG za namestitev na Android). Brez zunanjih knjižnic: slika se nariše
 // v pomnilnik in zapiše z zlib, ki ga ima Node. Zagon: node scripts/aplikacija/ikone.mjs
 //
-// Oblika: tri naraščajoči stolpci v barvi strani na modri podlagi. Navadna ikona ima zaobljene vogale,
-// "maskable" sega do roba, risba pa je v osrednjem krogu, ker Android ikono obreže v svojo obliko.
+// Oblika (avtor, 19. 10. 2026: "zamenjaj ikono s to grafiko"): enaka kot znak v stranskem meniju aplikacije,
+// bel graf s tremi stolpci in osnovnico na modri podlagi (ikona "chart" v MoneyTracker.jsx, mreža 24 x 24).
+// Navadna ikona ima zaobljene vogale, "maskable" sega do roba, risba pa je v osrednjem krogu, ker Android
+// ikono obreže v svojo obliko. Imena datotek nosijo različico, da telefon ne vzame stare iz predpomnilnika.
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { deflateSync } from 'node:zlib';
@@ -12,8 +14,12 @@ import { deflateSync } from 'node:zlib';
 const KOREN = join(dirname(fileURLToPath(import.meta.url)), '../..');
 const MAPA = join(KOREN, 'public/aplikacija');
 const MODRA = [37, 99, 235]; // --color-accent
-const SVETLA = [244, 242, 236]; // --color-bg
+const BELA = [255, 255, 255];
 const VZOREC = 4; // glajenje robov: vsak piksel je povprečje 4 x 4 vzorcev
+
+// Črte grafa v mreži 24 x 24, kot v znaku menija: trije stolpci in osnovnica, zaobljeni konci.
+const CRTE = [[4, 20, 4, 10], [10, 20, 10, 4], [16, 20, 16, 13], [21, 20, 3, 20]];
+const DEBELINA = 1.9; // v znaku menija 1,75; za ikono na zaslonu rahlo debelejša
 
 const CRC = new Uint32Array(256).map((_, n) => {
   let c = n;
@@ -51,13 +57,19 @@ function png(velikost, piksel) {
   return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), kos('IHDR', glava), kos('IDAT', deflateSync(vrstice, { level: 9 })), kos('IEND', Buffer.alloc(0))]);
 }
 
-// Lik v enotah 0..1. Vrne barvo [r, g, b, a] ali null (prozorno).
+// Razdalja točke do daljice.
+function razdalja(px, py, [x1, y1, x2, y2]) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+  return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+// Lik v enotah 0..1. Vrne barvo [r, g, b] ali null (prozorno).
 function risba({ maskable }) {
-  const polmer = maskable ? 0 : 0.22;
-  // Risba v osrednjem delu: pri maskable v krogu s polmerom 0,4 (varno območje), sicer nekoliko večja.
-  const m = maskable ? 0.62 : 0.74;
-  const zamik = (1 - m) / 2;
-  const stolpci = [[0.08, 0.5], [0.38, 0.72], [0.68, 0.95]].map(([x, visina]) => ({ x0: zamik + x * m, x1: zamik + (x + 0.24) * m, y0: zamik + (1 - visina) * m, y1: zamik + m }));
+  const polmer = maskable ? 0 : 0.25;
+  // Mreža 24 x 24 zavzame tak delež ikone kot v znaku menija (18 od 32 pik); pri maskable manj, da ostane
+  // v varnem krogu s polmerom 0,4.
+  const m = maskable ? 0.5 : 0.5625;
   return (u, v) => {
     if (!maskable) {
       // Zaobljen kvadrat: zunaj vogalnih krogov je prozorno.
@@ -65,15 +77,9 @@ function risba({ maskable }) {
       const cy = Math.min(Math.max(v, polmer), 1 - polmer);
       if ((u - cx) ** 2 + (v - cy) ** 2 > polmer ** 2) return null;
     }
-    const zaokrozitev = 0.035 * m;
-    for (const s of stolpci) {
-      if (u < s.x0 || u > s.x1 || v < s.y0 || v > s.y1) continue;
-      // Zaobljen vrh stolpca.
-      const cx = Math.min(Math.max(u, s.x0 + zaokrozitev), s.x1 - zaokrozitev);
-      if (v < s.y0 + zaokrozitev && (u - cx) ** 2 + (v - (s.y0 + zaokrozitev)) ** 2 > zaokrozitev ** 2) continue;
-      return [...SVETLA, 255];
-    }
-    return [...MODRA, 255];
+    const gx = 12 + (u - 0.5) * (24 / m);
+    const gy = 12 + (v - 0.5) * (24 / m);
+    return CRTE.some((c) => razdalja(gx, gy, c) <= DEBELINA / 2) ? BELA : MODRA;
   };
 }
 
@@ -94,10 +100,12 @@ function ikona(velikost, moznosti) {
 }
 
 mkdirSync(MAPA, { recursive: true });
+// Stare ikone (prva različica, 18. 10. 2026) gredo ven, da v mapi ni dveh kompletov.
+for (const staro of ['ikona-192.png', 'ikona-512.png', 'ikona-maskable-512.png']) rmSync(join(MAPA, staro), { force: true });
 const datoteke = [
-  ['ikona-192.png', ikona(192, { maskable: false })],
-  ['ikona-512.png', ikona(512, { maskable: false })],
-  ['ikona-maskable-512.png', ikona(512, { maskable: true })],
+  ['ikona-v2-192.png', ikona(192, { maskable: false })],
+  ['ikona-v2-512.png', ikona(512, { maskable: false })],
+  ['ikona-v2-maskable-512.png', ikona(512, { maskable: true })],
 ];
 for (const [ime, vsebina] of datoteke) writeFileSync(join(MAPA, ime), vsebina);
 console.log(datoteke.map(([ime, v]) => `${ime} (${v.length} B)`).join(', '));
