@@ -114,11 +114,11 @@ Netflix spends almost all of its free cash flow on **share buybacks**: it buys i
 
 Three one-off effects distort this year's figures. They are collected in one place so that readers do not have to look for them in the text:
 
-| One-off effect | Amount | What it affects | In this analysis |
-|---|---|---|---|
-| Tax dispute in Brazil (Q3 2025) | charge of $619m | last year's operating income and margin | last year's base excludes it |
-| Termination fee from withdrawing from the Warner Bros. deal (Q1 2026) | receipt of $2.8bn, about $2.26bn after tax | net income (about $0.53 per share) and cash flow | deducted |
-| Real estate transaction (Q4 2026) | outlay of about $0.5bn | free cash flow | kept, as it is an actual outlay |
+| One-off effect | Amount | In this analysis |
+|---|---|---|
+| Tax dispute in Brazil, Q3 2025: last year's operating income | charge of $619m | last year's base excludes it |
+| Warner Bros. termination fee, Q1 2026: profit and cash flow | $2.8bn, $2.26bn after tax ($0.53 per share) | deducted |
+| Real estate transaction, Q4 2026: cash flow | outlay of about $0.5bn | kept as an actual outlay |
 
 Netflix received the termination fee in February 2026, when it walked away from buying the film and streaming business of Warner Bros. Discovery after Paramount Skydance offered more. Excluding the fee, this year's free cash flow is about **$9.7 billion**, and about $10.2 billion without the real estate transaction.
 

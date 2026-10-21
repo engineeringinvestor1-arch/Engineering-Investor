@@ -113,11 +113,11 @@ Skoraj ves prosti denarni tok Netflix porabi za **odkupe lastnih delnic**: delni
 
 Letošnje številke popačijo trije enkratni učinki. Zbrani so na enem mestu, da jih ni treba iskati po besedilu:
 
-| Enkratni učinek | Znesek | Na kaj vpliva | V tej analizi |
-|---|---|---|---|
-| Davčni spor v Braziliji (Q3 2025) | strošek 619 mio USD | lanski poslovni izid in marža | lanska osnova brez njega |
-| Odstopnina ob umiku iz prevzema Warner Bros. (Q1 2026) | prejemek 2,8 mrd USD, po davku okoli 2,26 mrd USD | čisti dobiček (okoli 0,53 USD na delnico) in denarni tok | odšteta |
-| Posel z nepremičnino (Q4 2026) | izdatek okoli 0,5 mrd USD | prosti denarni tok | ostane, ker je dejanski izdatek |
+| Enkratni učinek | Znesek | V tej analizi |
+|---|---|---|
+| Davčni spor v Braziliji, Q3 2025: lanski poslovni izid | strošek 619 mio USD | lanska osnova brez njega |
+| Odstopnina Warner Bros., Q1 2026: dobiček in denarni tok | 2,8 mrd USD, po davku 2,26 mrd (0,53 USD na delnico) | odšteta |
+| Posel z nepremičnino, Q4 2026: denarni tok | izdatek okoli 0,5 mrd USD | ostane kot dejanski izdatek |
 
 Odstopnino je Netflix prejel februarja 2026, ko je odstopil od nakupa filmskega in pretočnega dela družbe Warner Bros. Discovery, potem ko je Paramount Skydance ponudil več. Brez odstopnine je letošnji prosti denarni tok okoli **9,7 milijarde USD**, brez posla z nepremičnino pa okoli 10,2 milijarde.
 
