@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ei-chart" width="720" height="430" viewBox="0 0 720 430" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" role="img" aria-label="Year-on-year growth in Netflix revenue in the US and Canada by quarter from Q4 2024 to Q3 2026, with both price increases marked">
+<style>
+  .ei-chart {
+    --ei-surface: var(--color-surface, #FCFAF5);
+    --ei-border: var(--color-border, #D8D3C5);
+    --ei-grid: var(--color-border, #E6E2D6);
+    --ei-axis: var(--color-border-strong, #BDB7A8);
+    --ei-ink: var(--color-text, #1A1A1A);
+    --ei-muted: var(--color-text-muted, #6B6B6B);
+    --ei-rise: var(--chart-rise, #2a78d6);
+    --ei-fall: var(--chart-fall, #e34948);
+    --ei-a: var(--chart-rise, #2a78d6);
+    --ei-b: var(--chart-vlozki, #0d9488);
+    --ei-c: var(--chart-obresti, #c4531d);
+    --ei-benchmark: var(--color-text-muted, #6B6B6B);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ei-chart {
+    --ei-surface: var(--color-surface, #181818);
+    --ei-border: var(--color-border, #2A2A2A);
+    --ei-grid: var(--color-border, #232323);
+    --ei-axis: var(--color-border-strong, #3A3A3A);
+    --ei-ink: var(--color-text, #F0F0EE);
+    --ei-muted: var(--color-text-muted, #888888);
+      --ei-benchmark: var(--color-text-muted, #888888);
+    }
+  }
+</style>
+<rect x="0.5" y="0.5" width="719" height="429" rx="10" style="fill:var(--ei-surface);stroke:var(--ei-border)"/>
+<text x="24" y="38" font-size="19" font-weight="600" style="fill:var(--ei-ink)">US and Canada: growth is slightly higher again after the price increase</text>
+<text x="24" y="62" font-size="13.5" style="fill:var(--ei-muted)">Year-on-year revenue growth in the region by quarter, in percent. This year’s bars are darker</text>
+<line x1="52" x2="696" y1="350" y2="350" style="stroke:var(--ei-axis)" stroke-width="1"/><text x="42" y="354" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">0%</text><line x1="52" x2="696" y1="293.5" y2="293.5" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="297.5" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">5%</text><line x1="52" x2="696" y1="237" y2="237" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="241" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">10%</text><line x1="52" x2="696" y1="180.5" y2="180.5" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="184.5" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">15%</text><line x1="52" x2="696" y1="124" y2="124" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="128" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">20%</text><path d="M71.3,350 V183.5 a3,3 0 0 1 3,-3 H110.3 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a);opacity:0.6"/><text x="92.3" y="173.5" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">15</text><text x="92.3" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q4 2024</text><path d="M151.8,350 V251.3 a3,3 0 0 1 3,-3 H190.8 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a);opacity:0.6"/><text x="172.8" y="241.3" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">9</text><text x="172.8" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q1 2025</text><path d="M232.3,350 V183.5 a3,3 0 0 1 3,-3 H271.3 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a);opacity:0.6"/><text x="253.3" y="173.5" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">15</text><text x="253.3" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q2 2025</text><path d="M312.8,350 V160.9 a3,3 0 0 1 3,-3 H351.8 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a);opacity:0.6"/><text x="333.8" y="150.9" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">17</text><text x="333.8" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q3 2025</text><path d="M393.3,350 V149.6 a3,3 0 0 1 3,-3 H432.3 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a);opacity:0.6"/><text x="414.3" y="139.6" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">18</text><text x="414.3" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q4 2025</text><path d="M473.8,350 V194.8 a3,3 0 0 1 3,-3 H512.8 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><text x="494.8" y="184.8" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">14</text><text x="494.8" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q1 2026</text><path d="M554.3,350 V240 a3,3 0 0 1 3,-3 H593.3 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><text x="575.3" y="230" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">10</text><text x="575.3" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q2 2026</text><path d="M634.8,350 V228.7 a3,3 0 0 1 3,-3 H673.8 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><text x="655.8" y="218.7" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">11</text><text x="655.8" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">Q3 2026</text><line x1="132.5" x2="132.5" y1="108" y2="350" style="stroke:var(--ei-muted)" stroke-width="1" stroke-dasharray="4 4" opacity="0.8"/><text x="140.5" y="116" font-size="12.5" text-anchor="start" style="fill:var(--ei-ink)">price increase, January 2025</text><line x1="535" x2="535" y1="108" y2="350" style="stroke:var(--ei-muted)" stroke-width="1" stroke-dasharray="4 4" opacity="0.8"/><text x="527" y="116" font-size="12.5" text-anchor="end" style="fill:var(--ei-ink)">price increase, late March 2026</text>
+<text x="24" y="400" font-size="11.5" style="fill:var(--ei-muted)">Source: Netflix, shareholder letters of 21 Jan 2025, 20 Jan 2026 and 20 Oct 2026. Date of this year’s price increase:</text><text x="24" y="418" font-size="11.5" style="fill:var(--ei-muted)">Fox 29, 27 Mar 2026.</text>
+</svg>

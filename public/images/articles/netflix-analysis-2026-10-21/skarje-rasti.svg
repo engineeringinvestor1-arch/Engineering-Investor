@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ei-chart" width="720" height="430" viewBox="0 0 720 430" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" role="img" aria-label="Netflix annual revenue growth and content amortization growth from 2022 to 2025 with the 2026 forecast">
+<style>
+  .ei-chart {
+    --ei-surface: var(--color-surface, #FCFAF5);
+    --ei-border: var(--color-border, #D8D3C5);
+    --ei-grid: var(--color-border, #E6E2D6);
+    --ei-axis: var(--color-border-strong, #BDB7A8);
+    --ei-ink: var(--color-text, #1A1A1A);
+    --ei-muted: var(--color-text-muted, #6B6B6B);
+    --ei-rise: var(--chart-rise, #2a78d6);
+    --ei-fall: var(--chart-fall, #e34948);
+    --ei-a: var(--chart-rise, #2a78d6);
+    --ei-b: var(--chart-vlozki, #0d9488);
+    --ei-c: var(--chart-obresti, #c4531d);
+    --ei-benchmark: var(--color-text-muted, #6B6B6B);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ei-chart {
+    --ei-surface: var(--color-surface, #181818);
+    --ei-border: var(--color-border, #2A2A2A);
+    --ei-grid: var(--color-border, #232323);
+    --ei-axis: var(--color-border-strong, #3A3A3A);
+    --ei-ink: var(--color-text, #F0F0EE);
+    --ei-muted: var(--color-text-muted, #888888);
+      --ei-benchmark: var(--color-text-muted, #888888);
+    }
+  }
+</style>
+<rect x="0.5" y="0.5" width="719" height="429" rx="10" style="fill:var(--ei-surface);stroke:var(--ei-border)"/>
+<text x="24" y="38" font-size="19" font-weight="600" style="fill:var(--ei-ink)">The gap that margin comes from is narrowing this year</text>
+<text x="24" y="62" font-size="13.5" style="fill:var(--ei-muted)">Annual growth in revenue and in content cost (amortization), in percent</text><rect x="24" y="77" width="11" height="11" rx="2.5" style="fill:var(--ei-a)"/><text x="41" y="86" font-size="12.5" style="fill:var(--ei-muted)">Revenue growth</text><rect x="159.39999999999998" y="77" width="11" height="11" rx="2.5" style="fill:var(--ei-c)"/><text x="176.4" y="86" font-size="12.5" style="fill:var(--ei-muted)">Content cost growth</text>
+<line x1="52" x2="696" y1="350" y2="350" style="stroke:var(--ei-axis)" stroke-width="1"/><text x="42" y="354" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">0%</text><line x1="52" x2="696" y1="290" y2="290" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="294" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">5%</text><line x1="52" x2="696" y1="230" y2="230" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="234" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">10%</text><line x1="52" x2="696" y1="170" y2="170" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="174" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">15%</text><line x1="52" x2="696" y1="110" y2="110" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="114" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">20%</text><path d="M77.4,350 V275 a3,3 0 0 1 3,-3 H112.4 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><path d="M117.4,350 V176.6 a3,3 0 0 1 3,-3 H152.4 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-c)"/><text x="96.4" y="265" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">6.5</text><text x="136.4" y="166.6" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">14.7</text><text x="116.4" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2022</text><path d="M206.2,350 V272.6 a3,3 0 0 1 3,-3 H241.2 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><path d="M246.2,350 V338.6 a3,3 0 0 1 3,-3 H281.2 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-c)"/><text x="225.2" y="262.6" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">6.7</text><text x="265.2" y="328.6" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">1.2</text><text x="245.2" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2023</text><path d="M335,350 V164.6 a3,3 0 0 1 3,-3 H370 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><path d="M375,350 V259.4 a3,3 0 0 1 3,-3 H410 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-c)"/><text x="354" y="154.6" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">15.7</text><text x="394" y="249.4" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">7.8</text><text x="374" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2024</text><path d="M463.8,350 V162.2 a3,3 0 0 1 3,-3 H498.8 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a)"/><path d="M503.8,350 V265.4 a3,3 0 0 1 3,-3 H538.8 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-c)"/><text x="482.8" y="152.2" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">15.9</text><text x="522.8" y="255.4" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">7.3</text><text x="502.8" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2025</text><path d="M592.6,350 V195.8 a3,3 0 0 1 3,-3 H627.6 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-a);opacity:0.5"/><path d="M632.6,350 V233 a3,3 0 0 1 3,-3 H667.6 a3,3 0 0 1 3,3 V350 z" style="fill:var(--ei-c);opacity:0.5"/><text x="611.6" y="185.8" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">~13.1</text><text x="651.6" y="223" font-size="11.5" text-anchor="middle" style="fill:var(--ei-ink);font-variant-numeric:tabular-nums">~10</text><text x="631.6" y="370" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">2026 forecast</text>
+<text x="24" y="400" font-size="11.5" style="fill:var(--ei-muted)">Source: Netflix, 10-K annual reports for 2023 and 2025. 2026: company forecast from the shareholder letters of 20 Oct 2026</text><text x="24" y="418" font-size="11.5" style="fill:var(--ei-muted)">(revenue $51.1bn, +13%) and 16 Jul 2026 (content amortization about +10%).</text>
+</svg>
