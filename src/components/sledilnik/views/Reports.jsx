@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Card, SectionHeader, PageHeader, Select, Stats } from '../ui.jsx';
-import { PieChart, BarChart, LineChart, FlowChart, StackedBar } from '../charts.jsx';
+import { PieChart, BarChart, LineChart, DenarniTok, StackedBar } from '../charts.jsx';
 import { CatIcon } from '../ikone.jsx';
-import { fmtEur, lastNMonths, monthName, monthRange, sumByCategory, sumByType } from '../store.js';
+import { denarniTok, fmtEur, lastNMonths, monthName, monthRange, sumByCategory, sumByType } from '../store.js';
 
 const RANGE_OPTIONS = [
   { v: 3,  label: 'Zadnji 3 meseci' },
@@ -129,6 +129,15 @@ export default function Reports({ state }) {
 
   const varcevanje = avgSavingsRate >= 20 ? 'Odlično' : avgSavingsRate >= 0 ? 'V redu' : 'Pod ničlo';
 
+  // Denarni tok: bistvo v enem stavku nad grafom.
+  const tok = denarniTok(incomeBreakdown, categorySpend);
+  const obdobje = `v zadnjih ${range} mesecih`;
+  const tokPovzetek = !tok ? '' : tok.prihodki === 0
+    ? `V zadnjih ${range} mesecih ni vpisanih prihodkov, odhodkov je bilo ${fmtEur(tok.odhodki)}.`
+    : tok.ostane >= 0
+      ? `Od ${fmtEur(tok.prihodki)} prihodkov ${obdobje} je ostalo ${fmtEur(tok.ostane)} (${Math.round((tok.ostane / tok.prihodki) * 100)} %).`
+      : `Odhodki ${obdobje} so bili za ${fmtEur(-tok.ostane)} višji od prihodkov.`;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {header}
@@ -158,10 +167,10 @@ export default function Reports({ state }) {
         </Card>
       </div>
 
-      {(incomeBreakdown.length > 0 || categorySpend.length > 0) && (
+      {tok && (
         <Card>
-          <SectionHeader title="Denarni tok" subtitle={`Vsi meseci obdobja skupaj (${range})`} />
-          <FlowChart incomes={incomeBreakdown} expenses={categorySpend} height={Math.max(260, Math.max(incomeBreakdown.length, categorySpend.length) * 30)} />
+          <SectionHeader title="Denarni tok" subtitle={tokPovzetek} />
+          <DenarniTok tok={tok} />
         </Card>
       )}
 

@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, excelSheets, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, BARVA_TEME, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
-  categoryBreakdown, cumulativeSpend, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
+  categoryBreakdown, cumulativeSpend, denarniTok, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
 import { crc32, xlsx } from './excel.js';
@@ -384,4 +384,38 @@ test('svetla tema aplikacije je bela, ne kremasta kot stran', () => {
   assert.match(css, /html\[data-theme='light'\] \{[^}]*--color-surface: #FFFFFF;/, 'ploskve aplikacije');
   assert.ok(beri('../../pages/aplikacija/index.astro').includes(`<meta name="theme-color" content="${BARVA_TEME.light}" media="(prefers-color-scheme: light)" />`), 'vrstica telefona ob odprtju');
   assert.equal(JSON.parse(beri('../../../public/aplikacija/manifest.webmanifest')).background_color, BARVA_TEME.light, 'zaslon ob zagonu');
+});
+
+test('denarni tok: prihodki, odhodki od največjega navzdol kot koraki, na koncu kar ostane', () => {
+  const kat = (id, value) => ({ id, label: id, value, color: '#000' });
+  const tok = denarniTok([kat('placa', 6000), kat('drugo', 450)], [
+    kat('hrana', 1500), kat('stanovanje', 2200), kat('promet', 500), kat('prosti', 460), kat('oblacila', 230), kat('zdravje', 170), kat('racuni', 150), kat('ostalo', 70),
+  ]);
+  assert.equal(tok.prihodki, 6450);
+  assert.equal(tok.odhodki, 5280);
+  assert.equal(tok.ostane, 1170);
+  assert.deepEqual(tok.koraki.map((k) => k.label), ['stanovanje', 'hrana', 'promet', 'prosti', 'oblacila', 'zdravje', 'Ostalo']);
+  assert.deepEqual(tok.koraki[0], { id: 'stanovanje', label: 'stanovanje', value: 2200, color: '#000', od: 6450, do: 4250 });
+  assert.deepEqual(tok.koraki[6], { id: 'ostalo-skupaj', label: 'Ostalo', value: 220, count: 2, od: 1390, do: 1170 }, 'zadnji dve kategoriji skupaj');
+  assert.deepEqual([tok.min, tok.max], [0, 6450]);
+});
+
+test('denarni tok: sedem kategorij ostane vseh sedem, ena sama se ne skrije v Ostalo', () => {
+  const kat = (id, value) => ({ id, label: id, value });
+  const sedem = denarniTok([kat('placa', 1000)], [1, 2, 3, 4, 5, 6, 7].map((v) => kat(`k${v}`, v * 10)));
+  assert.equal(sedem.koraki.length, 7);
+  assert.ok(!sedem.koraki.some((k) => k.label === 'Ostalo'));
+  assert.equal(denarniTok([kat('placa', 1000)], [kat('a', 0), kat('b', 5)]).koraki.length, 1, 'kategorije brez porabe ne štejejo');
+});
+
+test('denarni tok: ko so odhodki višji od prihodkov ali prihodkov ni, gre os pod nič', () => {
+  const kat = (id, value) => ({ id, label: id, value });
+  const vec = denarniTok([kat('placa', 1000)], [kat('a', 700), kat('b', 500)]);
+  assert.equal(vec.ostane, -200);
+  assert.deepEqual(vec.koraki.map((k) => [k.od, k.do]), [[1000, 300], [300, -200]]);
+  assert.deepEqual([vec.min, vec.max], [-200, 1000]);
+
+  const brez = denarniTok([], [kat('a', 50)]);
+  assert.deepEqual([brez.prihodki, brez.ostane, brez.min, brez.max], [0, -50, -50, 0]);
+  assert.equal(denarniTok([], []), null, 'brez podatkov ni grafa');
 });

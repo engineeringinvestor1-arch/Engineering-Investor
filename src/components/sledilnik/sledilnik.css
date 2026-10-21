@@ -430,6 +430,21 @@ html.sl-zaklep, html.sl-zaklep body { overflow: hidden; }
 .sl-month-val { font-family: var(--sl-num); font-size: 0.7rem; color: var(--sl-muted); letter-spacing: -0.03em; white-space: nowrap; }
 .sl-month-lbl { font-size: 0.74rem; color: var(--sl-subtle); }
 
+/* Denarni tok v Poročilih (avtor, 21. 10. 2026): vrstica z ikono, imenom, zneskom in deležem, pod njo črta. */
+.sl-tok { display: flex; flex-direction: column; gap: 12px; }
+.sl-tok-row { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: center; }
+.sl-tok-row--end { padding-top: 12px; border-top: 1px solid var(--sl-line); }
+.sl-tok-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.sl-tok-head { display: flex; align-items: baseline; gap: 8px; font-size: 0.84rem; }
+.sl-tok-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--sl-ink); }
+.sl-tok-row--end .sl-tok-name { font-weight: 600; }
+.sl-tok-amount { font-family: var(--sl-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; font-weight: 500; white-space: nowrap; }
+.sl-tok-pct { width: 34px; text-align: right; font-size: 0.74rem; color: var(--sl-subtle); }
+.sl-tok-bar { position: relative; height: 8px; border-radius: 4px; background: var(--sl-field); overflow: hidden; }
+.sl-tok-bar span { position: absolute; top: 0; bottom: 0; border-radius: 2px; }
+/* Kje je nič, kadar so odhodki višji od prihodkov. */
+.sl-tok-bar i { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--sl-ink); }
+
 @media (max-width: 760px) {
   /* Na telefonu dva stolpca številk; liha zadnja zasede vso širino, da ne ostane prazen kot. */
   .sl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

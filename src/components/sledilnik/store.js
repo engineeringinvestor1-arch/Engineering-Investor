@@ -586,6 +586,34 @@ export function mesecnaPoraba(transactions, ym, n = 6) {
   });
 }
 
+// Denarni tok v Poročilih (avtor, 21. 10. 2026: prejšnji graf brez imen in zneskov "ni najbolj intuitiven").
+// Začne pri vsoti prihodkov, vsak odhodek od največjega navzdol jo zmanjša za en korak (od, do), na koncu je,
+// kar ostane. Več kot najvec + 1 kategorij: najmanjše gredo skupaj v Ostalo. min in max sta meji osi, ki
+// vključuje nič, da se vidi tudi, koliko so odhodki presegli prihodke.
+export function denarniTok(prihodki, odhodki, najvec = 6) {
+  const prihodkiSkupaj = round2(prihodki.reduce((s, k) => s + Math.max(0, k.value), 0));
+  const urejeni = odhodki.filter((k) => k.value > 0).sort((a, b) => b.value - a.value);
+  if (!prihodkiSkupaj && !urejeni.length) return null;
+  const ostali = urejeni.slice(najvec);
+  const koraki = ostali.length > 1
+    ? [...urejeni.slice(0, najvec), { id: 'ostalo-skupaj', label: 'Ostalo', value: round2(ostali.reduce((s, k) => s + k.value, 0)), count: ostali.length }]
+    : urejeni;
+  let raven = prihodkiSkupaj;
+  const tok = koraki.map((k) => {
+    const od = raven;
+    raven = round2(raven - k.value);
+    return { ...k, od, do: raven };
+  });
+  return {
+    prihodki: prihodkiSkupaj,
+    odhodki: round2(urejeni.reduce((s, k) => s + k.value, 0)),
+    ostane: raven,
+    koraki: tok,
+    min: Math.min(0, raven),
+    max: prihodkiSkupaj,
+  };
+}
+
 /* ---------- formatters ---------- */
 
 const eurFmt = new Intl.NumberFormat('sl-SI', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });

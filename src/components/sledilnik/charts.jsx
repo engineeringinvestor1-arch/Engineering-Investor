@@ -4,6 +4,11 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { CatIcon } from './ikone.jsx';
+import { fmtEur } from './store.js';
+
+// Barva skupine Ostalo, kot nekategorizirani odhodki drugod v Poročilih.
+const OSTALO = '#64748b';
 
 // Širina vsebnika v slikovnih pikah, da se graf nariše v pravi velikosti (ostra črta in besedilo),
 // namesto da bi ga brskalnik raztegnil.
@@ -328,71 +333,53 @@ export function StackedBar({ segments, height = 10 }) {
 }
 
 /**
- * Sankey-style flow chart: incomes -> total -> expense categories.
- * Custom minimal renderer (single hub).
+ * Denarni tok (avtor, 21. 10. 2026: prejšnji graf "ni najbolj intuitiven", ker ni imel imen ne zneskov).
+ * Zgoraj prihodki, pod njimi odhodki od največjega navzdol, spodaj kar ostane. Barvni del črte je kategorija,
+ * siva črta pred njim denar, ki je po njej še ostal. Izračun s preizkusom je denarniTok v store.js.
  */
-export function FlowChart({ incomes, expenses, height = 360 }) {
-  const totalIn = incomes.reduce((s, d) => s + Math.max(0, d.value), 0);
-  const totalOut = expenses.reduce((s, d) => s + Math.max(0, d.value), 0);
-  const total = Math.max(totalIn, totalOut, 1);
-  const w = 100;
-  const hubW = 8;
-  const hubX = (w - hubW) / 2;
+const kategorij = (n) => (n === 2 ? 'kategoriji' : n === 3 || n === 4 ? 'kategorije' : 'kategorij');
 
-  let leftAcc = 0;
-  let rightAcc = 0;
-  const incomeNodes = incomes.map((d) => {
-    const h = (Math.max(0, d.value) / total) * 100;
-    const node = { ...d, h, y: leftAcc };
-    leftAcc += h + 1.5;
-    return node;
-  });
-  const expenseNodes = expenses.map((d) => {
-    const h = (Math.max(0, d.value) / total) * 100;
-    const node = { ...d, h, y: rightAcc };
-    rightAcc += h + 1.5;
-    return node;
-  });
+export function DenarniTok({ tok }) {
+  const razpon = tok.max - tok.min || 1;
+  const x = (v) => ((v - tok.min) / razpon) * 100;
+  const delez = (v) => (tok.prihodki > 0 ? `${Math.round((Math.abs(v) / tok.prihodki) * 100)} %` : '');
+  const plus = tok.ostane >= 0;
+  const konec = plus ? 'var(--sl-in)' : 'var(--sl-warn)';
 
-  const incTotalH = incomeNodes.reduce((s, n) => s + n.h, 0) + Math.max(0, incomeNodes.length - 1) * 1.5;
-  const expTotalH = expenseNodes.reduce((s, n) => s + n.h, 0) + Math.max(0, expenseNodes.length - 1) * 1.5;
-
-  let hubInY = 0;
-  let hubOutY = 0;
+  const vrstice = [
+    { kljuc: 'prihodki', ikona: { name: 'Prihodki', color: 'var(--sl-in)', type: 'income' }, ime: 'Prihodki', znesek: `+${fmtEur(tok.prihodki)}`, barva: 'var(--sl-in)', deli: [[0, tok.prihodki, 'var(--sl-in)']] },
+    ...tok.koraki.map((k) => ({
+      kljuc: k.id,
+      ikona: k.count ? { name: 'Ostalo', color: OSTALO } : { name: k.label, color: k.color },
+      ime: k.count ? `Ostalo (${k.count} ${kategorij(k.count)})` : k.label,
+      znesek: `−${fmtEur(k.value)}`,
+      delez: delez(k.value),
+      deli: [...(k.do > 0 ? [[0, k.do, 'var(--sl-line-strong)']] : []), [k.do, k.od, k.color || OSTALO]],
+    })),
+    { kljuc: 'ostane', ime: plus ? 'Ostane' : 'Manjka', znesek: `${plus ? '+' : '−'}${fmtEur(Math.abs(tok.ostane))}`, barva: konec, delez: delez(tok.ostane), deli: [[0, tok.ostane, konec]] },
+  ];
 
   return (
-    <svg viewBox={`0 0 ${w} 100`} preserveAspectRatio="none" width="100%" height={height} style={{ display: 'block' }}>
-      <rect x={hubX} y={0} width={hubW} height={100} fill="var(--sl-accent)" opacity="0.75" rx="0.5" />
-      {incomeNodes.map((n, i) => {
-        const sourceX = 0;
-        const sourceY = n.y + n.h / 2;
-        const targetX = hubX;
-        const targetY = hubInY + n.h / 2;
-        hubInY += n.h;
-        const path = `M ${sourceX} ${sourceY} C ${(sourceX + targetX) / 2} ${sourceY}, ${(sourceX + targetX) / 2} ${targetY}, ${targetX} ${targetY}`;
-        return (
-          <g key={`in-${i}`}>
-            <rect x={0} y={n.y} width={2} height={n.h} fill={n.color} rx="0.3" />
-            <path d={path} stroke={n.color} strokeWidth={n.h} fill="none" opacity="0.45"
-              vectorEffect="non-scaling-stroke" style={{ strokeWidth: `${n.h}px`, strokeLinecap: 'butt' }} />
-          </g>
-        );
-      })}
-      {expenseNodes.map((n, i) => {
-        const sourceX = hubX + hubW;
-        const sourceY = hubOutY + n.h / 2;
-        hubOutY += n.h;
-        const targetX = w;
-        const targetY = n.y + n.h / 2;
-        const path = `M ${sourceX} ${sourceY} C ${(sourceX + targetX) / 2} ${sourceY}, ${(sourceX + targetX) / 2} ${targetY}, ${targetX} ${targetY}`;
-        return (
-          <g key={`out-${i}`}>
-            <rect x={w - 2} y={n.y} width={2} height={n.h} fill={n.color} rx="0.3" />
-            <path d={path} stroke={n.color} strokeWidth={n.h} fill="none" opacity="0.45"
-              vectorEffect="non-scaling-stroke" style={{ strokeWidth: `${n.h}px`, strokeLinecap: 'butt' }} />
-          </g>
-        );
-      })}
-    </svg>
+    <div className="sl-tok">
+      {vrstice.map((v) => (
+        <div key={v.kljuc} className={v.ikona ? 'sl-tok-row' : 'sl-tok-row sl-tok-row--end'}>
+          {v.ikona ? <CatIcon category={v.ikona} type={v.ikona.type} size={28} /> : <span />}
+          <div className="sl-tok-body">
+            <div className="sl-tok-head">
+              <span className="sl-tok-name">{v.ime}</span>
+              <span className="sl-tok-amount" style={v.barva ? { color: v.barva } : undefined}>{v.znesek}</span>
+              <span className="sl-tok-pct">{v.delez}</span>
+            </div>
+            <div className="sl-tok-bar">
+              {v.deli.map(([a, b, barva]) => (
+                <span key={`${a}:${b}`} style={{ left: `${x(Math.min(a, b))}%`, width: `${Math.abs(x(b) - x(a))}%`, background: barva }} />
+              ))}
+              {tok.min < 0 && <i style={{ left: `${x(0)}%` }} />}
+            </div>
+          </div>
+        </div>
+      ))}
+      <div className="sl-hint">Siva črta kaže, koliko denarja je še ostalo po vsaki kategoriji.</div>
+    </div>
   );
 }
