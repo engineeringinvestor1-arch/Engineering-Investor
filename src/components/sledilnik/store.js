@@ -3,6 +3,8 @@
  * All amounts are EUR, stored as numbers (use cents-precision when needed).
  */
 
+import { xlsx } from './excel.js';
+
 const STORAGE_KEY = 'ei-tracker-v1';
 
 export const ACCOUNT_TYPES = [
@@ -183,27 +185,26 @@ export function excelSheets(state) {
     Stanje: r.active ? 'Aktivno' : 'Pavza',
   }));
 
+  // Pregled po mesecih na prvem listu, najnovejši zgoraj (avtor, 21. 10. 2026: "excel pregledni obliki").
+  const meseci = [...new Set(state.transactions.filter((t) => t.type !== 'transfer').map((t) => t.date.slice(0, 7)))].sort().reverse();
+  const poMesecih = meseci.map((ym) => {
+    const { income, expense } = monthTotals(state.transactions, ym);
+    const ime = monthName(ym);
+    return {
+      Mesec: `${ime.charAt(0).toUpperCase()}${ime.slice(1)} ${ym.slice(0, 4)}`,
+      'Prihodki (EUR)': round2(income),
+      'Odhodki (EUR)': round2(expense),
+      'Ostane (EUR)': round2(income - expense),
+    };
+  });
+
   return [
-    { name: 'Transakcije', rows: transakcije },
+    { name: 'Po mesecih', rows: poMesecih, skupaj: true },
+    { name: 'Transakcije', rows: transakcije, filter: true },
     { name: 'Računi', rows: racuni },
     { name: 'Proračun', rows: proracun },
     { name: 'Redni stroški', rows: redni },
   ].filter((sheet) => sheet.rows.length > 0);
-}
-
-// Izvoz za Excel kot CSV (aplikacija na telefonu, 18. 10. 2026). Prej je bila to datoteka .xlsx s knjižnico xlsx,
-// ki je v različici z npm imela znane ranljivosti in je za izvoz ene preglednice odveč. Slovenski Excel pričakuje
-// podpičje in decimalno vejico; oznaka BOM na začetku poskrbi, da Excel prav prebere šumnike.
-const celica = (v) => {
-  const s = typeof v === 'number' ? String(v).replace('.', ',') : String(v ?? '');
-  return /[;"\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-};
-
-export function transactionsCsv(state) {
-  const sheet = excelSheets(state).find((s) => s.name === 'Transakcije');
-  if (!sheet) return null;
-  const glava = Object.keys(sheet.rows[0]);
-  return [glava, ...sheet.rows.map((r) => glava.map((h) => r[h]))].map((vrstica) => vrstica.map(celica).join(';')).join('\r\n');
 }
 
 function prenesi(blob, ime) {
@@ -216,11 +217,11 @@ function prenesi(blob, ime) {
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
 }
 
+// Izvoz v Excel kot datoteka .xlsx (excel.js); do 21. 10. 2026 je bil to CSV samo s transakcijami.
 // Vrne null ob uspehu ali sporočilo napake.
-export function exportCsv(state) {
-  const csv = transactionsCsv(state);
-  if (!csv) return 'Ni še nobenega vnosa za izvoz.';
-  prenesi(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }), `sledilnik-${todayIso()}.csv`);
+export function exportXlsx(state) {
+  if (!state.transactions.length) return 'Ni še nobenega vnosa za izvoz.';
+  prenesi(new Blob([xlsx(excelSheets(state))], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), `sledilnik-${todayIso()}.xlsx`);
   return null;
 }
 

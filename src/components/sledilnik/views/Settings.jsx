@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Card, Button, Input, Select, Field, Modal, PageHeader, SectionHeader } from '../ui.jsx';
 import { CatIcon } from '../ikone.jsx';
 import { Swatches } from '../QuickAdd.jsx';
-import { cistoIme, fmtEur, exportJson, exportCsv, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
+import { cistoIme, fmtEur, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
 import { hasDemo } from '../demo.js';
 import { izbranaTema, nastaviTemo } from '../tema.js';
 
@@ -11,7 +11,7 @@ function emptyCategory(type = 'expense') {
 }
 
 // Različica aplikacije: ob vsaki objavi enaka številki predpomnilnika v public/aplikacija/sw.js.
-const RAZLICICA = '7 (21. 10. 2026)';
+const RAZLICICA = '8 (21. 10. 2026)';
 
 // Brskalnik, v katerem teče aplikacija. Samsung Internet in Edge se predstavita tudi kot Chrome, zato najprej.
 function brskalnik() {
@@ -23,7 +23,7 @@ function brskalnik() {
   return 'neznan brskalnik';
 }
 
-export default function Settings({ state, dispatch }) {
+export default function Settings({ state, dispatch, onKopija }) {
   const fileRef = useRef(null);
   const [editingCat, setEditingCat] = useState(null);
   const [editingPayee, setEditingPayee] = useState(null);
@@ -32,10 +32,6 @@ export default function Settings({ state, dispatch }) {
   function izberiTemo(izbira) {
     nastaviTemo(izbira);
     setTema(izbira);
-  }
-
-  function handleExport() {
-    exportJson(state);
   }
 
   async function handleImportFile(e) {
@@ -125,11 +121,10 @@ export default function Settings({ state, dispatch }) {
       </Card>
 
       <Card>
-        <SectionHeader title="Podatki" subtitle="Vsi podatki so shranjeni samo na tej napravi. Nič ne pošljemo na strežnik. Redno shrani varnostno kopijo (datoteka JSON): ob brisanju podatkov brskalnika ali na novem telefonu jo uvoziš nazaj." />
+        <SectionHeader title="Podatki" subtitle="Vsi podatki so shranjeni samo na tej napravi. Nič ne pošljemo na strežnik. Redno shrani varnostno kopijo: ob brisanju podatkov brskalnika ali na novem telefonu jo uvoziš nazaj. Za pregled na računalniku shrani Excel." />
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 8 }}>
-          <Button variant="primary" onClick={handleExport}>Shrani varnostno kopijo</Button>
+          <Button variant="primary" onClick={onKopija}>Shrani kopijo ali Excel</Button>
           <Button variant="secondary" onClick={() => fileRef.current?.click()}>Uvozi varnostno kopijo</Button>
-          <Button variant="secondary" onClick={() => { const napaka = exportCsv(state); if (napaka) alert(napaka); }}>Izvozi za Excel (CSV)</Button>
           {hasDemo(state)
             ? <Button variant="secondary" onClick={() => dispatch({ type: 'demo/remove' })}>Odstrani testne podatke</Button>
             : <Button variant="secondary" onClick={() => dispatch({ type: 'demo/load', today: todayIso() })}>Naloži testne podatke</Button>}

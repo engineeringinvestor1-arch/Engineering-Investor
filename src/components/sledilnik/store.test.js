@@ -4,11 +4,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
-  blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
+  blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, excelSheets, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, BARVA_TEME, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
   categoryBreakdown, cumulativeSpend, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
+import { crc32, xlsx } from './excel.js';
 
 const tx = (over) => ({ id: 't', type: 'expense', date: '2026-10-03', amount: 23.4, accountId: 'trr', categoryId: 'hrana', payee: 'Hofer', ...over });
 
@@ -220,16 +221,73 @@ test('še pride ta mesec: redni stroški po današnjem dnevu do konca meseca', (
   assert.equal(o.totalBudget, 300);
 });
 
-test('izvoz za Excel: podpičje, decimalna vejica, odhodek z minusom, narekovaji okrog podpičja', () => {
+// Prebere nestisnjen arhiv zip iz izvoza nazaj v { ime: besedilo } in sproti preveri CRC vsake datoteke.
+function odpriZip(bajti) {
+  const v = new DataView(bajti.buffer, bajti.byteOffset, bajti.byteLength);
+  const besedilo = (od, dolzina) => new TextDecoder().decode(bajti.subarray(od, od + dolzina));
+  const datoteke = {};
+  let o = 0;
+  while (v.getUint32(o, true) === 0x04034b50) {
+    const velikost = v.getUint32(o + 18, true);
+    const dolzinaImena = v.getUint16(o + 26, true);
+    const ime = besedilo(o + 30, dolzinaImena);
+    const zacetek = o + 30 + dolzinaImena;
+    assert.equal(crc32(bajti.subarray(zacetek, zacetek + velikost)), v.getUint32(o + 14, true), `CRC ${ime}`);
+    datoteke[ime] = besedilo(zacetek, velikost);
+    o = zacetek + velikost;
+  }
+  assert.equal(v.getUint32(bajti.length - 22, true), 0x06054b50, 'konec arhiva');
+  assert.equal(v.getUint16(bajti.length - 12, true), Object.keys(datoteke).length, 'vse datoteke so v imeniku');
+  return datoteke;
+}
+
+test('izvoz v Excel: CRC-32 kot ga zahteva zip', () => {
+  assert.equal(crc32(new TextEncoder().encode('123456789')), 0xcbf43926);
+});
+
+test('izvoz v Excel: mesečni povzetek pred transakcijami, prenosi niso ne prihodek ne odhodek', () => {
   const state = { ...freshState(), transactions: [
-    tx({ id: 'a', date: '2026-10-02', amount: 23.4, payee: 'Hofer' }),
-    tx({ id: 'b', date: '2026-10-03', type: 'income', amount: 1500, payee: 'Plača', categoryId: 'placa', notes: 'oktober; z dodatkom' }),
+    tx({ id: 'a', date: '2026-10-02', amount: 23.4 }),
+    tx({ id: 'b', date: '2026-10-03', type: 'income', amount: 1500, payee: 'Plača', categoryId: 'placa' }),
+    tx({ id: 'c', date: '2026-09-30', amount: 100 }),
+    tx({ id: 'd', date: '2026-09-12', type: 'transfer', amount: 300, transferToAccountId: 'gotovina' }),
   ] };
-  const vrstice = transactionsCsv(state).split('\r\n');
-  assert.equal(vrstice[0], 'Datum;Vrsta;Trgovina ali plačnik;Kategorija;Račun;Znesek (EUR);Opomba');
-  assert.match(vrstice[1], /^2026-10-03;Prihodek;Plača;[^;]*;[^;]*;1500;"oktober; z dodatkom"$/);
-  assert.match(vrstice[2], /^2026-10-02;Odhodek;Hofer;[^;]*;[^;]*;-23,4;$/);
-  assert.equal(transactionsCsv(freshState()), null);
+  const listi = excelSheets(state);
+  assert.deepEqual(listi.slice(0, 2).map((l) => l.name), ['Po mesecih', 'Transakcije']);
+  assert.deepEqual(listi[0].rows, [
+    { Mesec: 'Oktober 2026', 'Prihodki (EUR)': 1500, 'Odhodki (EUR)': 23.4, 'Ostane (EUR)': 1476.6 },
+    { Mesec: 'September 2026', 'Prihodki (EUR)': 0, 'Odhodki (EUR)': 100, 'Ostane (EUR)': -100 },
+  ]);
+});
+
+test('izvoz v Excel: prava datoteka .xlsx s krepko glavo, datumi kot datumi in zneski kot števila', () => {
+  const state = { ...freshState(), transactions: [
+    tx({ id: 'a', date: '2026-10-02', amount: 23.4, payee: 'Hofer & Co <1>' }),
+    tx({ id: 'b', date: '2026-10-03', type: 'income', amount: 1500, payee: 'Plača', categoryId: 'placa' }),
+    tx({ id: 'c', date: '2026-09-30', amount: 100 }),
+  ] };
+  const listi = excelSheets(state);
+  const d = odpriZip(xlsx(listi));
+  assert.ok(['[Content_Types].xml', '_rels/.rels', 'xl/workbook.xml', 'xl/_rels/workbook.xml.rels', 'xl/styles.xml'].every((ime) => ime in d));
+  listi.forEach((l, i) => {
+    assert.ok(`xl/worksheets/sheet${i + 1}.xml` in d, l.name);
+    assert.ok(d['[Content_Types].xml'].includes(`/xl/worksheets/sheet${i + 1}.xml`));
+    assert.ok(d['xl/workbook.xml'].includes(`<sheet name="${l.name}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`));
+  });
+
+  const povzetek = d['xl/worksheets/sheet1.xml'];
+  assert.ok(povzetek.includes('<c r="A1" s="1" t="inlineStr"><is><t>Mesec</t></is></c>'), 'krepka glava');
+  assert.match(povzetek, /<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"\/>/, 'glava ostane na vrhu');
+  assert.ok(povzetek.includes('<c r="A4" s="4" t="inlineStr"><is><t>Skupaj</t></is></c>'), 'vrstica Skupaj');
+  assert.ok(povzetek.includes('<c r="B4" s="5"><f>SUM(B2:B3)</f><v>1500</v></c>'), 'seštevek prihodkov kot formula');
+  assert.ok(povzetek.includes('<c r="D3" s="3"><v>-100</v></c>'), 'zneski kot števila');
+
+  const transakcije = d['xl/worksheets/sheet2.xml'];
+  assert.ok(transakcije.includes('<c r="A2" s="2"><v>46298</v></c>'), '3. 10. 2026 kot datum');
+  assert.ok(transakcije.includes('<v>-23.4</v>'), 'odhodek kot negativno število');
+  assert.ok(transakcije.includes('Hofer &amp; Co &lt;1&gt;'), 'posebni znaki');
+  assert.ok(transakcije.includes('<autoFilter ref="A1:G4"/>'), 'filter na transakcijah');
+  assert.ok(d['xl/workbook.xml'].includes(`<definedName name="_xlnm._FilterDatabase" localSheetId="1" hidden="1">'Transakcije'!$A$1:$G$4</definedName>`));
 });
 
 test('opomnik za varnostno kopijo: ob prvem vnosu in po tednu dni brez kopije', () => {

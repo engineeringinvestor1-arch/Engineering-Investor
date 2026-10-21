@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from 'react';
 import './sledilnik.css';
-import { loadState, saveState, fmtEur, postDueRecurring, todayIso, exportJson, zadnjaKopija, potrebnaKopija, fmtDate } from './store.js';
+import { loadState, saveState, fmtEur, postDueRecurring, todayIso, exportJson, exportXlsx, zadnjaKopija, potrebnaKopija, fmtDate } from './store.js';
 import { reducer } from './reducer.js';
 import { hasDemo } from './demo.js';
 import { Button, Modal, Notice } from './ui.jsx';
@@ -49,6 +49,8 @@ const ICONS = {
   calendar:  <><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" /><path d="M3.5 10h17" /><path d="M8 3v4M16 3v4" /><path d="M7.5 14h2M11 14h2M14.5 14h2M7.5 17.25h2M11 17.25h2" /></>,
   plus:      <><path d="M12 5v14" /><path d="M5 12h14" /></>,
   lock:      <><rect x="5" y="10.5" width="14" height="10" rx="2.2" /><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" /></>,
+  table:     <><rect x="3.5" y="4.5" width="17" height="15" rx="2.2" /><path d="M3.5 9.5h17M3.5 14.5h17M9.5 9.5v10" /></>,
+  shield:    <><path d="M12 3 4.75 6v5.5c0 4.5 3.1 8.2 7.25 9.5 4.15-1.3 7.25-5 7.25-9.5V6z" /><path d="m9 12 2.2 2.2L15.5 10" /></>,
   chevron:   <path d="m9.5 6 6 6-6 6" />,
 };
 
@@ -74,6 +76,7 @@ function MoneyTrackerInner() {
   const [vnos, setVnos] = useState(null);
   const [autoPosted, setAutoPosted] = useState([]);
   const [kopija, setKopija] = useState(() => zadnjaKopija());
+  const [kopijaOpen, setKopijaOpen] = useState(false);
 
   // Brskalnik sme podatke spletne strani ob pomanjkanju prostora izbrisati; trajna shramba to prepreči.
   // Nameščena aplikacija jo na Androidu običajno dobi brez vprašanja.
@@ -82,9 +85,22 @@ function MoneyTrackerInner() {
   // Tema po izbiri v Nastavitvah; pri sistemski sledi telefonu tudi med uporabo (tema.js).
   useEffect(() => spremljajSistem(), []);
 
+  // "Shrani kopijo" ponudi izbiro: Excel za pregled ali JSON za obnovo (avtor, 21. 10. 2026).
   function shraniKopijo() {
+    setMoreOpen(false);
+    setKopijaOpen(true);
+  }
+
+  function shraniJson() {
     exportJson(state);
     setKopija(zadnjaKopija());
+    setKopijaOpen(false);
+  }
+
+  function shraniExcel() {
+    const napaka = exportXlsx(state);
+    if (napaka) alert(napaka);
+    else setKopijaOpen(false);
   }
 
   // Nov pogled se odpre na vrhu, kot v aplikaciji; brez tega bi ostal na višini prejšnjega.
@@ -127,7 +143,7 @@ function MoneyTrackerInner() {
       case 'porocila':     return <Reports state={state} />;
       case 'ponavljajoce': return <Recurring state={state} dispatch={dispatch} />;
       case 'vpogledi':     return <Insights state={state} />;
-      case 'nastavitve':   return <Settings state={state} dispatch={dispatch} />;
+      case 'nastavitve':   return <Settings state={state} dispatch={dispatch} onKopija={shraniKopijo} />;
       default: return null;
     }
   }
@@ -231,6 +247,27 @@ function MoneyTrackerInner() {
           <span style={{ flex: 1 }}>Podatki so samo na tej napravi. {kopijaBesedilo}</span>
           <Button variant="secondary" size="sm" onClick={shraniKopijo}>Shrani kopijo</Button>
         </div>
+      </Modal>
+
+      <Modal open={kopijaOpen} onClose={() => setKopijaOpen(false)} title="Shrani kopijo">
+        <div className="sl-card sl-list">
+          {[
+            ['table', 'Excel', 'Preglednica za ogled in tiskanje', '.xlsx', shraniExcel],
+            ['shield', 'Varnostna kopija', 'Za obnovo na tem ali novem telefonu', '.json', shraniJson],
+          ].map(([ikona, ime, opis, koncnica, akcija]) => (
+            <button key={koncnica} className="sl-row" onClick={akcija}>
+              <span className="sl-ico" style={{ background: 'var(--sl-field)', color: 'var(--sl-ink)' }}><NavIcon name={ikona} /></span>
+              <span style={{ minWidth: 0 }}>
+                <div className="sl-row-title">{ime}</div>
+                <div className="sl-row-sub">{opis}</div>
+              </span>
+              <span className="sl-tag">{koncnica}</span>
+            </button>
+          ))}
+        </div>
+        <p className="sl-hint" style={{ margin: '0.75rem 0 0' }}>
+          Excel ima liste Po mesecih, Transakcije, Računi, Proračun in Redni stroški. Nazaj v aplikacijo se uvozi samo varnostna kopija. {kopijaBesedilo}
+        </p>
       </Modal>
 
       <VnosList open={vnosOpen} state={state} dispatch={dispatch} onClose={() => setVnosOpen(false)} onAdded={setVnos} />
