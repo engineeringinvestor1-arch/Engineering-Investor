@@ -2,9 +2,10 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, transactionsCsv, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
-  postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
+  postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, BARVA_TEME, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
   categoryBreakdown, cumulativeSpend, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
@@ -314,4 +315,15 @@ test('tema aplikacije: svetla in temna veljata vedno, sistemska sledi telefonu, 
   assert.equal(temaZaPrikaz(null, 'dark', false), 'dark', 'brez izbire kot doslej: tema strani');
   assert.equal(temaZaPrikaz(null, null, true), 'dark');
   assert.equal(temaZaPrikaz('neznano', null, false), 'light');
+});
+
+test('svetla tema aplikacije je bela, ne kremasta kot stran', () => {
+  // Avtor, 21. 10. 2026: "ko dam na svetlo temo je aplikacija sivkasta". Stran ima podlago #F4F2EC.
+  const beri = (pot) => readFileSync(new URL(pot, import.meta.url), 'utf8');
+  assert.equal(BARVA_TEME.light, '#FFFFFF');
+  const css = beri('./sledilnik.css');
+  assert.match(css, /html\[data-theme='light'\] \{[^}]*--color-bg: #FFFFFF;/, 'podlaga aplikacije');
+  assert.match(css, /html\[data-theme='light'\] \{[^}]*--color-surface: #FFFFFF;/, 'ploskve aplikacije');
+  assert.ok(beri('../../pages/aplikacija/index.astro').includes(`<meta name="theme-color" content="${BARVA_TEME.light}" media="(prefers-color-scheme: light)" />`), 'vrstica telefona ob odprtju');
+  assert.equal(JSON.parse(beri('../../../public/aplikacija/manifest.webmanifest')).background_color, BARVA_TEME.light, 'zaslon ob zagonu');
 });

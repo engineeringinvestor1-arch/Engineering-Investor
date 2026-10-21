@@ -6,7 +6,7 @@
 // - Datoteke /_astro/ imajo v imenu zgoščeno oznako in se ne spreminjajo: najprej shranjena kopija.
 // Ob novi različici aplikacije se številka v CACHE poveča in stare kopije se izbrišejo.
 
-const CACHE = 'sledilnik-6';
+const CACHE = 'sledilnik-7';
 const OBMOCJE = '/aplikacija/';
 const STALNE = [OBMOCJE, `${OBMOCJE}manifest.webmanifest`, `${OBMOCJE}ikona-v2-192.png`, `${OBMOCJE}ikona-v2-512.png`];
 

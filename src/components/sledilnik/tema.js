@@ -4,10 +4,9 @@
  * v store.js (s preizkusom); zagonski skript v aplikacija/index.astro ga ponovi, da ob odprtju ni utripa.
  */
 
-import { temaZaPrikaz } from './store.js';
+import { temaZaPrikaz, BARVA_TEME as BARVA } from './store.js';
 
 const KLJUC = 'sledilnik-tema';
-const BARVA = { light: '#F4F2EC', dark: '#0E0E0E' };
 
 const preberi = (kljuc) => {
   try { return localStorage.getItem(kljuc); } catch { return null; }

@@ -13,6 +13,8 @@
   --sl-card: var(--color-surface);
   --sl-field: color-mix(in srgb, var(--color-text) 5%, var(--color-surface));
   --sl-field-hover: color-mix(in srgb, var(--color-text) 8%, var(--color-surface));
+  /* Ploščice kategorij in znesek v oknu za vnos ležijo neposredno na podlagi. */
+  --sl-tile: var(--sl-card);
   --sl-line: color-mix(in srgb, var(--color-text) 9%, transparent);
   --sl-line-strong: color-mix(in srgb, var(--color-text) 18%, transparent);
   --sl-ink: var(--color-text);
@@ -40,6 +42,16 @@
    dovolil samodejno temnjenje (avtor, 19. 10. 2026: svetla tema je ostala siva). */
 html[data-theme='light'] { color-scheme: only light; }
 html[data-theme='dark'] { color-scheme: only dark; }
+
+/* Svetla tema aplikacije je bela (avtor, 21. 10. 2026: "ko dam na svetlo temo je aplikacija sivkasta").
+   Stran ima kremasto podlago #F4F2EC; te sloge naloži samo aplikacija, zato stran svoje barve obdrži.
+   Isto belo imajo vrstica telefona (BARVA_TEME v store.js) in zaslon ob zagonu (manifest). */
+html[data-theme='light'] {
+  --color-bg: #FFFFFF;
+  --color-surface: #FFFFFF;
+}
+/* Na beli podlagi so ploščice v barvi polj, sicer bi se zlile s podlago. */
+[data-theme='light'] .sl { --sl-tile: var(--sl-field); }
 
 /* Samsung Internet ne temni strani sam, kadar ima stran v slogih pravilo za temni način telefona. To pravilo
    velja samo prvi trenutek, preden zagonski skript v aplikacija/index.astro nastavi temo. */
@@ -379,11 +391,11 @@ html.sl-zaklep, html.sl-zaklep body { overflow: hidden; }
 .sl-vnos { background: var(--sl-bg); display: flex; flex-direction: column; gap: 0.6rem; max-width: 480px; margin: 0 auto; }
 /* Okno se raje pomakne, kot da bi stisnilo vrstice (vrstica trgovin bi se sicer odrezala). */
 .sl-vnos > * { flex-shrink: 0; }
-.sl-vnos-amount input { background: var(--sl-card); }
+.sl-vnos-amount input { background: var(--sl-tile); }
 .sl-vnos-cats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .sl-tile {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; padding: 5px 3px;
-  border-radius: 12px; border: 1px solid transparent; background: var(--sl-card); color: var(--sl-ink); cursor: pointer;
+  border-radius: 12px; border: 1px solid transparent; background: var(--sl-tile); color: var(--sl-ink); cursor: pointer;
   font-size: 0.68rem; font-weight: 500; line-height: 1.15; touch-action: manipulation;
 }
 .sl-tile > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -119,6 +119,10 @@ export function temaZaPrikaz(izbira, temaStrani, sistemTemna) {
   return sistemTemna ? 'dark' : 'light';
 }
 
+// Barva podlage v vsaki temi: vrstica telefona nad aplikacijo (tema.js) in zaslon ob zagonu (manifest).
+// Svetla je bela, ne kremasta kot stran (avtor, 21. 10. 2026: "ko dam na svetlo temo je aplikacija sivkasta").
+export const BARVA_TEME = { light: '#FFFFFF', dark: '#0E0E0E' };
+
 export function preklopiPripomocek(izbira, id) {
   const nova = izbira.includes(id) ? izbira.filter((x) => x !== id) : [...izbira, id];
   return PRIPOMOCKI.filter((x) => nova.includes(x));
