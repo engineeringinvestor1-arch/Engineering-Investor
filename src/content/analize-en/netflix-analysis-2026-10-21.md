@@ -1,5 +1,5 @@
 ---
-title: "Netflix after the third quarter: profit is growing faster than viewing time"
+title: "Netflix after the third quarter: earning more and more while people barely watch longer"
 description: "July to September in line with guidance, a year-end forecast slightly below analysts' expectations, less advertising money and a new content chief. How long can Netflix keep earning more while people barely watch longer, and how much of that is already in the share price?"
 pubDate: 2026-10-21
 category: Delnice

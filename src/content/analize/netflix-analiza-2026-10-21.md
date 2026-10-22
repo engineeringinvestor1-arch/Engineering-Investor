@@ -1,5 +1,5 @@
 ---
-title: "Netflix po tretjem četrtletju: dobiček raste hitreje od časa gledanja"
+title: "Netflix po tretjem četrtletju: služi vse več, čeprav ljudje ne gledajo bistveno dlje"
 description: "Julij do september po napovedi, za konec leta malo pod pričakovanji analitikov, manj denarja od oglasov in nov vodja vsebin. Kako dolgo lahko Netflix služi vse več, čeprav ljudje ne gledajo bistveno dlje, in koliko tega je že v ceni delnice?"
 pubDate: 2026-10-21
 category: Delnice
