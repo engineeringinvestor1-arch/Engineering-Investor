@@ -116,9 +116,9 @@ Three one-off effects distort this year's figures:
 
 | One-off effect | Amount | In this analysis |
 |---|---|---|
-| Tax dispute in Brazil, Q3 2025: last year's operating income | charge of $619m | last year's base excludes it |
-| Warner Bros. termination fee, Q1 2026: profit and cash flow | $2.8bn, $2.26bn after tax ($0.53 per share) | deducted |
-| Real estate transaction, Q4 2026: cash flow | outlay of about $0.5bn | kept as an actual outlay |
+| Tax dispute in Brazil (Q3 2025) | charge of $619m | excluded from last year's operating income |
+| Warner Bros. termination fee (Q1 2026) | $2.8bn, $2.26bn after tax ($0.53 per share) | deducted from profit and cash |
+| Real estate transaction (Q4 2026) | outlay of about $0.5bn | kept as an actual outlay |
 
 Netflix received the termination fee in February 2026, when it walked away from buying part of Warner Bros. Discovery. Excluding the fee, this year's free cash flow is about **$9.7 billion**, and about $10.2 billion without the real estate transaction.
 
@@ -206,12 +206,12 @@ All ratios in this analysis are based on the last close before the results, **$6
 
 Once the termination fee is deducted, the stock is more expensive than it first appears:
 
-| Ratio at a price of $68.69 | As reported by the company | Excluding the fee |
+| At a price of $68.69 | As reported | Excluding the fee |
 |---|---|---|
-| Price/earnings, last 12 months | 19.9 ($3.46) | **23.4** ($2.93) |
-| Price/earnings, 2026 (nine months and the Q4 forecast) | 19.2 ($3.57) | **22.6** ($3.04) |
-| Price/earnings, analyst estimate for 2027 | 18.1 ($3.80) | 18.1 ($3.80) |
-| Market value/free cash flow 2026 | 24 ($12.0bn) | **28 to 30** |
+| P/E, last 12 months | 19.9 ($3.46) | **23.4** ($2.93) |
+| P/E 2026 | 19.2 ($3.57) | **22.6** ($3.04) |
+| P/E 2027 (analysts) | 18.1 ($3.80) | 18.1 ($3.80) |
+| Price/free cash flow 2026 | 24 ($12.0bn) | **28 to 30** |
 
 The fee thus makes past profit look higher and future growth lower. The 2027 earnings estimate is about 6% above this year's earnings as reported by the company, and **about 25%** above this year's earnings excluding the fee.
 

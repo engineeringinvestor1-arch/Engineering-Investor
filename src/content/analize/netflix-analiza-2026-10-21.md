@@ -115,9 +115,9 @@ Letošnje številke popačijo trije enkratni učinki:
 
 | Enkratni učinek | Znesek | V tej analizi |
 |---|---|---|
-| Davčni spor v Braziliji, Q3 2025: lanski poslovni izid | strošek 619 mio USD | lanska osnova brez njega |
-| Odstopnina Warner Bros., Q1 2026: dobiček in denarni tok | 2,8 mrd USD, po davku 2,26 mrd (0,53 USD na delnico) | odšteta |
-| Posel z nepremičnino, Q4 2026: denarni tok | izdatek okoli 0,5 mrd USD | ostane kot dejanski izdatek |
+| Davčni spor v Braziliji (Q3 2025) | strošek 619 mio USD | lanski poslovni izid brez njega |
+| Odstopnina Warner Bros. (Q1 2026) | 2,8 mrd USD, po davku 2,26 mrd (0,53 USD na delnico) | odšteta iz dobička in denarja |
+| Posel z nepremičnino (Q4 2026) | izdatek okoli 0,5 mrd USD | ostane kot dejanski izdatek |
 
 Odstopnino je Netflix prejel februarja 2026, ko je odstopil od nakupa dela družbe Warner Bros. Discovery. Brez nje je letošnji prosti denarni tok okoli **9,7 milijarde USD**, brez posla z nepremičnino pa okoli 10,2 milijarde.
 
@@ -205,12 +205,12 @@ Vsa razmerja v analizi izhajajo iz zadnjega zaprtja pred objavo rezultatov, **68
 
 Ko odštejemo odstopnino, je delnica dražja, kot je videti na prvi pogled:
 
-| Razmerje pri ceni 68,69 USD | Kot ga poroča podjetje | Brez odstopnine |
+| Pri ceni 68,69 USD | Kot poroča podjetje | Brez odstopnine |
 |---|---|---|
-| Cena/dobiček zadnjih 12 mesecev | 19,9 (3,46 USD) | **23,4** (2,93 USD) |
-| Cena/dobiček 2026 (devet mesecev in napoved za Q4) | 19,2 (3,57 USD) | **22,6** (3,04 USD) |
-| Cena/dobiček, ocena analitikov za 2027 | 18,1 (3,80 USD) | 18,1 (3,80 USD) |
-| Tržna vrednost/prosti denarni tok 2026 | 24 (12,0 mrd USD) | **28 do 30** |
+| Cena/dobiček, 12 mesecev | 19,9 (3,46 USD) | **23,4** (2,93 USD) |
+| Cena/dobiček 2026 | 19,2 (3,57 USD) | **22,6** (3,04 USD) |
+| Cena/dobiček 2027 (analitiki) | 18,1 (3,80 USD) | 18,1 (3,80 USD) |
+| Cena/prosti denarni tok 2026 | 24 (12,0 mrd USD) | **28 do 30** |
 
 Odstopnina tako dobiček za nazaj prikaže višji, rast za naprej pa nižjo. Ocena dobička za 2027 je od letošnjega, kot ga poroča podjetje, višja za okoli 6 %, od dobička brez odstopnine pa za **okoli 25 %**.
 
