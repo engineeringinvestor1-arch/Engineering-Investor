@@ -340,7 +340,9 @@
       "title": "Seja FOMC - obrestne mere",
       "category": "Centralna banka",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "forecast": "3,75-4,00 %",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "us-gdp-oct26",
@@ -350,7 +352,9 @@
       "category": "GDP",
       "region": "US",
       "importance": "LOW",
-      "previous": "2,2 % letna stopnja rasti (Q2 2026)"
+      "previous": "2,2 % letna stopnja rasti (Q2 2026)",
+      "forecast": "3,0 % (anualizirano)",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "us-pce-oct26",
@@ -369,7 +373,9 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
-      "importance": "LOW"
+      "importance": "LOW",
+      "forecast": "depozitna mera 2,50 %",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "us-ism-nov26",
