@@ -24,6 +24,8 @@ Preberi na začetku vsakega pogovora o strani. Kaj je kje, je v [README.md](READ
 2. Objavi iz čistega stanja `origin/main`, ne iz mape z neshranjenim delom.
 3. Po objavi preveri stran na engineering-investor.com.
 
+Tedenski pregled pred objavo prestane še preizkus slike tedna (avtor 24. 10. 2026): članek preberi kot bralec, ki o tednu ne ve ničesar, sliko primerjaj z dejanskim tednom iz izmerjenih podatkov in vseh zgodb ter avtorju povej, kje je napačen vtis in kaj manjka. Postopek je v `engineering-investor-agent/CLAUDE.md`.
+
 Remote mora v naslovu vsebovati `engineeringinvestor1-arch@github.com`, sicer GitHub zapis zavrne (na računalniku sta shranjena dva računa).
 
 ## Pravila kode
