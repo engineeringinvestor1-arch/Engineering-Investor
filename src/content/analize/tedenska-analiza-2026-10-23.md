@@ -1,9 +1,9 @@
 ---
 title: "Tedenska analiza trga: 19. do 23. oktober 2026"
-description: "Teme tedna: čipovske delnice, SpaceX in Tesla, padec donosnosti obveznic, Barclays in Volvo Cars, Meta po rezultatih, dražja nafta."
+description: "Teme tedna: tehnološke delnice, SpaceX in Tesla, obveznice, ameriško gospodarstvo, Meta, nafta; rezultati podjetij."
 pubDate: 2026-10-24
 category: Trgi
-readingTime: 12
+readingTime: 16
 featured: false
 ---
 
@@ -25,21 +25,23 @@ Pregled dogajanja na trgih med 19. 10. 2026 in 23. 10. 2026: ključne številke,
 
 ## Teme tedna
 
-### 1. Čipovske delnice po ponedeljkovem odboju znova navzdol
+### 1. Tehnološke delnice: velik padec v četrtek, teden skoraj brez izgube
 
 Teden se je začel po največjem tedenskem padcu indeksa Nasdaq 100 od aprila lani. V tednu do 16. 10. je S&P 500 po navedbah CNBC izgubil skoraj 2 %, Nasdaq Composite pa 4,5 %, s čimer se je končal njegov štiritedenski niz rasti. MarketWatch je takrat zapisal, da je imel tehnološki sektor S&P 500 najslabši teden v letu in pol.
 
 V ponedeljek so se delnice proizvajalcev čipov, med njimi Micron, okrepile, borze pa so dan večinoma končale višje: Nasdaq 100 je pridobil 1,17 % in imel po navedbah Yahoo Finance najboljši dan v skoraj mesecu dni, indeks delnic proizvajalcev čipov Philadelphia Semiconductor Index pa je zrasel za okoli 1,6 %. CNBC je zapisal, da bodo poročila podjetij o poslovanju v tem tednu pokazala, ali je odboj trajen. Azijske borze se mu niso pridružile: v torek sredi trgovanja je bil indeks azijskih delnic MSCI Asia Pacific nižje za 0,8 %, hongkonški Hang Seng pa za 1 %.
 
-V torek zvečer so po poročanju Bloomberga zrasle terminske pogodbe na ameriške indekse, s katerimi se trguje tudi zunaj rednega borznega časa. Spodbudili so jih dobri rezultati nekaterih podjetij, ki jim koristi razmah umetne inteligence. V sredo je Nasdaq 100 pridobil 1,13 %.
+V torek je Dow Jones pridobil 1,02 % oziroma 530 točk. CNBC je zapisal, da so trgovci postajali bolj prepričani o sezoni poslovnih rezultatov. Zvečer so po poročanju Bloomberga zrasle terminske pogodbe na ameriške indekse, s katerimi se trguje tudi zunaj rednega borznega časa. Spodbudili so jih dobri rezultati nekaterih podjetij, ki jim koristi razmah umetne inteligence. V sredo je Nasdaq 100 pridobil 1,13 %.
 
-V četrtek je Nasdaq 100 izgubil 2,90 %, S&P 500 pa 1,21 %, Dow Jones je dan končal skoraj nespremenjen. Za Nasdaq Composite je bil to po navedbah CNBC najslabši dan od junija. Yahoo Finance je zapisal, da je Metin načrt večjih naložb v podatkovne centre in opremo znova vzbudil skrbi vlagateljev, ob tem ko vse več tehnoloških podjetij za razvoj umetne inteligence išče posojila. Po pisanju MarketWatcha so delnice proizvajalcev čipov padle tudi zato, ker je Tesla znižala načrtovane naložbe, Lam Research, proizvajalec opreme za izdelavo čipov, pa je objavil slabšo napoved od pričakovane.
+V četrtek je Nasdaq 100 izgubil 2,90 %, S&P 500 pa 1,21 %, Dow Jones je dan končal skoraj nespremenjen. Za Nasdaq Composite je bil to po navedbah CNBC najslabši dan od junija. Yahoo Finance je zapisal, da je Metin načrt večjih naložb v podatkovne centre in opremo znova vzbudil skrbi vlagateljev, ob tem ko vse več tehnoloških podjetij za razvoj umetne inteligence išče posojila. Po pisanju MarketWatcha so delnice proizvajalcev čipov padle tudi zato, ker je Tesla znižala načrtovane naložbe, Lam Research, proizvajalec opreme za izdelavo čipov, pa je objavil slabšo napoved od pričakovane. Sektor osnovnih potrošnih dobrin je v četrtek pridobil 3,31 %, sektor komunalnih storitev pa 2,07 %. MarketWatch je zvečer zapisal, da se ameriški borzni trg deli na dva tabora, Yahoo Finance pa v petek, da je teden zaznamoval premik iz delnic, povezanih z umetno inteligenco, v defenzivne naložbe, torej v sektorje, ki jih gospodarska nihanja manj prizadenejo.
 
-V petek je Nasdaq po poročanju Yahoo Finance med trgovanjem prešel v plus, ko so se čipovske delnice odbile. Ob zaprtju v petek je bil Nasdaq 100 nespremenjen, S&P 500 je izgubil 0,52 %, Dow Jones pa 1,23 %. V celem tednu je Nasdaq 100 izgubil 0,79 %, S&P 500 0,47 %, Dow Jones pa je pridobil 0,41 %.
+V petek je Nasdaq po poročanju Yahoo Finance med trgovanjem prešel v plus, ko so se čipovske delnice odbile. Ob zaprtju v petek je bil Nasdaq 100 nespremenjen, S&P 500 je izgubil 0,52 %, Dow Jones pa 1,23 % (več v temi 6).
+
+V celem tednu je Nasdaq 100 izgubil 0,79 %, S&P 500 0,47 %, Dow Jones pa je pridobil 0,41 %. Sektor informacijske tehnologije je teden končal skoraj nespremenjen, z -0,13 %. Rast je imelo 8 od 11 sektorjev. Najbolj je v tednu pridobil energetski sektor, za 1,60 %, za njim zdravstveni, za 1,45 %. Najbolj pa je v tednu izgubil sektor komunikacijskih storitev, v katerem sta Meta in Netflix, za 4,36 %.
 
 *Sektor Informacijska tehnologija (XLK) -3,29 % v četrtek, 22. 10.*
 
-*Viri: [Financial Times](https://www.ft.com/content/915ea7ca-1f35-4847-810a-fb29e8344496?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/19/tech-stocks-rebound-meta-tesla-earnings.html), [MarketWatch](https://www.marketwatch.com/story/two-big-reasons-micron-and-other-chip-stocks-are-falling-on-thursday-312f1fb2?mod=mw_rss_topstories), [Yahoo Finance](https://stocktwits.com/news-articles/markets/equity/nasdaq-100-clocks-worst-day-in-four-months/cZxwY21RBDl?.tsrc=rss), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-20/stock-market-today-dow-s-p-live-updates)*
+*Viri: [Financial Times](https://www.ft.com/content/915ea7ca-1f35-4847-810a-fb29e8344496?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/20/stock-market-today-live-updates.html), [MarketWatch](https://www.marketwatch.com/story/two-big-reasons-micron-and-other-chip-stocks-are-falling-on-thursday-312f1fb2?mod=mw_rss_topstories), [Yahoo Finance](https://stocktwits.com/news-articles/markets/equity/nasdaq-100-clocks-worst-day-in-four-months/cZxwY21RBDl?.tsrc=rss), [MarketWatch](https://www.marketwatch.com/story/the-u-s-stock-market-is-fracturing-into-two-camps-and-its-leaving-investors-with-a-brutal-case-of-whiplash-e8580a99?mod=mw_rss_topstories), [Yahoo Finance](https://finance.yahoo.com/m/2cb9b6bd-6bd7-3cbc-98b9-0daae999cfc0/nasdaq-falls-as-ai-recovery.html?.tsrc=rss)*
 
 ### 2. SpaceX v dobičku, Musk preučuje združitev s Teslo
 
@@ -51,7 +53,7 @@ V sredo so delnice SpaceX po navedbah CNBC pred odprtjem borze pridobile 10 %. B
 
 V sredo po zaprtju borze je rezultate objavila še Tesla. Financial Times poroča, da je dobiček zdrsnil ob slabši prodaji vozil, prihodki pa so ostali na ravni lanskih. Delnica Tesle je v trgovanju po zaprtju borze padla. MarketWatch piše, da Musk o združitvi ni povedal nič novega.
 
-*Tesla: dobiček na delnico 0,48 USD po prilagojenem izračunu podjetja, pričakovanih 0,44 USD; po računovodskih pravilih 0,22 USD. Viri: [Tesla, poročilo za tretje četrtletje](https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm), pričakovanje [Finnhub](https://finnhub.io/).*
+*Rezultata SpaceX in Tesle sta v preglednici Rezultati podjetij v tednu.*
 
 *Viri: [CNBC](https://www.cnbc.com/2026/10/19/elon-musk-spacex-shares-giveaway-kids.html), [New York Times](https://www.nytimes.com/2026/10/20/technology/spacex-earnings-elon-musk.html), [Financial Times](https://www.ft.com/content/f2a2a578-5a2e-42ff-b4c9-8bafff271b37?syn-25a6b1a6=1), [MarketWatch](https://www.marketwatch.com/story/teslas-stock-falls-as-elon-musk-leaves-investors-wanting-more-eb347f38?mod=mw_rss_topstories), [Financial Times](https://www.ft.com/content/16bdf332-2a75-4e57-81ea-a37caf50ec0f?syn-25a6b1a6=1)*
 
@@ -59,7 +61,7 @@ V sredo po zaprtju borze je rezultate objavila še Tesla. Financial Times poroč
 
 Ameriške državne obveznice so bile ta teden zatočišče pred padcem tehnoloških delnic. Donosnost 10-letne obveznice, torej obrestna mera, ki jo vlagatelji zahtevajo za posojanje državi, je bila od ponedeljka do srede med 5,12 % in 5,15 %. Ko vlagatelji obveznice kupujejo, njihova cena zraste, donosnost pa pade.
 
-V četrtek je MarketWatch med trgovanjem poročal, da se vlagatelji vračajo k državnim obveznicam, da bi se zavarovali pred nadaljnjimi pretresi na trgih delnic in posojil, povezanih z umetno inteligenco. Donosnost 10-letne obveznice je v četrtek padla za 17 bazičnih točk (0,17 odstotne točke) na 4,96 %, donosnost 2-letne pa za 16 bazičnih točk na 4,65 %. Po navedbah MarketWatcha je bil to največji dnevni padec donosnosti 10-letne obveznice od propada banke Silicon Valley Bank marca 2023, CNBC pa piše, da je bila donosnost najnižja v skoraj mesecu dni. Tipp iz družbe za upravljanje premoženja PGIM je za MarketWatch dejal, da to ni položaj, v katerem bi vlagatelje vodil strah pred recesijo.
+V četrtek je MarketWatch med trgovanjem poročal, da se vlagatelji vračajo k državnim obveznicam, da bi se zavarovali pred nadaljnjimi pretresi na trgih delnic in posojil, povezanih z umetno inteligenco. Donosnost 10-letne obveznice je v četrtek padla za 17 bazičnih točk (0,17 odstotne točke) na 4,96 %, donosnost 2-letne pa za 16 bazičnih točk na 4,65 %. Po navedbah MarketWatcha je bil to največji dnevni padec donosnosti 10-letne obveznice od propada banke Silicon Valley Bank marca 2023, CNBC pa piše, da je bila donosnost najnižja v skoraj mesecu dni. Tipp iz družbe za upravljanje premoženja PGIM je za MarketWatch dejal, da to ni položaj, v katerem bi vlagatelje vodil strah pred recesijo. Yahoo Finance je med trgovanjem v četrtek zapisal, da trgovci z obveznicami opuščajo stave na nov dvig obrestnih mer Feda.
 
 Zlato, ki prav tako velja za varno naložbo, se tokrat ni podražilo. Bloomberg je v četrtek zvečer zapisal, da je zlato blizu najnižjega zaprtja v več kot treh mesecih, ker so ga vlagatelji prodajali ob razprodaji na več trgih hkrati. Financial Times je v petek med trgovanjem poročal, da je cena zlata padla pod 4.000 dolarjev za unčo, čeprav so vlagatelji iskali varnost v državnih obveznicah. Zlato je teden končal pri 4.007,90 dolarja, kar je 4,14 % manj kot teden prej.
 
@@ -69,13 +71,19 @@ V petek je bila donosnost 10-letne obveznice ob zaprtju po podatkih ameriškega 
 
 *Viri: [MarketWatch](https://www.marketwatch.com/story/treasury-yields-see-extreme-plunge-why-investors-are-ducking-for-cover-60044c66?mod=mw_rss_topstories), [MarketWatch](https://www.marketwatch.com/story/ai-is-on-trial-bond-yields-sink-below-5-as-investors-look-for-safety-dbc86ee9?mod=mw_rss_topstories), [CNBC](https://www.cnbc.com/2026/10/22/treasurys-bonds-ai-yields.html), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-23/gold-holds-near-three-month-low-as-ai-jitters-fuel-volatility), [Financial Times](https://www.ft.com/content/5a6e15e9-249d-4d59-a140-c51302930a9f?syn-25a6b1a6=1)*
 
-### 4. Barclays in Volvo Cars ukinjata delovna mesta
+### 4. Ameriško gospodarstvo pred sejo Feda: stanovanjski trg slabi, odpuščanj je malo
 
-Dve evropski podjetji sta ta teden napovedali ukinjanje delovnih mest. V četrtek je britanska banka Barclays sporočila, da bo ukinila 5.000 delovnih mest. Po navedbah CNBC banka kot razlog navaja prihranke, ki jih omogoča umetna inteligenca. Financial Times dodaja, da je zmanjšanje napovedala ob dobičku tretjega četrtletja, ki je bil nižji od pričakovanj analitikov.
+Gospodarski podatki tega tedna so pokazali dve plati ameriškega gospodarstva pred sejo centralne banke Fed, ki bo o obrestnih merah odločala 28. 10. CNBC je v torek zapisal, da Fed tehta nadaljnje dvige obrestnih mer.
 
-V petek je švedski proizvajalec avtomobilov Volvo Cars sporočil, da bo ukinil še 2.500 delovnih mest, potem ko je v četrtletju posloval z izgubo. Njegove delnice so v petek na stockholmski borzi med trgovanjem izgubile 27 % (CNBC) do 30 % (Financial Times). Direktor je po poročanju CNBC dejal, da je prodaja na Kitajskem upadla hitreje, kot so pričakovali. Podjetje navaja težje razmere na trgih Kitajske in ZDA, ki so po njegovih besedah zmanjšale prosti denarni tok, torej denar, ki podjetju ostane po naložbah. Financial Times piše, da Volvo Cars ne izključuje dodatnih ukrepov.
+Stanovanjski trg slabi. V ponedeljek je Bloomberg poročal, da je zaupanje gradbincev stanovanj padlo na najnižjo raven v 14 letih, ob obrestnih merah za stanovanjske kredite nad 7 %, pomanjkanju delavcev in dragem gradbenem materialu. V torek so podatki za september pokazali, da je bila gradnja novih stanovanj septembra ena najpočasnejših od pandemije (Bloomberg), pogodb o nakupu obstoječih stanovanj pa je bilo najmanj doslej; Financial Times navaja, da so septembra padle za 7,3 %. CNBC piše, da so prodaja, gradnja in razpoloženje padli bolj, kot so pričakovali analitiki. Povprečna obrestna mera za 30-letni stanovanjski kredit s fiksno obrestno mero je bila po navedbah New York Timesa v četrtek 7,32 %.
 
-*Viri: [CNBC](https://www.cnbc.com/2026/10/22/barclays-ai-jobs-cuts.html), [Financial Times](https://www.ft.com/content/e83591cd-13d4-4358-aee9-c500930bfd36?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/volvo-cars-q3-earnings-job-cuts.html), [Financial Times](https://www.ft.com/content/deb209b5-a5ed-4d24-a470-636ecc1e3668?syn-25a6b1a6=1), [New York Times](https://www.nytimes.com/2026/10/23/business/volvo-china-2500-job-cuts.html)*
+Trg dela ostaja trden. V četrtek je število novih prijav za nadomestilo za brezposelnost padlo za 6.000 na 194.000, kar je po Bloombergu najmanj v treh mesecih; ekonomisti so pričakovali 200.000. CNBC navaja, da so prijave blizu najnižje ravni od šestdesetih let prejšnjega stoletja.
+
+V petek je Univerza v Michiganu objavila, da je razpoloženje potrošnikov zdrsnilo z 48,1 točke septembra na 48 točk oktobra, kar je po Bloombergu najnižje v petih mesecih. Bloomberg navaja, da potrošnike pestijo visoke cene in višje obrestne mere.
+
+*Prve prijave za nadomestilo za brezposelnost 194.000, pričakovanih 200.000 (Bloomberg).*
+
+*Viri: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-19/us-homebuilder-sentiment-drops-to-14-year-low-on-depressed-sales), [Financial Times](https://www.ft.com/content/42ed6778-d350-48a6-ba3d-99efca3cd276?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/20/housing-mortgage-rates-real-estate-federal-reserve.html), [New York Times](https://www.nytimes.com/2026/10/22/business/mortgage-rates-housing-costs.html), [CNBC](https://www.cnbc.com/2026/10/22/jobless-claims-record-low-weekly.html), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-23/us-consumer-sentiment-slips-to-five-month-low-on-inflation-woes)*
 
 ### 5. Meta po rezultatih: zvečer navzgor, naslednji dan navzdol
 
@@ -85,7 +93,7 @@ Isti dan je CNBC poročal, da mora Meta v ameriški zvezni državi Nova Mehika p
 
 V četrtek je delnica Mete po poročanju CNBC med trgovanjem izgubila 8 %. Cena petletnega zavarovanja pred neplačilom Metinega dolga (CDS), torej cena zaščite pred tem, da podjetje dolga ne bi vrnilo, je po navedbah CNBC dosegala rekordne ravni.
 
-*Meta: dobiček na delnico 3,83 USD; brez enkratnega stroška 9,89 milijarde USD za poravnavo s tožilci ameriških zveznih držav bi znašal 7,40 USD, pričakovanih 6,00 USD. Sektor Komunikacijske storitve (XLC), v katerem je Meta, -1,42 % v četrtek, 22. 10. Viri: [Meta, sporočilo o rezultatih](https://www.sec.gov/Archives/edgar/data/1326801/000162828026066700/meta-09302026xexhibit991.htm), pričakovanje [Finnhub](https://finnhub.io/).*
+*Sektor Komunikacijske storitve (XLC), v katerem je Meta, -1,42 % v četrtek, 22. 10., v tednu -4,36 %. Rezultat Mete je v preglednici Rezultati podjetij v tednu.*
 
 *Viri: [MarketWatch](https://www.marketwatch.com/story/metas-stock-rises-as-investors-glimpse-an-opportunity-that-could-dwarf-the-ad-business-89369c6c?mod=mw_rss_topstories), [CNBC](https://www.cnbc.com/2026/10/21/meta-new-mexico-cambridge-analytica-penalty.html), [Yahoo Finance](https://beincrypto.com/meta-non-voting-class-c-shares/?.tsrc=rss), [New York Times](https://www.nytimes.com/2026/10/22/business/dealbook/zuckerbergs-big-deal.html), [CNBC](https://www.cnbc.com/2026/10/22/meta-stock-q3-earnings-free-cash-flow.html)*
 
@@ -99,20 +107,47 @@ V sredo so Financial Times, Bloomberg in MarketWatch poročali, da je izvoz naft
 
 V četrtek se je Brent podražil za 4,00 %, v petek pa še za 3,14 %. V celem tednu se je podražil s 109,86 na 116,72 dolarja za sod. MarketWatch je v četrtek pisal o novem energetskem stisku, ki ga povzročajo močno podražene cene prevoza s tankerji. Po navedbah CNBC je predsednik Donald Trump ta dan Iran obtožil, da skuša manipulirati naftni trg. V petek je Brent po poročanju New York Timesa med trgovanjem dosegel 117 dolarjev za sod, največ od aprila. MarketWatch je zapisal, da bi se nafta lahko še podražila, če bi ZDA in Izrael po volitvah v obeh državah napadli Iran.
 
+Dražja nafta je segla tudi drugam. V petek je Dow Jones izgubil 653 točk oziroma 1,23 %; MarketWatch je po zaprtju zapisal, da so indeksi padli, ko je nafta dosegla najvišjo ceno v šestih mesecih. Sektor energije je dan končal 2,60 % višje. Ameriške letalske družbe so zaradi dražjega goriva zniževale letne napovedi (glej Rezultati podjetij v tednu). Zaupanje britanskih potrošnikov je oktobra po navedbah Bloomberga padlo za toliko kot po referendumu o brexitu, ker so jih prizadele visoke cene goriva; Financial Times piše, da je bil to največji mesečni padec od začetka pandemije leta 2020.
+
 *Nafta Brent +4,00 % v četrtek, 22. 10., in +3,14 % v petek, 23. 10.*
 
-*Viri: [Financial Times](https://www.ft.com/content/8ee22d89-03eb-48dc-99a5-27555373a89c?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/19/saudi-arabia-postpones-fii-investor-conference-to-2027.html), [Financial Times](https://www.ft.com/content/f39aa4d2-e290-451f-ae91-b19138b6172f?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/oil-price-brent-wti-iran-war-saudi-arabia.html), [New York Times](https://www.nytimes.com/2026/10/23/business/energy-environment/oil-prices-iran-war.html), [MarketWatch](https://www.marketwatch.com/story/oil-markets-are-on-edge-ahead-of-the-weekend-as-midterm-elections-near-and-fresh-u-s-strikes-on-iran-are-predicted-8c27e634?mod=mw_rss_topstories)*
+*Viri: [Financial Times](https://www.ft.com/content/8ee22d89-03eb-48dc-99a5-27555373a89c?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/19/saudi-arabia-postpones-fii-investor-conference-to-2027.html), [Financial Times](https://www.ft.com/content/f39aa4d2-e290-451f-ae91-b19138b6172f?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/oil-price-brent-wti-iran-war-saudi-arabia.html), [New York Times](https://www.nytimes.com/2026/10/23/business/energy-environment/oil-prices-iran-war.html), [MarketWatch](https://www.marketwatch.com/story/oil-markets-are-on-edge-ahead-of-the-weekend-as-midterm-elections-near-and-fresh-u-s-strikes-on-iran-are-predicted-8c27e634?mod=mw_rss_topstories), [MarketWatch](https://www.marketwatch.com/bulletins/redirect/go?g=8d6c379a-0f52-484d-a1e0-3dc4134cbac1&mod=mw_rss_bulletins), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-22/uk-consumer-confidence-in-slump-as-big-as-brexit-shock-gfk-says)*
+
+## Rezultati podjetij v tednu
+
+Od torka do petka je rezultate za tretje četrtletje, torej julij, avgust in september, objavilo več velikih podjetij. V preglednici so tista, ki so med 20 največjimi v S&P 500, in tista, o katerih rezultatih so poročali vsaj trije spremljani portali. Številke so iz uradnih sporočil podjetij.
+
+| Podjetje | Prihodki | Dobiček | Pričakovanja in odziv delnice |
+|---|---|---|---|
+| Netflix, torek | 12,87 mrd USD, +12 % | 0,87 USD na delnico | Po Bloombergu nad pričakovanji; po objavi delnica navzdol |
+| SpaceX, torek | 14,6 mrd USD, +161 % | 0,35 USD na delnico, lani izguba | Nad pričakovanji (MarketWatch); v sredo pred odprtjem +10 % |
+| General Motors, torek | 50,0 mrd USD | 3,70 USD na delnico, prilagojeno | Nad pričakovanji (Yahoo Finance); delnica navzdol |
+| Tesla, sreda | 28,05 mrd USD, lani 28,10 mrd | 0,48 USD na delnico, prilagojeno; po računovodskih pravilih 0,22 USD | Pričakovanih 0,44 USD; po objavi delnica navzdol |
+| Meta, sreda | 64,6 mrd USD, +26 % | 3,83 USD na delnico; brez enkratnega stroška 7,40 USD | Pričakovanih 6,00 USD; zvečer navzgor, v četrtek med trgovanjem -8 % |
+| American Airlines, četrtek | 16,3 mrd USD, +19,3 % | izguba 0,28 USD na delnico, prilagojeno | Znova znižana letna napoved |
+| Barclays, četrtek | 7,4 mrd GBP, +3 % | dobiček pred davki 2,3 mrd GBP, lani 2,1 mrd | Pod pričakovanji analitikov (Financial Times) |
+| Volvo Cars, petek | ni znano | izguba | Med trgovanjem v Stockholmu -27 % do -30 % |
+
+Netflix je po navedbah Bloomberga napovedal, da se bo rast prodaje upočasnila že četrto četrtletje zapored. MarketWatch piše, da je podjetje priznalo nekaj skrbi vlagateljev glede rasti časa, ki ga ljudje preživijo ob njegovih vsebinah. General Motors je napovedal nov odkup lastnih delnic za 20 milijard dolarjev in zožil razpon letne napovedi; Bloomberg poroča, da je direktorica Mary Barra opozorila na vse večje izzive. Meta je pričakovanja presegla, delnica pa je naslednji dan padla. CNBC to povezuje s prostim denarnim tokom, ki je zaradi naložb v umetno inteligenco padel pod nič (tema 5). O SpaceX in Tesli piše tema 2.
+
+Letalske družbe je prizadela dražja nafta. American Airlines je imel rekordne prihodke, gorivo pa ga je stalo 1,9 milijarde dolarjev oziroma 67,5 % več kot lani. CNBC piše, da je to četrti večji ameriški letalski prevoznik, ki je ta mesec zaradi dražjega goriva znižal napoved za leto 2026, Financial Times pa navaja opozorilo podjetja, da se cene letalskih vozovnic ne bodo vrnile na raven pred vojno z Iranom.
+
+V Evropi sta Barclays in Volvo Cars ob rezultatih napovedala ukinjanje delovnih mest. Britanska banka Barclays bo ukinila 5.000 delovnih mest in po navedbah CNBC kot razlog navaja prihranke, ki jih omogoča umetna inteligenca. Švedski proizvajalec avtomobilov Volvo Cars, ki je v četrtletju posloval z izgubo, bo ukinil še 2.500 delovnih mest. Direktor je po poročanju CNBC dejal, da je prodaja na Kitajskem upadla hitreje, kot so pričakovali, Financial Times pa piše, da podjetje ne izključuje dodatnih ukrepov.
+
+*Številke: uradna sporočila podjetij ([Netflix](https://www.sec.gov/Archives/edgar/data/1065280/000106528026000290/ex991_q326.htm), [SpaceX](https://www.sec.gov/Archives/edgar/data/1181412/000162828026066482/spaceexplorationtechnologi.htm), [General Motors](https://www.sec.gov/Archives/edgar/data/1467858/000146785826000056/gmq32026pressreleaseandfin.htm), [Tesla](https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm), [Meta](https://www.sec.gov/Archives/edgar/data/1326801/000162828026066700/meta-09302026xexhibit991.htm), [American Airlines](https://www.sec.gov/Archives/edgar/data/6201/000000620126000064/a8kerexhibit991q3-26.htm), [Barclays](https://www.sec.gov/Archives/edgar/data/312069/000165495426009079/a9532z.htm)); pričakovanja za Teslo in Meto: [Finnhub](https://finnhub.io/).*
+
+*Viri: [Bloomberg](https://www.bloomberg.com/news/videos/2026-10-20/netflix-forecasts-adds-to-growth-concerns-video), [MarketWatch](https://www.marketwatch.com/story/netflix-vows-to-revive-viewership-trends-but-investors-hit-sell-on-the-stock-3e24420a?mod=mw_rss_topstories), [Bloomberg](https://www.bloomberg.com/news/videos/2026-10-20/gm-slides-as-ceo-barra-warns-of-intensifying-challenges-video), [CNBC](https://www.cnbc.com/2026/10/22/american-airlines-aal-q3-2026-earnings.html), [Financial Times](https://www.ft.com/content/d114ce00-f30d-41c6-ac03-71209aa62ee2?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/22/barclays-ai-jobs-cuts.html), [Financial Times](https://www.ft.com/content/e83591cd-13d4-4358-aee9-c500930bfd36?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/volvo-cars-q3-earnings-job-cuts.html), [Financial Times](https://www.ft.com/content/deb209b5-a5ed-4d24-a470-636ecc1e3668?syn-25a6b1a6=1)*
 
 ## Še omembe vredno
 
 - **Moderna in Merck: cepivo proti raku**: [MarketWatch](https://www.marketwatch.com/story/modernas-stock-tumbles-after-reported-leak-of-data-for-cancer-vaccine-dcc897c1?mod=mw_rss_topstories), [CNBC](https://www.cnbc.com/2026/10/22/moderna-stock-cancer-vaccine-data-leak.html), [Financial Times](https://www.ft.com/content/9e59746f-9b63-4adb-b868-14088d638b8a?syn-25a6b1a6=1)
-- **Zaupanje potrošnikov v Veliki Britaniji in ZDA**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-22/uk-consumer-confidence-in-slump-as-big-as-brexit-shock-gfk-says), [Financial Times](https://www.ft.com/content/74bb3555-6f29-4ff9-bcaf-6cd20a9a3b1b?syn-25a6b1a6=1), [MarketWatch](https://www.marketwatch.com/bulletins/redirect/go?g=bc18f534-11d4-4c2a-b51c-cc576d40ecdf&mod=mw_rss_bulletins)
 - **Nemiri v Franciji**: [MarketWatch](https://www.marketwatch.com/bulletins/redirect/go?g=eed6bafe-192a-43e1-9832-73362512b59c&mod=mw_rss_bulletins), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-19/france-s-bonds-drop-as-rioting-heaps-pressure-on-government), [CNBC](https://www.cnbc.com/2026/10/19/france-protests-worst-in-years-unrest-macron-.html)
 - **CoreWeave in kreditni pritisk na podjetja z umetno inteligenco**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-17/coreweave-woes-risk-shutting-down-ai-junk-market-credit-weekly), [CNBC](https://www.cnbc.com/2026/10/19/oracle-debt-faces-an-ai-stress-test-why-some-investors-arent-worried-.html), [New York Times](https://www.nytimes.com/2026/10/17/business/weak-links-start-to-show-in-ai-borrowing.html)
 - **Francoski obvezniški trg in bonitetna ocena**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-20/bessent-sees-no-spillover-from-france-bond-market-s-turmoil), [New York Times](https://www.nytimes.com/2026/10/20/business/france-protests-bond-markets.html), [Financial Times](https://www.ft.com/content/76f076e4-9db2-4971-8ac9-73d9f39e4876?syn-25a6b1a6=1)
 - **Anthropic: financiranje, posli in javna ponudba**: [Financial Times](https://www.ft.com/content/cb4034e1-475f-40b9-a5f9-256e91aacb89?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html), [New York Times](https://www.nytimes.com/2026/10/19/business/dealbook/anthropic-ipo-charity.html)
 - **Indonezija in MSCI**: [Financial Times](https://www.ft.com/content/472ad6cf-438f-4d62-a41c-8725cbf53383?syn-25a6b1a6=1), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-16/indonesia-unveils-117-million-in-fines-after-msci-warning), [CNBC](https://www.cnbc.com/2026/10/19/indonesian-stocks-msci-downgrade-fears-mount.html)
-- **Netflix po rezultatih tretjega četrtletja**: [Financial Times](https://www.ft.com/content/1b5d97dc-535a-42d9-ac0e-2c00e91c0aed?syn-25a6b1a6=1), [New York Times](https://www.nytimes.com/2026/10/20/business/media/netflix-earnings-ted-sarandos-peter-rice.html), [MarketWatch](https://www.marketwatch.com/story/netflix-vows-to-revive-viewership-trends-but-investors-hit-sell-on-the-stock-3e24420a?mod=mw_rss_topstories)
+- **Ameriške carine na Kanado**: [New York Times](https://www.nytimes.com/2026/10/23/business/trump-susan-collins-canada-tariffs.html), [CNBC](https://www.cnbc.com/2026/10/23/trump-tariffs-canada-susan-collins.html), [CNBC](https://www.cnbc.com/2026/10/20/trump-tariffs-canada-section-338-lawsuit.html)
+- **Inflacija in obrestne mere na Japonskem**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-22/japan-inflation-rises-above-boj-target-level-backing-rate-hikes), [CNBC](https://www.cnbc.com/2026/10/23/japan-inflation-september-highest-in-2026.html), [Financial Times](https://www.ft.com/content/f968f40c-ecc8-4981-ba60-a826f808505b)
 
 ## Koledar naslednjih dveh tednov
 
