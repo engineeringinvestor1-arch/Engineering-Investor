@@ -342,7 +342,8 @@
       "region": "US",
       "importance": "HIGH",
       "forecast": "3,75-4,00 %",
-      "forecastSource": "Nasdaq"
+      "forecastSource": "Nasdaq",
+      "previous": "3,75 % do 4,00 %"
     },
     {
       "id": "us-gdp-oct26",
@@ -375,7 +376,8 @@
       "region": "EU",
       "importance": "LOW",
       "forecast": "depozitna mera 2,50 %",
-      "forecastSource": "Nasdaq"
+      "forecastSource": "Nasdaq",
+      "previous": "depozitna mera 2,50 %"
     },
     {
       "id": "us-ism-nov26",
@@ -393,7 +395,8 @@
       "title": "US NFP (okt 2026)",
       "category": "Trg dela",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "previous": "+29 tisoč delovnih mest (sep 2026); brezposelnost 4,2 %"
     },
     {
       "id": "us-cpi-nov26",
