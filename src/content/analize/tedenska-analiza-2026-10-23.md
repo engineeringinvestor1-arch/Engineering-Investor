@@ -1,9 +1,9 @@
 ---
 title: "Tedenska analiza trga: 19. do 23. oktober 2026"
-description: "Teme tedna: čipovske delnice znova navzdol; SpaceX v dobičku in možna združitev s Teslo; Barclays in Volvo Cars ukinjata delovna mesta; Meta po rezultatih."
+description: "Teme tedna: čipovske delnice, SpaceX in Tesla, padec donosnosti obveznic, Barclays in Volvo Cars, Meta po rezultatih, dražja nafta."
 pubDate: 2026-10-24
 category: Trgi
-readingTime: 9
+readingTime: 12
 featured: false
 ---
 
@@ -55,7 +55,21 @@ V sredo po zaprtju borze je rezultate objavila še Tesla. Financial Times poroč
 
 *Viri: [CNBC](https://www.cnbc.com/2026/10/19/elon-musk-spacex-shares-giveaway-kids.html), [New York Times](https://www.nytimes.com/2026/10/20/technology/spacex-earnings-elon-musk.html), [Financial Times](https://www.ft.com/content/f2a2a578-5a2e-42ff-b4c9-8bafff271b37?syn-25a6b1a6=1), [MarketWatch](https://www.marketwatch.com/story/teslas-stock-falls-as-elon-musk-leaves-investors-wanting-more-eb347f38?mod=mw_rss_topstories), [Financial Times](https://www.ft.com/content/16bdf332-2a75-4e57-81ea-a37caf50ec0f?syn-25a6b1a6=1)*
 
-### 3. Barclays in Volvo Cars ukinjata delovna mesta
+### 3. Donosnost 10-letne obveznice z največjim dnevnim padcem od leta 2023
+
+Ameriške državne obveznice so bile ta teden zatočišče pred padcem tehnoloških delnic. Donosnost 10-letne obveznice, torej obrestna mera, ki jo vlagatelji zahtevajo za posojanje državi, je bila od ponedeljka do srede med 5,12 % in 5,15 %. Ko vlagatelji obveznice kupujejo, njihova cena zraste, donosnost pa pade.
+
+V četrtek je MarketWatch med trgovanjem poročal, da se vlagatelji vračajo k državnim obveznicam, da bi se zavarovali pred nadaljnjimi pretresi na trgih delnic in posojil, povezanih z umetno inteligenco. Donosnost 10-letne obveznice je v četrtek padla za 17 bazičnih točk (0,17 odstotne točke) na 4,96 %, donosnost 2-letne pa za 16 bazičnih točk na 4,65 %. Po navedbah MarketWatcha je bil to največji dnevni padec donosnosti 10-letne obveznice od propada banke Silicon Valley Bank marca 2023, CNBC pa piše, da je bila donosnost najnižja v skoraj mesecu dni. Tipp iz družbe za upravljanje premoženja PGIM je za MarketWatch dejal, da to ni položaj, v katerem bi vlagatelje vodil strah pred recesijo.
+
+Zlato, ki prav tako velja za varno naložbo, se tokrat ni podražilo. Bloomberg je v četrtek zvečer zapisal, da je zlato blizu najnižjega zaprtja v več kot treh mesecih, ker so ga vlagatelji prodajali ob razprodaji na več trgih hkrati. Financial Times je v petek med trgovanjem poročal, da je cena zlata padla pod 4.000 dolarjev za unčo, čeprav so vlagatelji iskali varnost v državnih obveznicah. Zlato je teden končal pri 4.007,90 dolarja, kar je 4,14 % manj kot teden prej.
+
+V petek je bila donosnost 10-letne obveznice ob zaprtju po podatkih ameriškega ministrstva za finance 5,00 %. V celem tednu je padla za 9 bazičnih točk.
+
+*10-letna ameriška obveznica -17 b. t. v četrtek, 22. 10.*
+
+*Viri: [MarketWatch](https://www.marketwatch.com/story/treasury-yields-see-extreme-plunge-why-investors-are-ducking-for-cover-60044c66?mod=mw_rss_topstories), [MarketWatch](https://www.marketwatch.com/story/ai-is-on-trial-bond-yields-sink-below-5-as-investors-look-for-safety-dbc86ee9?mod=mw_rss_topstories), [CNBC](https://www.cnbc.com/2026/10/22/treasurys-bonds-ai-yields.html), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-23/gold-holds-near-three-month-low-as-ai-jitters-fuel-volatility), [Financial Times](https://www.ft.com/content/5a6e15e9-249d-4d59-a140-c51302930a9f?syn-25a6b1a6=1)*
+
+### 4. Barclays in Volvo Cars ukinjata delovna mesta
 
 Dve evropski podjetji sta ta teden napovedali ukinjanje delovnih mest. V četrtek je britanska banka Barclays sporočila, da bo ukinila 5.000 delovnih mest. Po navedbah CNBC banka kot razlog navaja prihranke, ki jih omogoča umetna inteligenca. Financial Times dodaja, da je zmanjšanje napovedala ob dobičku tretjega četrtletja, ki je bil nižji od pričakovanj analitikov.
 
@@ -63,7 +77,7 @@ V petek je švedski proizvajalec avtomobilov Volvo Cars sporočil, da bo ukinil 
 
 *Viri: [CNBC](https://www.cnbc.com/2026/10/22/barclays-ai-jobs-cuts.html), [Financial Times](https://www.ft.com/content/e83591cd-13d4-4358-aee9-c500930bfd36?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/volvo-cars-q3-earnings-job-cuts.html), [Financial Times](https://www.ft.com/content/deb209b5-a5ed-4d24-a470-636ecc1e3668?syn-25a6b1a6=1), [New York Times](https://www.nytimes.com/2026/10/23/business/volvo-china-2500-job-cuts.html)*
 
-### 4. Meta po rezultatih: zvečer navzgor, naslednji dan navzdol
+### 5. Meta po rezultatih: zvečer navzgor, naslednji dan navzdol
 
 Meta, lastnica Facebooka in Instagrama, je v sredo po zaprtju borze objavila rezultate tretjega četrtletja. MarketWatch navaja, da je bilo četrtletje osrednjega oglaševalskega posla močno, vlagatelje pa so zanimali novi posli okoli Muse, Metinega osebnega pomočnika z umetno inteligenco. Delnica je v trgovanju po zaprtju borze zrasla.
 
@@ -75,16 +89,30 @@ V četrtek je delnica Mete po poročanju CNBC med trgovanjem izgubila 8 %. Cena 
 
 *Viri: [MarketWatch](https://www.marketwatch.com/story/metas-stock-rises-as-investors-glimpse-an-opportunity-that-could-dwarf-the-ad-business-89369c6c?mod=mw_rss_topstories), [CNBC](https://www.cnbc.com/2026/10/21/meta-new-mexico-cambridge-analytica-penalty.html), [Yahoo Finance](https://beincrypto.com/meta-non-voting-class-c-shares/?.tsrc=rss), [New York Times](https://www.nytimes.com/2026/10/22/business/dealbook/zuckerbergs-big-deal.html), [CNBC](https://www.cnbc.com/2026/10/22/meta-stock-q3-earnings-free-cash-flow.html)*
 
+### 6. Nafta Brent v tednu dražja za 6,24 % ob napadih na Savdsko Arabijo
+
+Cene nafte so bile ta teden pod vplivom vojne z Iranom in napadov na Savdsko Arabijo. Že v petek, 16. 10., je Brent po pisanju Financial Timesa dosegel 110 dolarjev za sod, največ v petih mesecih, ko so sile pod vodstvom Savdske Arabije prestregle rakete, namenjene ključnim energetskim objektom.
+
+V ponedeljek je Savdska Arabija po poročanju CNBC svojo veliko investicijsko konferenco preložila na leto 2027, ker so jo jemenski uporniki Huti, ki jih podpira Iran, večkrat napadli z raketami in droni. Bloomberg je zvečer zapisal, da trgovci tehtajo tveganje novih iranskih napadov v Hormuški ožini, skozi katero pluje nafta iz Perzijskega zaliva, proti močnemu izvozu nafte iz Zaliva.
+
+V sredo so Financial Times, Bloomberg in MarketWatch poročali, da je izvoz nafte iz Perzijskega zaliva približno na ravni pred vojno z Iranom, ker ladje uporabljajo tudi druge poti. Isti dan je Financial Times poročal, da sta v napadu z dronom na naftno polje Shaybah savdske družbe Saudi Aramco umrla dva človeka in da so ZDA delu svojega osebja ukazale, naj zapusti Savdsko Arabijo. CNBC je v noči na četrtek poročal, da se ZDA po neuradnih navedbah pripravljajo na napade na Iran po vmesnih volitvah.
+
+V četrtek se je Brent podražil za 4,00 %, v petek pa še za 3,14 %. V celem tednu se je podražil s 109,86 na 116,72 dolarja za sod. MarketWatch je v četrtek pisal o novem energetskem stisku, ki ga povzročajo močno podražene cene prevoza s tankerji. Po navedbah CNBC je predsednik Donald Trump ta dan Iran obtožil, da skuša manipulirati naftni trg. V petek je Brent po poročanju New York Timesa med trgovanjem dosegel 117 dolarjev za sod, največ od aprila. MarketWatch je zapisal, da bi se nafta lahko še podražila, če bi ZDA in Izrael po volitvah v obeh državah napadli Iran.
+
+*Nafta Brent +4,00 % v četrtek, 22. 10., in +3,14 % v petek, 23. 10.*
+
+*Viri: [Financial Times](https://www.ft.com/content/8ee22d89-03eb-48dc-99a5-27555373a89c?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/19/saudi-arabia-postpones-fii-investor-conference-to-2027.html), [Financial Times](https://www.ft.com/content/f39aa4d2-e290-451f-ae91-b19138b6172f?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/oil-price-brent-wti-iran-war-saudi-arabia.html), [New York Times](https://www.nytimes.com/2026/10/23/business/energy-environment/oil-prices-iran-war.html), [MarketWatch](https://www.marketwatch.com/story/oil-markets-are-on-edge-ahead-of-the-weekend-as-midterm-elections-near-and-fresh-u-s-strikes-on-iran-are-predicted-8c27e634?mod=mw_rss_topstories)*
+
 ## Še omembe vredno
 
 - **Moderna in Merck: cepivo proti raku**: [MarketWatch](https://www.marketwatch.com/story/modernas-stock-tumbles-after-reported-leak-of-data-for-cancer-vaccine-dcc897c1?mod=mw_rss_topstories), [CNBC](https://www.cnbc.com/2026/10/22/moderna-stock-cancer-vaccine-data-leak.html), [Financial Times](https://www.ft.com/content/9e59746f-9b63-4adb-b868-14088d638b8a?syn-25a6b1a6=1)
-- **Zaupanje potrošnikov**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-22/uk-consumer-confidence-in-slump-as-big-as-brexit-shock-gfk-says), [Financial Times](https://www.ft.com/content/74bb3555-6f29-4ff9-bcaf-6cd20a9a3b1b?syn-25a6b1a6=1), [MarketWatch](https://www.marketwatch.com/bulletins/redirect/go?g=bc18f534-11d4-4c2a-b51c-cc576d40ecdf&mod=mw_rss_bulletins)
-- **Napadi na Savdsko Arabijo in cene nafte**: [CNBC](https://www.cnbc.com/2026/10/18/oil-price-today-ukraine-russia-iran-strait-hormuz.html), [Financial Times](https://www.ft.com/content/8ee22d89-03eb-48dc-99a5-27555373a89c?syn-25a6b1a6=1), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-18/latest-oil-market-news-and-analysis-for-oct-19)
+- **Zaupanje potrošnikov v Veliki Britaniji in ZDA**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-22/uk-consumer-confidence-in-slump-as-big-as-brexit-shock-gfk-says), [Financial Times](https://www.ft.com/content/74bb3555-6f29-4ff9-bcaf-6cd20a9a3b1b?syn-25a6b1a6=1), [MarketWatch](https://www.marketwatch.com/bulletins/redirect/go?g=bc18f534-11d4-4c2a-b51c-cc576d40ecdf&mod=mw_rss_bulletins)
 - **Nemiri v Franciji**: [MarketWatch](https://www.marketwatch.com/bulletins/redirect/go?g=eed6bafe-192a-43e1-9832-73362512b59c&mod=mw_rss_bulletins), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-19/france-s-bonds-drop-as-rioting-heaps-pressure-on-government), [CNBC](https://www.cnbc.com/2026/10/19/france-protests-worst-in-years-unrest-macron-.html)
 - **CoreWeave in kreditni pritisk na podjetja z umetno inteligenco**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-17/coreweave-woes-risk-shutting-down-ai-junk-market-credit-weekly), [CNBC](https://www.cnbc.com/2026/10/19/oracle-debt-faces-an-ai-stress-test-why-some-investors-arent-worried-.html), [New York Times](https://www.nytimes.com/2026/10/17/business/weak-links-start-to-show-in-ai-borrowing.html)
 - **Francoski obvezniški trg in bonitetna ocena**: [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-20/bessent-sees-no-spillover-from-france-bond-market-s-turmoil), [New York Times](https://www.nytimes.com/2026/10/20/business/france-protests-bond-markets.html), [Financial Times](https://www.ft.com/content/76f076e4-9db2-4971-8ac9-73d9f39e4876?syn-25a6b1a6=1)
 - **Anthropic: financiranje, posli in javna ponudba**: [Financial Times](https://www.ft.com/content/cb4034e1-475f-40b9-a5f9-256e91aacb89?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/19/anthropic-ipo-ai-trade.html), [New York Times](https://www.nytimes.com/2026/10/19/business/dealbook/anthropic-ipo-charity.html)
 - **Indonezija in MSCI**: [Financial Times](https://www.ft.com/content/472ad6cf-438f-4d62-a41c-8725cbf53383?syn-25a6b1a6=1), [Bloomberg](https://www.bloomberg.com/news/articles/2026-10-16/indonesia-unveils-117-million-in-fines-after-msci-warning), [CNBC](https://www.cnbc.com/2026/10/19/indonesian-stocks-msci-downgrade-fears-mount.html)
+- **Netflix po rezultatih tretjega četrtletja**: [Financial Times](https://www.ft.com/content/1b5d97dc-535a-42d9-ac0e-2c00e91c0aed?syn-25a6b1a6=1), [New York Times](https://www.nytimes.com/2026/10/20/business/media/netflix-earnings-ted-sarandos-peter-rice.html), [MarketWatch](https://www.marketwatch.com/story/netflix-vows-to-revive-viewership-trends-but-investors-hit-sell-on-the-stock-3e24420a?mod=mw_rss_topstories)
 
 ## Koledar naslednjih dveh tednov
 
