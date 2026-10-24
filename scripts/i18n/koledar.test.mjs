@@ -20,6 +20,8 @@ test('predloge, ki jih piše robot', () => {
     'Fed obrestna mera: 3,50-3,75 %': 'Fed funds rate: 3.50-3.75%',
     '+162.000 delovnih mest': '+162,000 jobs',
     '-1.234.000 delovnih mest': '-1,234,000 jobs',
+    // 24. 10. 2026: prejšnja vrednost NFP iz tedenskega paketa (config/calendar.json agenta) je v tisočih.
+    '+29 tisoč delovnih mest (sep 2026); brezposelnost 4,2 %': '+29 thousand jobs (Sep 2026); unemployment 4.2%',
     '1,5 % (anualizirano)': '1.5% (annualised)',
     '−0,6 % mesečno': '−0.6% m/m',
     'brezposelnost 4,1 %': 'unemployment 4.1%',

@@ -94,6 +94,7 @@ const VZORCI_EN: [RegExp, string | ((...m: string[]) => string)][] = [
   [beseda('prva objava'), 'first release'],
   [beseda('prva ocena'), 'first estimate'],
   [beseda('revizija'), 'revision'],
+  [beseda('tisoč delovnih mest'), 'thousand jobs'],
   [beseda('delovnih mest'), 'jobs'],
   [beseda('brezposelnost'), 'unemployment'],
   [beseda('anualizirano'), 'annualised'],
