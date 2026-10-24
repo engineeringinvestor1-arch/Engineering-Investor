@@ -3,7 +3,7 @@ title: "Tedenska analiza trga: 19. do 23. oktober 2026"
 description: "Teme tedna: tehnološke delnice, SpaceX in Tesla, obveznice, ameriško gospodarstvo, Meta, nafta; rezultati podjetij."
 pubDate: 2026-10-24
 category: Trgi
-readingTime: 16
+readingTime: 17
 featured: false
 ---
 
@@ -117,16 +117,18 @@ Dražja nafta je segla tudi drugam. V petek je Dow Jones izgubil 653 točk oziro
 
 Od torka do petka je rezultate za tretje četrtletje, torej julij, avgust in september, objavilo več velikih podjetij. V preglednici so tista, ki so med 20 največjimi v S&P 500, in tista, o katerih rezultatih so poročali vsaj trije spremljani portali. Številke so iz uradnih sporočil podjetij.
 
-| Podjetje | Prihodki | Dobiček | Pričakovanja in odziv delnice |
+| Podjetje | Prihodki, sprememba v letu dni | Dobiček na delnico | Delnica po objavi, med dnevom |
 |---|---|---|---|
-| Netflix, torek | 12,87 mrd USD, +12 % | 0,87 USD na delnico | Po Bloombergu nad pričakovanji; po objavi delnica navzdol |
-| SpaceX, torek | 14,6 mrd USD, +161 % | 0,35 USD na delnico, lani izguba | Nad pričakovanji (MarketWatch); v sredo pred odprtjem +10 % |
-| General Motors, torek | 50,0 mrd USD | 3,70 USD na delnico, prilagojeno | Nad pričakovanji (Yahoo Finance); delnica navzdol |
-| Tesla, sreda | 28,05 mrd USD, lani 28,10 mrd | 0,48 USD na delnico, prilagojeno; po računovodskih pravilih 0,22 USD | Pričakovanih 0,44 USD; po objavi delnica navzdol |
-| Meta, sreda | 64,6 mrd USD, +26 % | 3,83 USD na delnico; brez enkratnega stroška 7,40 USD | Pričakovanih 6,00 USD; zvečer navzgor, v četrtek med trgovanjem -8 % |
-| American Airlines, četrtek | 16,3 mrd USD, +19,3 % | izguba 0,28 USD na delnico, prilagojeno | Znova znižana letna napoved |
-| Barclays, četrtek | 7,4 mrd GBP, +3 % | dobiček pred davki 2,3 mrd GBP, lani 2,1 mrd | Pod pričakovanji analitikov (Financial Times) |
-| Volvo Cars, petek | ni znano | izguba | Med trgovanjem v Stockholmu -27 % do -30 % |
+| Netflix, tor. | 12,87 mrd USD, +12 % | 0,87 USD | navzdol |
+| SpaceX, tor. | 14,6 mrd USD, +161 % | 0,35 USD | +10 % pred odprtjem |
+| General Motors, tor. | 50,0 mrd USD | 3,70 USD, prilagojeno | navzdol |
+| Tesla, sre. | 28,05 mrd USD, -0,2 % | 0,48 USD, prilagojeno | navzdol |
+| Meta, sre. | 64,6 mrd USD, +26 % | 3,83 USD | navzgor, nato -8 % |
+| American Airlines, čet. | 16,3 mrd USD, +19,3 % | -0,28 USD, prilagojeno | ni znano |
+| Barclays, čet. | 7,4 mrd GBP, +3 % | ni znano | ni znano |
+| Volvo Cars, pet. | ni znano | izguba | -27 % do -30 % |
+
+Prilagojeno pomeni izračun podjetja brez nekaterih postavk. Tesla je po računovodskih pravilih zaslužila 0,22 USD na delnico, analitiki pa so po podatkih Finnhub pričakovali 0,44 USD. Meta bi brez enkratnega stroška 9,89 milijarde USD za poravnavo s tožilci ameriških zveznih držav zaslužila 7,40 USD na delnico, pričakovanih je bilo 6,00 USD. Barclays je zaslužil 2,3 milijarde funtov pred davki, lani v istem četrtletju 2,1 milijarde. Pričakovanja so po navedbah Bloomberga, MarketWatcha in Yahoo Finance presegli Netflix, SpaceX in General Motors, Barclays pa je bil po pisanju Financial Timesa pod njimi. Odstotki pri delnicah so izmerjeni med trgovanjem: SpaceX v sredo pred odprtjem borze, Meta v četrtek, Volvo Cars v petek na stockholmski borzi.
 
 Netflix je po navedbah Bloomberga napovedal, da se bo rast prodaje upočasnila že četrto četrtletje zapored. MarketWatch piše, da je podjetje priznalo nekaj skrbi vlagateljev glede rasti časa, ki ga ljudje preživijo ob njegovih vsebinah. General Motors je napovedal nov odkup lastnih delnic za 20 milijard dolarjev in zožil razpon letne napovedi; Bloomberg poroča, da je direktorica Mary Barra opozorila na vse večje izzive. Meta je pričakovanja presegla, delnica pa je naslednji dan padla. CNBC to povezuje s prostim denarnim tokom, ki je zaradi naložb v umetno inteligenco padel pod nič (tema 5). O SpaceX in Tesli piše tema 2.
 
@@ -136,7 +138,7 @@ V Evropi sta Barclays in Volvo Cars ob rezultatih napovedala ukinjanje delovnih 
 
 *Številke: uradna sporočila podjetij ([Netflix](https://www.sec.gov/Archives/edgar/data/1065280/000106528026000290/ex991_q326.htm), [SpaceX](https://www.sec.gov/Archives/edgar/data/1181412/000162828026066482/spaceexplorationtechnologi.htm), [General Motors](https://www.sec.gov/Archives/edgar/data/1467858/000146785826000056/gmq32026pressreleaseandfin.htm), [Tesla](https://www.sec.gov/Archives/edgar/data/1318605/000162828026066738/exhibit9914.htm), [Meta](https://www.sec.gov/Archives/edgar/data/1326801/000162828026066700/meta-09302026xexhibit991.htm), [American Airlines](https://www.sec.gov/Archives/edgar/data/6201/000000620126000064/a8kerexhibit991q3-26.htm), [Barclays](https://www.sec.gov/Archives/edgar/data/312069/000165495426009079/a9532z.htm)); pričakovanja za Teslo in Meto: [Finnhub](https://finnhub.io/).*
 
-*Viri: [Bloomberg](https://www.bloomberg.com/news/videos/2026-10-20/netflix-forecasts-adds-to-growth-concerns-video), [MarketWatch](https://www.marketwatch.com/story/netflix-vows-to-revive-viewership-trends-but-investors-hit-sell-on-the-stock-3e24420a?mod=mw_rss_topstories), [Bloomberg](https://www.bloomberg.com/news/videos/2026-10-20/gm-slides-as-ceo-barra-warns-of-intensifying-challenges-video), [CNBC](https://www.cnbc.com/2026/10/22/american-airlines-aal-q3-2026-earnings.html), [Financial Times](https://www.ft.com/content/d114ce00-f30d-41c6-ac03-71209aa62ee2?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/22/barclays-ai-jobs-cuts.html), [Financial Times](https://www.ft.com/content/e83591cd-13d4-4358-aee9-c500930bfd36?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/volvo-cars-q3-earnings-job-cuts.html), [Financial Times](https://www.ft.com/content/deb209b5-a5ed-4d24-a470-636ecc1e3668?syn-25a6b1a6=1)*
+*Viri: [Bloomberg](https://www.bloomberg.com/news/videos/2026-10-20/netflix-forecasts-adds-to-growth-concerns-video), [MarketWatch](https://www.marketwatch.com/story/netflix-vows-to-revive-viewership-trends-but-investors-hit-sell-on-the-stock-3e24420a?mod=mw_rss_topstories), [Bloomberg](https://www.bloomberg.com/news/videos/2026-10-20/gm-slides-as-ceo-barra-warns-of-intensifying-challenges-video), [Yahoo Finance](https://finance.yahoo.com/video/what-to-expect-with-spacex-earnings-and-gms-better-than-expected-earnings-144826737.html?.tsrc=rss), [CNBC](https://www.cnbc.com/2026/10/22/american-airlines-aal-q3-2026-earnings.html), [Financial Times](https://www.ft.com/content/d114ce00-f30d-41c6-ac03-71209aa62ee2?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/22/barclays-ai-jobs-cuts.html), [Financial Times](https://www.ft.com/content/e83591cd-13d4-4358-aee9-c500930bfd36?syn-25a6b1a6=1), [CNBC](https://www.cnbc.com/2026/10/23/volvo-cars-q3-earnings-job-cuts.html), [Financial Times](https://www.ft.com/content/deb209b5-a5ed-4d24-a470-636ecc1e3668?syn-25a6b1a6=1)*
 
 ## Še omembe vredno
 
