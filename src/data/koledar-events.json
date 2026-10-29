@@ -365,7 +365,9 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "LOW",
-      "previous": "3,4 % medletno (avg 2026); jedrni 3,0 %"
+      "previous": "3,4 % medletno (avg 2026); jedrni 3,0 %",
+      "forecast": "3,6 % medletno; jedrni 3,1 %",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "ecb-oct26",
