@@ -343,7 +343,8 @@
       "importance": "HIGH",
       "forecast": "3,75-4,00 %",
       "forecastSource": "Nasdaq",
-      "previous": "3,75 % do 4,00 %"
+      "previous": "3,75 % do 4,00 %",
+      "actual": "Fed obrestna mera: 3,75-4,00 %"
     },
     {
       "id": "us-gdp-oct26",
@@ -355,7 +356,8 @@
       "importance": "LOW",
       "previous": "2,2 % letna stopnja rasti (Q2 2026)",
       "forecast": "3,2 % (anualizirano)",
-      "forecastSource": "Nasdaq, Forex Factory"
+      "forecastSource": "Nasdaq, Forex Factory",
+      "actual": "3,4 % (anualizirano)"
     },
     {
       "id": "us-pce-oct26",
@@ -367,7 +369,8 @@
       "importance": "LOW",
       "previous": "3,4 % medletno (avg 2026); jedrni 3,0 %",
       "forecast": "3,6 % medletno; jedrni 3,1 %",
-      "forecastSource": "Nasdaq"
+      "forecastSource": "Nasdaq",
+      "actual": "PCE 3,6 % medletno; jedrni 3,1 %"
     },
     {
       "id": "ecb-oct26",
@@ -889,12 +892,13 @@
       "year": 2026
     },
     {
-      "id": "nvda-2026-11-17",
+      "id": "nvda-q4-26",
       "date": "2026-11-17",
       "ticker": "NVDA",
       "name": "NVIDIA",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance"
+      "when": "po zaprtju",
+      "quarter": 4,
+      "year": 2026
     },
     {
       "id": "wmt-q3-27",
