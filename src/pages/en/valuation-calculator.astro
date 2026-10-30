@@ -1,12 +1,12 @@
 ---
-// Kalkulator pričakovanega donosa v angleščini (/en/valuation-calculator).
+// Obratni DCF v angleščini (/en/valuation-calculator); 30. 10. 2026 je nadomestil kalkulator pričakovanega donosa.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PricakovaniDonos from '../../components/calculators/PricakovaniDonos.astro';
+import ObratniDcf from '../../components/calculators/ObratniDcf.astro';
 import { slovar } from '../../i18n/slovar';
 
 const t = slovar('en').kalkulatorji.vrednotenje;
 ---
 
 <BaseLayout title={t.naslov} description={t.opisMeta}>
-  <PricakovaniDonos />
+  <ObratniDcf />
 </BaseLayout>

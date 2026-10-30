@@ -1,0 +1,407 @@
+---
+import '../../styles/kalkulator.css';
+// Obratni DCF (avtor, 30. 10. 2026: "naprednega objavi na spletni strani ampak brez primerov podjetij"; isti dan
+// je nadomestil kalkulator pričakovanega donosa: "odstrani ta kalkulator"). Podroben izračun iz avtorjevega
+// orodja v repozitoriju agenta (orodja/obratni-dcf), brez primerov resničnih podjetij.
+// Račun je v src/lib/obratni-dcf.ts. Primer ob odprtju je izmišljeno podjetje z okroglimi številkami, da stran
+// ne kaže zastarelih podatkov o resničnem podjetju brez vira.
+import { getLang } from '../../i18n';
+import { slovar } from '../../i18n/slovar';
+
+// Besedila so v slovarju (src/i18n, ključ od); jezik pride iz naslova strani.
+const lang = getLang(Astro.url.pathname);
+const t = slovar(lang).od;
+const vnos = (v: number) => (lang === 'sl' ? String(v).replace('.', ',') : String(v));
+// Izmišljeno podjetje: pri 9 % donosa da 10,5 % potrebne rasti, malo nad rastjo doslej (10 %).
+const P = { trzna: 100, dolg: 0, prih: 25, m0: 25, davek: 21, roic: 25, pret: 10, r: 9, mc: 25, gT: 2.5, sg: 10, sm: 25 };
+
+const podjetje = [
+  { id: 'trzna', ime: t.trzna, opis: t.trznaOpis, v: P.trzna, enota: t.mrd },
+  { id: 'dolg', ime: t.dolg, opis: t.dolgOpis, v: P.dolg, enota: t.mrd, minus: true },
+  { id: 'prih', ime: t.prihodki, opis: t.prihodkiOpis, v: P.prih, enota: t.mrd },
+  { id: 'm0', ime: t.marza, opis: t.marzaOpis, v: P.m0, enota: '%' },
+  { id: 'davek', ime: t.davek, opis: t.davekOpis, v: P.davek, enota: '%' },
+  { id: 'roic', ime: t.roic, opis: t.roicOpis, v: P.roic, enota: '%' },
+  { id: 'pret', ime: t.preteklo, opis: t.pretekloOpis, v: P.pret, enota: '%' },
+];
+---
+
+<div class="od">
+  <header class="od__header">
+    <h1 class="od__title">{t.naslov}</h1>
+    <p class="od__lead">{t.lead}</p>
+  </header>
+
+  <section class="od__kratko" aria-labelledby="od-kratko">
+    <h2 class="kd__h" id="od-kratko">{t.naKratko}</h2>
+    <ol>{t.koraki.map((k) => <li set:html={k} />)}</ol>
+    <p>{t.naKratkoKonec} {t.primer}</p>
+  </section>
+
+  <section class="od__panel od__odgovor" aria-live="polite">
+    <div class="od__vrsta">
+      <p class="od__big" id="od-odg">–</p>
+      <p class="od__big-cap">{t.odgovorOpis}</p>
+      <span class="od__pill" id="od-pill"></span>
+    </div>
+    <div class="od__chips">
+      <span class="od__chip">{t.rastDoslej} <strong id="od-chip-pret">–</strong></span>
+      <span class="od__chip" id="od-chip-pred"></span>
+    </div>
+    <p class="od__besedilo" id="od-besedilo"></p>
+    <p class="od__napaka" id="od-napaka" hidden></p>
+  </section>
+
+  <div class="od__grid">
+    <form class="od__panel od__vnosi" id="od-form" novalidate>
+      <fieldset>
+        <legend class="kd__h">{t.podjetjeDanes}</legend>
+        {podjetje.map((f) => (
+          <label class="kd__field">
+            <span class="kd__label">{f.ime}<small>{f.opis}</small></span>
+            <span class="kd__with-unit">
+              {f.minus
+                ? <input class="kd__num" type="text" id={`od-${f.id}`} value={vnos(f.v)} autocomplete="off" />
+                : <input class="kd__num" type="text" inputmode="decimal" id={`od-${f.id}`} value={vnos(f.v)} autocomplete="off" />}
+              <span class="kd__unit">{f.enota}</span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+      <fieldset>
+        <legend class="kd__h">{t.predpostavke}</legend>
+        <div class="od__drsni">
+          <label class="kd__field">
+            <span class="kd__label">{t.donos}<small>{t.donosOpis}</small></span>
+            <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="od-r" value={vnos(P.r)} autocomplete="off" /><span class="kd__unit">%</span></span>
+          </label>
+          <input type="range" class="od__range" id="od-r-d" min="5" max="15" step="0.5" value={P.r} aria-label={t.donosDrsnik} />
+        </div>
+        <div class="od__drsni">
+          <label class="kd__field">
+            <span class="kd__label">{t.marzaCez}<small>{t.marzaCezOpis}</small></span>
+            <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="od-mc" value={vnos(P.mc)} autocomplete="off" /><span class="kd__unit">%</span></span>
+          </label>
+          <input type="range" class="od__range" id="od-mc-d" min="0" max="60" step="0.5" value={P.mc} aria-label={t.marzaDrsnik} />
+        </div>
+        <label class="kd__field">
+          <span class="kd__label">{t.gT}<small>{t.gTOpis}</small></span>
+          <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="od-gT" value={vnos(P.gT)} autocomplete="off" /><span class="kd__unit">%</span></span>
+        </label>
+      </fieldset>
+    </form>
+
+    <div class="od__col">
+      <section class="od__panel">
+        <p class="kd__h od__h">{t.obcutljivost}</p>
+        <h2 class="od__naslov">{t.obcutljivostNaslov}</h2>
+        <p class="od__sub">{t.obcutljivostOpis}</p>
+        <div class="od__tbl-wrap"><table class="od__tbl" id="od-obc"></table></div>
+        <p class="od__legenda">
+          <span><i class="od__sw od__c--ok"></i>{t.legenda[0]}</span>
+          <span><i class="od__sw od__c--mid"></i>{t.legenda[1]}</span>
+          <span><i class="od__sw od__c--hi"></i>{t.legenda[2]}</span>
+        </p>
+      </section>
+
+      <section class="od__panel">
+        <p class="kd__h od__h">{t.scenarij}</p>
+        <h2 class="od__naslov">{t.scenarijNaslov}</h2>
+        <p class="od__sub">{t.scenarijOpis}</p>
+        <form class="od__scen" id="od-scen" novalidate>
+          <label class="kd__field">
+            <span class="kd__label">{t.scenRast}</span>
+            <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="od-sg" value={vnos(P.sg)} autocomplete="off" /><span class="kd__unit">%</span></span>
+          </label>
+          <label class="kd__field">
+            <span class="kd__label">{t.scenMarza}</span>
+            <span class="kd__with-unit"><input class="kd__num" type="text" inputmode="decimal" id="od-sm" value={vnos(P.sm)} autocomplete="off" /><span class="kd__unit">%</span></span>
+          </label>
+        </form>
+        <div class="od__vrsta">
+          <p class="od__big od__big--sc" id="od-sc-donos">–</p>
+          <p class="od__big-cap" id="od-sc-opis"></p>
+        </div>
+      </section>
+
+      <section class="od__panel">
+        <p class="kd__h od__h">{t.pot}</p>
+        <h2 class="od__naslov">{t.potNaslov}</h2>
+        <p class="od__sub">{t.potOpis}</p>
+        <div class="od__graf" id="od-graf"></div>
+        <p class="od__legenda">
+          <span><i class="od__sw od__sw--tok"></i>{t.prostiTok}</span>
+          <span><i class="od__sw od__sw--vl"></i>{t.vlaganja}</span>
+          <span id="od-graf-koncna"></span>
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <details class="kd__more">
+    <summary><span class="kd__sum-title">{t.kakoRacuna}</span></summary>
+    <div class="kd__more-body kd__explain">
+      <p set:html={t.kakoUvod} />
+      <ol>{t.formule.map((f) => <li set:html={f} />)}</ol>
+      <p set:html={t.cesaNe} />
+    </div>
+  </details>
+
+  <details class="kd__more">
+    <summary><span class="kd__sum-title">{t.kjePodatki}</span></summary>
+    <div class="kd__more-body">
+      <div class="od__tbl-wrap">
+        <table class="od__viri">
+          <thead><tr>{t.glava.map((g) => <th scope="col">{g}</th>)}</tr></thead>
+          <tbody>{t.viri.map(([vn, kaj, kje]) => <tr><th scope="row">{vn}</th><td>{kaj}</td><td>{kje}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="kd__more">
+    <summary><span class="kd__sum-title">{t.kakoBrati}</span></summary>
+    <div class="kd__more-body kd__explain">
+      <ul>{t.brati.map((b) => <li set:html={b} />)}</ul>
+      <p><strong>{t.pastiNaslov}</strong></p>
+      <ul>{t.pasti.map((b) => <li set:html={b} />)}</ul>
+    </div>
+  </details>
+
+  <p class="kd__note">{t.opomba}</p>
+</div>
+
+<style is:global>
+  .od {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md) var(--space-3xl);
+    font-variant-numeric: tabular-nums;
+    /* Barve primerjave z rastjo doslej, enake kot v avtorjevem orodju. */
+    --od-ok-bg: #DDF1E8; --od-ok-fg: #05704F;
+    --od-mid-bg: #FAF1D2; --od-mid-fg: #8A5A00;
+    --od-hi-bg: #F8E1DA; --od-hi-fg: #A3341C;
+    --od-vlaganja: #C9A24A;
+  }
+  [data-theme="dark"] .od {
+    --od-ok-bg: #0F2A20; --od-ok-fg: #5FD3A5;
+    --od-mid-bg: #2A2010; --od-mid-fg: #F2B65A;
+    --od-hi-bg: #2E1712; --od-hi-fg: #F08A6E;
+    --od-vlaganja: #B8913E;
+  }
+  .od__header { margin-bottom: var(--space-lg); max-width: 680px; }
+  .od__title { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.02em; margin-bottom: var(--space-sm); }
+  .od__lead { color: var(--color-text-muted); line-height: 1.6; }
+
+  .od__kratko { background: var(--color-accent-bg); border: 1px solid var(--color-accent-border); border-radius: var(--radius-lg); padding: var(--space-md) var(--space-lg); margin-bottom: var(--space-lg); font-size: var(--text-sm); line-height: 1.6; }
+  .od__kratko .kd__h { margin-bottom: var(--space-sm); }
+  .od__kratko ol { list-style: decimal; padding-left: var(--space-lg); margin-bottom: var(--space-sm); max-width: 80ch; }
+  .od__kratko li { margin-bottom: 0.25rem; }
+  .od__kratko p { color: var(--color-text-muted); max-width: 80ch; }
+
+  .od__panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); min-width: 0; }
+  .od__odgovor { margin-bottom: var(--space-lg); display: grid; gap: var(--space-md); }
+  .od__vrsta { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-sm) var(--space-lg); }
+  .od__big { font-size: clamp(2.6rem, 7vw, 3.8rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--color-accent); }
+  .od__big--sc { font-size: clamp(2.1rem, 5vw, 2.8rem); }
+  .od__big-cap { font-size: var(--text-sm); color: var(--color-text); max-width: 34ch; padding-bottom: 0.3rem; }
+  .od__pill { font-size: var(--text-xs); font-weight: 600; padding: 0.3rem 0.75rem; border-radius: 999px; }
+  .od__pill:empty { display: none; }
+  .od__chips { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+  .od__chip { font-size: var(--text-xs); padding: 0.3rem 0.65rem; border-radius: 999px; background: var(--color-surface-hover); border: 1px solid var(--color-border); color: var(--color-text); }
+  .od__chip:empty { display: none; }
+  .od__besedilo { font-size: var(--text-sm); line-height: 1.6; color: var(--color-text-muted); max-width: 80ch; }
+  .od__besedilo strong { color: var(--color-text); }
+  .od__napaka { font-size: var(--text-sm); padding: 0.6rem 0.9rem; border-radius: var(--radius-md); background: var(--od-hi-bg); color: var(--od-hi-fg); }
+
+  .od__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-lg); align-items: start; }
+  @media (max-width: 880px) { .od__grid { grid-template-columns: minmax(0, 1fr); } }
+  .od__vnosi fieldset { border: 0; margin: 0 0 var(--space-lg); padding: 0; min-width: 0; }
+  .od__vnosi fieldset:last-child { margin-bottom: 0; }
+  .od__drsni { margin-bottom: var(--space-sm); }
+  .od__drsni .kd__field { margin-bottom: 0.3rem; }
+  .od__range { width: 100%; accent-color: var(--color-accent); }
+  .od__col { display: grid; gap: var(--space-lg); min-width: 0; }
+  .od__h { margin-bottom: 0.3rem; }
+  .od__naslov { font-size: var(--text-lg); font-weight: 600; line-height: 1.35; margin-bottom: 0.3rem; }
+  .od__sub { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.5; margin-bottom: var(--space-md); }
+
+  .od__c--ok { background: var(--od-ok-bg); color: var(--od-ok-fg); }
+  .od__c--mid { background: var(--od-mid-bg); color: var(--od-mid-fg); }
+  .od__c--hi, .od__c--na.od__pill { background: var(--od-hi-bg); color: var(--od-hi-fg); }
+  .od__c--na { background: var(--color-surface-hover); color: var(--color-text-muted); }
+
+  .od__tbl-wrap { overflow-x: auto; }
+  .od__tbl { width: 100%; border-collapse: separate; border-spacing: 4px; }
+  .od__tbl th { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); text-align: center; padding: 0.3rem 0.2rem; line-height: 1.3; }
+  .od__tbl th[scope="row"] { text-align: left; white-space: nowrap; }
+  .od__tbl td { text-align: center; font-size: var(--text-sm); font-weight: 600; padding: 0.55rem 0.3rem; border-radius: var(--radius-sm); border: 2px solid transparent; white-space: nowrap; }
+  .od__tbl td.od__c--na { font-weight: 500; font-size: var(--text-xs); }
+  .od__tbl td.od__sel { border-color: var(--color-text); }
+  .od__legenda { display: flex; flex-wrap: wrap; gap: 0.3rem var(--space-md); font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-sm); }
+  .od__legenda span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .od__sw { width: 0.75rem; height: 0.75rem; border-radius: 3px; display: inline-block; }
+  .od__sw--tok { background: var(--color-accent); }
+  .od__sw--vl { background: var(--od-vlaganja); }
+
+  .od__scen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-lg); margin-bottom: var(--space-sm); }
+  @media (max-width: 560px) { .od__scen { grid-template-columns: minmax(0, 1fr); } }
+
+  .od__graf { position: relative; width: 100%; min-height: 200px; }
+  .od__graf svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .od__graf text { font-family: var(--font-sans); }
+
+  .od__viri { width: 100%; min-width: 560px; border-collapse: collapse; font-size: var(--text-sm); line-height: 1.5; }
+  .od__viri th, .od__viri td { text-align: left; vertical-align: top; padding: 0.55rem 0.6rem 0.55rem 0; border-bottom: 1px solid var(--color-border); }
+  .od__viri thead th { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); border-bottom-color: var(--color-border-strong); }
+  .od__viri tbody th { font-weight: 600; color: var(--color-text); white-space: nowrap; }
+  .od__viri td { color: var(--color-text-muted); }
+</style>
+
+<script>
+  import { donosScenarija, napaka, potrebnaRast, razred, vrednost, type Vnosi } from '../../lib/obratni-dcf';
+  import { fmt, fmtPct, fmtVnos, nastaviJezik, parseStevilo, pctVnos } from '../../lib/stevilke';
+  import { jezikStrani, slovar } from '../../i18n/slovar';
+
+  // Jezik strani določa besedila (slovar src/i18n, ključ od) in zapis števil.
+  const LANG = jezikStrani();
+  nastaviJezik(LANG);
+  const T = slovar(LANG).od;
+
+  const $ = (id: string) => document.getElementById(id)!;
+  const val = (id: string) => parseStevilo(($(id) as HTMLInputElement).value);
+  // Model računa v odstotkih (9 = 9 %), zapis na strani pa v deležih.
+  const pct = (x: number, dec = 1) => fmtPct(x / 100, dec);
+  const pctV = (x: number) => pctVnos(x / 100);
+  const mrd = (x: number, dec = 0) => `${fmt(x, dec)} ${T.mrd}`;
+
+  function vhod(): Vnosi {
+    return {
+      trzna: val('od-trzna'), netoDolg: val('od-dolg'), prihodki0: val('od-prih'), marza0: val('od-m0'), davek: val('od-davek'),
+      roic: val('od-roic'), preteklo: val('od-pret'), r: val('od-r'), ciljnaMarza: val('od-mc'), gT: val('od-gT'),
+    };
+  }
+
+  function oznaciNeveljavne() {
+    document.querySelectorAll<HTMLInputElement>('#od-form .kd__num, #od-scen .kd__num').forEach((el) => {
+      el.setAttribute('aria-invalid', String(Number.isNaN(parseStevilo(el.value))));
+    });
+  }
+
+  let zadnja: ReturnType<typeof vrednost> | null = null;
+
+  function izrisi() {
+    oznaciNeveljavne();
+    const v = vhod();
+    const err = napaka(v);
+    $('od-napaka').hidden = !err;
+    if (err) {
+      $('od-napaka').textContent = T.napake[err];
+      $('od-odg').textContent = '–';
+      $('od-pill').textContent = '';
+      $('od-besedilo').textContent = '';
+      $('od-chip-pred').innerHTML = '';
+      $('od-obc').innerHTML = '';
+      $('od-sc-donos').textContent = '–';
+      $('od-sc-opis').textContent = '';
+      zadnja = null;
+      narisi();
+      return;
+    }
+    const osnova = { prihodki0: v.prihodki0, marza0: v.marza0, davek: v.davek, roic: v.roic, gT: v.gT, netoDolg: v.netoDolg };
+
+    // Odgovor
+    const g = potrebnaRast({ ...osnova, ciljnaMarza: v.ciljnaMarza, r: v.r, trzna: v.trzna });
+    const k = razred(g, v.preteklo);
+    $('od-odg').textContent = g == null ? T.niResitve : pct(g);
+    $('od-pill').className = `od__pill od__c--${k}`;
+    $('od-pill').textContent = T.oznake[k];
+    $('od-chip-pret').textContent = pctV(v.preteklo);
+    $('od-chip-pred').innerHTML = T.priDonosu(pctV(v.r), pctV(v.ciljnaMarza));
+    zadnja = g == null ? null : vrednost({ ...osnova, ciljnaMarza: v.ciljnaMarza, r: v.r, rast: g });
+    if (!zadnja) $('od-besedilo').textContent = v.roic <= v.r ? T.brezResitveRoic : T.brezResitveRazpon;
+    else {
+      $('od-besedilo').innerHTML = T.odgovor(pctV(v.r), mrd(v.prihodki0, 1), mrd(zadnja.leta[4].prihodki), mrd(zadnja.leta[9].prihodki),
+        pctV(v.ciljnaMarza), pct(zadnja.delezKoncne * 100, 0));
+    }
+
+    // Občutljivost: zahtevani donos ±2 točki, marža čez pet let ±3 točke.
+    const rji = [-2, -1, 0, 1, 2].map((d) => v.r + d).filter((r) => r > v.gT);
+    const mji = [-3, 0, 3].map((d) => v.ciljnaMarza + d);
+    let html = `<thead><tr><th scope="col">${T.zahtevaniDonos}</th>${mji.map((m) => `<th scope="col">${T.marzaStolpec(pctV(m))}</th>`).join('')}</tr></thead><tbody>`;
+    for (const r of rji) {
+      html += `<tr><th scope="row">${pctV(r)}</th>`;
+      for (const m of mji) {
+        const gg = potrebnaRast({ ...osnova, ciljnaMarza: m, r, trzna: v.trzna });
+        const sel = r === v.r && m === v.ciljnaMarza ? ' od__sel' : '';
+        html += `<td class="od__c--${razred(gg, v.preteklo)}${sel}">${gg == null ? T.niResitve : pct(gg)}</td>`;
+      }
+      html += '</tr>';
+    }
+    $('od-obc').innerHTML = `${html}</tbody>`;
+
+    // Scenarij
+    const sg = val('od-sg'), sm = val('od-sm');
+    const d = Number.isFinite(sg) && Number.isFinite(sm) ? donosScenarija({ ...osnova, rast: sg, ciljnaMarza: sm, trzna: v.trzna }) : null;
+    $('od-sc-donos').textContent = d == null ? T.niResitve : pct(d);
+    $('od-sc-opis').textContent = d == null ? T.scenNi : T.scenIzid(pctV(sg), pctV(sm));
+
+    narisi();
+  }
+
+  // Graf: dobiček iz poslovanja po davku po letih, razdeljen na prosti denarni tok in vlaganja za rast.
+  // Izriše se po dejanski širini, da je besedilo na telefonu berljivo.
+  function niceStep(span: number) {
+    const raw = span / 5, mag = 10 ** Math.floor(Math.log10(raw)), n = raw / mag;
+    return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * mag;
+  }
+
+  function narisi() {
+    const box = $('od-graf');
+    const x = zadnja;
+    if (!x || !box.clientWidth) { box.innerHTML = ''; $('od-graf-koncna').textContent = ''; return; }
+    const W = Math.max(280, box.clientWidth), H = W < 520 ? 220 : 260;
+    const L = 44, R = 6, Tp = 12, B = 54;
+    const maxY = Math.max(...x.leta.map((y) => Math.max(y.nopat, y.fcff, 0))) * 1.08;
+    const minY = Math.min(0, ...x.leta.map((y) => y.fcff));
+    const sy = (v: number) => Tp + (H - Tp - B) * (1 - (v - minY) / (maxY - minY || 1));
+    const korak = niceStep(maxY - minY || 1);
+    const dec = korak < 1 ? 1 : 0;
+    let s = '';
+    for (let v = Math.ceil(minY / korak) * korak; v <= maxY; v += korak) {
+      s += `<line x1="${L}" x2="${W - R}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}" style="stroke:var(--color-border)" stroke-width="1"/>`;
+      s += `<text x="${L - 6}" y="${(sy(v) + 4).toFixed(1)}" text-anchor="end" font-size="11" style="fill:var(--color-text-muted)">${fmt(v, dec)}</text>`;
+    }
+    const n = x.leta.length, bw = (W - L - R) / n, w = bw * 0.62;
+    x.leta.forEach((y, i) => {
+      const cx = L + bw * i + bw / 2, x0 = cx - w / 2;
+      const vl = Math.max(y.nopat - y.fcff, 0);
+      const vrh = sy(Math.max(y.fcff, 0)), dno = sy(Math.min(y.fcff, 0));
+      s += `<rect x="${x0.toFixed(1)}" y="${vrh.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(dno - vrh, 0).toFixed(1)}" style="fill:var(--color-accent)" rx="2"><title>${T.grafTok(y.t, mrd(y.fcff, 1))}</title></rect>`;
+      if (vl > 0) s += `<rect x="${x0.toFixed(1)}" y="${sy(y.nopat).toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(sy(Math.max(y.fcff, 0)) - sy(y.nopat) - 2, 0).toFixed(1)}" style="fill:var(--od-vlaganja)" rx="2"><title>${T.grafVlaganja(y.t, mrd(vl, 1))}</title></rect>`;
+      s += `<text x="${cx.toFixed(1)}" y="${H - B + 16}" text-anchor="middle" font-size="11" style="fill:var(--color-text-muted)">${y.t}</text>`;
+      s += `<text x="${cx.toFixed(1)}" y="${H - B + 31}" text-anchor="middle" font-size="10" style="fill:var(--color-text-subtle)">${pct(y.g, 0)}</text>`;
+    });
+    s += `<text x="${L}" y="${H - 3}" font-size="10" style="fill:var(--color-text-subtle)">${T.grafOs}</text>`;
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${T.grafOznaka}">${s}</svg>`;
+    $('od-graf-koncna').textContent = T.grafKoncna(pct(x.delezKoncne * 100, 0));
+  }
+
+  // Drsnik in polje kažeta isto število.
+  for (const [polje, drsnik] of [['od-r', 'od-r-d'], ['od-mc', 'od-mc-d']]) {
+    const p = $(polje) as HTMLInputElement, d = $(drsnik) as HTMLInputElement;
+    d.addEventListener('input', () => { p.value = fmtVnos(Number(d.value)); }); // izriše obrazec, ko dogodek pride do njega
+    p.addEventListener('input', () => { const v = parseStevilo(p.value); if (Number.isFinite(v)) d.value = String(v); });
+  }
+  for (const id of ['od-form', 'od-scen']) {
+    $(id).addEventListener('input', izrisi);
+    $(id).addEventListener('submit', (e) => e.preventDefault());
+  }
+
+  let sirina = 0;
+  new ResizeObserver(() => {
+    const w = $('od-graf').clientWidth;
+    if (w && Math.abs(w - sirina) > 4) { sirina = w; narisi(); }
+  }).observe($('od-graf'));
+  izrisi();
+</script>

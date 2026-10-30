@@ -45,7 +45,7 @@ test('besedila s spremenljivkami vrnejo niz v obeh jezikih', () => {
   for (const s of [sl, en]) {
     assert.match(s.clanek.minBranja(7), /7/);
     assert.match(s.ik.koncniOpomba('10 let', '6 %', ''), /6 %/);
-    assert.match(s.pd.cenaCez('5 let'), /5 let/);
+    assert.match(s.od.priDonosu('9 %', '25 %'), /9 %/);
   }
 });
 
