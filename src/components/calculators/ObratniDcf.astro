@@ -30,13 +30,17 @@ const podjetje = [
   <header class="od__header">
     <h1 class="od__title">{t.naslov}</h1>
     <p class="od__lead">{t.lead}</p>
+    <p class="od__primer">{t.primer}</p>
   </header>
 
-  <section class="od__kratko" aria-labelledby="od-kratko">
-    <h2 class="kd__h" id="od-kratko">{t.naKratko}</h2>
-    <ol>{t.koraki.map((k) => <li set:html={k} />)}</ol>
-    <p>{t.naKratkoKonec} {t.primer}</p>
-  </section>
+  <!-- Navodila so zaprta (avtor, 30. 10. 2026: "navodila skrij v razdelek"), da je na telefonu kalkulator takoj viden. -->
+  <details class="kd__more od__kratko">
+    <summary><span class="kd__sum-title">{t.naKratko}</span><span class="kd__sum-sub">{t.naKratkoPod}</span></summary>
+    <div class="kd__more-body">
+      <ol>{t.koraki.map((k) => <li set:html={k} />)}</ol>
+      <p>{t.naKratkoKonec}</p>
+    </div>
+  </details>
 
   <section class="od__panel od__odgovor" aria-live="polite">
     <div class="od__vrsta">
@@ -192,9 +196,9 @@ const podjetje = [
   .od__header { margin-bottom: var(--space-lg); max-width: 680px; }
   .od__title { font-size: var(--text-3xl); font-weight: 700; letter-spacing: -0.02em; margin-bottom: var(--space-sm); }
   .od__lead { color: var(--color-text-muted); line-height: 1.6; }
+  .od__primer { font-size: var(--text-xs); color: var(--color-text-subtle); margin-top: var(--space-sm); }
 
-  .od__kratko { background: var(--color-accent-bg); border: 1px solid var(--color-accent-border); border-radius: var(--radius-lg); padding: var(--space-md) var(--space-lg); margin-bottom: var(--space-lg); font-size: var(--text-sm); line-height: 1.6; }
-  .od__kratko .kd__h { margin-bottom: var(--space-sm); }
+  .kd__more.od__kratko { margin: 0 0 var(--space-lg); font-size: var(--text-sm); line-height: 1.6; }
   .od__kratko ol { list-style: decimal; padding-left: var(--space-lg); margin-bottom: var(--space-sm); max-width: 80ch; }
   .od__kratko li { margin-bottom: 0.25rem; }
   .od__kratko p { color: var(--color-text-muted); max-width: 80ch; }

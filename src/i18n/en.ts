@@ -292,6 +292,7 @@ export const en: Slovar = {
     lead: 'How fast must a company grow to justify today’s share price? Enter the company’s figures and the return you want. The calculator finds the revenue growth the price already assumes.',
     primer: 'When the page opens, it shows round numbers for a made-up company. Replace them with the figures of the company you are interested in.',
     naKratko: 'How to use it',
+    naKratkoPod: 'Five steps to the answer',
     koraki: [
       '<strong>Enter the company’s figures</strong> in billions of the same currency. Where to find them is explained below under Where to find the data.',
       '<strong>Set your required return</strong>: how much you want to earn per year from the stock.',

@@ -296,6 +296,7 @@ export const sl = {
     lead: 'Koliko mora podjetje rasti, da je današnja cena delnice upravičena? Vpiši podatke podjetja in donos, ki ga želiš. Kalkulator poišče rast prihodkov, ki jo cena že vključuje.',
     primer: 'Ob odprtju so vpisane okrogle številke izmišljenega podjetja. Zamenjaj jih s podatki podjetja, ki te zanima.',
     naKratko: 'Kako ga uporabljaš',
+    naKratkoPod: 'Pet korakov do odgovora',
     koraki: [
       '<strong>Vpiši podatke podjetja</strong> v milijardah iste valute. Kje jih najdeš, piše spodaj v razdelku Kje najdeš podatke.',
       '<strong>Nastavi zahtevani donos</strong>: koliko želiš na leto zaslužiti z delnico.',
