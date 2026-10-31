@@ -89,6 +89,7 @@ const VZORCI_EN: [RegExp, string | ((...m: string[]) => string)][] = [
   [beseda('presegel pričakovanja'), 'beat expectations'],
   [beseda('zaostal za pričakovanji'), 'missed expectations'],
   [beseda('pod pričakovanji'), 'below expectations'],
+  [beseda('po računovodskih pravilih'), 'under accounting rules (GAAP)'],
   [beseda('nad pričakovanji'), 'above expectations'],
   [beseda('pričakovano'), 'expected'],
   [beseda('prva objava'), 'first release'],

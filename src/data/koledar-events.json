@@ -382,7 +382,8 @@
       "importance": "LOW",
       "forecast": "depozitna mera 2,50 %",
       "forecastSource": "Nasdaq",
-      "previous": "depozitna mera 2,50 %"
+      "previous": "depozitna mera 2,50 %",
+      "actual": "depozitna mera 2,50 %"
     },
     {
       "id": "us-ism-nov26",
@@ -410,7 +411,8 @@
       "title": "US CPI (okt 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "previous": "3,7 % medletno (sep 2026); jedrna 2,6 %"
     },
     {
       "id": "us-pce-nov26",
@@ -770,7 +772,10 @@
       "name": "Tesla",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "0,48 USD",
+      "estEps": "0,44 USD",
+      "actualNote": "presegel pričakovanja (ocena 0,44 USD); po računovodskih pravilih 0,22 USD"
     },
     {
       "id": "meta-q3-26",
@@ -779,7 +784,10 @@
       "name": "Meta Platforms",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "7,40 USD",
+      "estEps": "6,00 USD",
+      "actualNote": "presegel pričakovanja (ocena 6,00 USD); po računovodskih pravilih 3,83 USD"
     },
     {
       "id": "v-q3-26",
@@ -788,7 +796,10 @@
       "name": "Visa",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "3,48 USD",
+      "estEps": "3,50 USD",
+      "actualNote": "zaostal za pričakovanji (ocena 3,50 USD)"
     },
     {
       "id": "googl-q3-26",
@@ -797,7 +808,10 @@
       "name": "Alphabet",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "2,12 USD",
+      "estEps": "3,11 USD",
+      "actualNote": "zaostal za pričakovanji (ocena 3,11 USD)"
     },
     {
       "id": "msft-q3-26",
@@ -806,7 +820,10 @@
       "name": "Microsoft",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "4,89 USD",
+      "estEps": "4,82 USD",
+      "actualNote": "presegel pričakovanja (ocena 4,82 USD)"
     },
     {
       "id": "lly-q3-26",
@@ -816,7 +833,9 @@
       "when": "pred odprtjem",
       "quarter": 3,
       "year": 2026,
-      "estEps": "7,49 USD"
+      "estEps": "6,61 USD",
+      "actualEps": "7,48 USD",
+      "actualNote": "presegel pričakovanja (ocena 6,61 USD)"
     },
     {
       "id": "intc-q3-26",
@@ -825,7 +844,9 @@
       "name": "Intel",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "0,52 USD",
+      "actualNote": "po računovodskih pravilih 0,60 USD"
     },
     {
       "id": "ma-q3-26",
@@ -834,7 +855,10 @@
       "name": "Mastercard",
       "when": "pred odprtjem",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "5,31 USD",
+      "estEps": "5,32 USD",
+      "actualNote": "zaostal za pričakovanji (ocena 5,32 USD)"
     },
     {
       "id": "amzn-q3-26",
@@ -843,7 +867,10 @@
       "name": "Amazon",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "1,89 USD",
+      "estEps": "2,00 USD",
+      "actualNote": "zaostal za pričakovanji (ocena 2,00 USD)"
     },
     {
       "id": "abbv-q3-26",
@@ -852,7 +879,10 @@
       "name": "AbbVie",
       "when": "pred odprtjem",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "3,82 USD",
+      "estEps": "3,83 USD",
+      "actualNote": "zaostal za pričakovanji (ocena 3,83 USD)"
     },
     {
       "id": "xom-q3-26",
@@ -861,7 +891,10 @@
       "name": "Exxon Mobil",
       "when": "pred odprtjem",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "4,23 USD",
+      "estEps": "4,12 USD",
+      "actualNote": "presegel pričakovanja (ocena 4,12 USD); po računovodskih pravilih 3,72 USD"
     },
     {
       "id": "aapl-q3-26",
@@ -870,7 +903,8 @@
       "name": "Apple",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "estEps": "2,02 USD"
     },
     {
       "id": "amd-q3-26",
@@ -879,7 +913,8 @@
       "name": "AMD",
       "when": "po zaprtju",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "estEps": "1,97 USD"
     },
     {
       "id": "brkb-q3-26",

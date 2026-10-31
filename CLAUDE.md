@@ -26,6 +26,8 @@ Preberi na začetku vsakega pogovora o strani. Kaj je kje, je v [README.md](READ
 
 Tedenski pregled pred objavo prestane še preizkus slike tedna (avtor 24. 10. 2026): članek preberi kot bralec, ki o tednu ne ve ničesar, sliko primerjaj z dejanskim tednom iz izmerjenih podatkov in vseh zgodb ter avtorju povej, kje je napačen vtis in kaj manjka. Postopek je v `engineering-investor-agent/CLAUDE.md`.
 
+Ob vsakem tedenskem pregledu se posodobi tudi koledar (avtor 31. 10. 2026), za naprej in za nazaj. Za naprej: dogodki in objave rezultatov naslednjih dveh tednov z uro, prejšnjo vrednostjo in pričakovanjem. Za nazaj: vsak dogodek in vsaka objava rezultatov preteklega tedna ima izid, uradno naslovno številko ob prvi objavi, preverjeno pri izdajatelju (BLS, BEA, Fed, ECB, sporočilo podjetja na SEC) in primerjano z investing.com. Kar robot ni vpisal, se vpiše ročno, vzrok pa se popravi. Vse samo iz brezplačnih virov, brez modela.
+
 Remote mora v naslovu vsebovati `engineeringinvestor1-arch@github.com`, sicer GitHub zapis zavrne (na računalniku sta shranjena dva računa).
 
 ## Pravila kode

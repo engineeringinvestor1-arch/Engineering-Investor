@@ -29,6 +29,8 @@ test('predloge, ki jih piše robot', () => {
     'depozitna mera 2,25 %': 'deposit rate 2.25%',
     'presegel pričakovanja (ocena 2,13 USD)': 'beat expectations (estimate $2.13)',
     'zaostal za pričakovanji (ocena 32,56 USD)': 'missed expectations (estimate $32.56)',
+    // 31. 10. 2026: pri prilagojenem izidu opomba pove še dobiček po računovodskih pravilih (Tesla, Meta, Intel, Exxon).
+    'presegel pričakovanja (ocena 0,44 USD); po računovodskih pravilih 0,22 USD': 'beat expectations (estimate $0.44); under accounting rules (GAAP) $0.22',
     '33,42 USD': '$33.42',
     'izguba 0,09 USD': 'loss $0.09',
     '~0,53 USD': '~$0.53',
