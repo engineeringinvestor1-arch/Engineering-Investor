@@ -8,7 +8,10 @@
  *     releases: CPI, PPI, PCE, NFP, retail sales, GDP, Fed funds rate.
  *     Each must use the series behind the official headline figure; the
  *     run happens a day or so after the release, so it records the first print.
- *   - Finnhub for actual reported EPS on the earnings calendar.
+ *   - Finnhub (free key) and Nasdaq's public earnings calendar (no key) for
+ *     actual reported EPS, compared with each other (scripts/koledar/izidi.mjs).
+ *     When they differ by more than rounding, both numbers go in with their
+ *     source (author, 31 Oct 2026: "napiši obe števili in tudi napiši od kje").
  *
  * Since 2 Oct 2026 it also writes the consensus forecast ("napoved") for events
  * in the next two weeks, from Nasdaq's economic calendar checked against Forex
@@ -38,11 +41,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchForexFactory, fetchNasdaqDay, forecastFor, ruleFor } from './koledar/pricakovanja.mjs';
 import { DNI_NAPREJ, dopolniObjave, dopolniPredvidene, fetchNasdaqEarningsDay, fetchYahooEarnings, izberiPredvidene, ocenjeneObjave, razpisaneObjave, yahooObjave } from './koledar/objave.mjs';
+import { fetchFinnhubEarnings, izberiFinnhub, izidRezultata } from './koledar/izidi.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, '../src/data/koledar-events.json');
 const PODJETJA_PATH = path.join(__dirname, '../src/data/koledar-podjetja.json');
 const LOOKBACK_DAYS = 4; // covers weekends / a missed run without re-scanning ancient history
+// Earnings: an after-close report reaches Finnhub a day later; ten days also cover a week of missed runs.
+const EARNINGS_LOOKBACK_DAYS = 10;
 const FORECAST_DAYS = 14; // the calendar looks two weeks ahead; consensus appears a few days before a release
 
 function parseDateUTC(str) {
@@ -193,30 +199,26 @@ async function fetchMacroActual(apiKey, evt) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Finnhub (earnings actuals)                                          */
+/* Earnings actuals: Finnhub and Nasdaq compared (koledar/izidi.mjs)    */
 /* ------------------------------------------------------------------ */
 
-async function fetchEarningsActual(apiKey, evt, cutoffDate) {
-  const url = `https://finnhub.io/api/v1/stock/earnings?symbol=${evt.ticker}&token=${apiKey}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Finnhub ${evt.ticker} ${res.status}: ${await res.text()}`);
-  const rows = await res.json();
-  if (!Array.isArray(rows) || rows.length === 0) return null;
-
-  const match = rows.find((r) => r.actual !== null && r.period && parseDateUTC(r.period) >= cutoffDate);
-  if (!match) return null;
-
-  const actual = match.actual;
-  const estimate = match.estimate;
-  let note = null;
-  if (typeof estimate === 'number') {
-    const diff = actual - estimate;
-    note = diff >= 0
-      ? `presegel pričakovanja (ocena ${fmtNum(estimate, 2)} USD)`
-      : `zaostal za pričakovanji (ocena ${fmtNum(estimate, 2)} USD)`;
+async function fetchEarningsActual(finnhubKey, evt, nasdaqDays) {
+  let finnhub = null;
+  if (finnhubKey) {
+    try {
+      finnhub = izberiFinnhub(await fetchFinnhubEarnings(finnhubKey, evt.ticker), evt);
+    } catch (err) {
+      console.warn(`  earnings: ${evt.id} Finnhub ni prebran: ${err.message}`);
+    }
   }
-
-  return { actualEps: `${fmtNum(actual, 2)} USD`, actualNote: note };
+  let nasdaq = null;
+  try {
+    nasdaqDays[evt.date] ??= await fetchNasdaqEarningsDay(evt.date);
+    nasdaq = nasdaqDays[evt.date].find((r) => r.symbol === evt.ticker) ?? null;
+  } catch (err) {
+    console.warn(`  earnings: ${evt.id} Nasdaq ni prebran: ${err.message}`);
+  }
+  return izidRezultata({ finnhub, nasdaq });
 }
 
 /* ------------------------------------------------------------------ */
@@ -333,7 +335,11 @@ async function main() {
   };
 
   const pendingMacro = data.macroEvents.filter((e) => inWindow(e.date) && !e.actual);
-  const pendingEarnings = data.earnings.filter((e) => inWindow(e.date) && !e.actualEps);
+  const earningsCutoff = today - EARNINGS_LOOKBACK_DAYS * 86_400_000;
+  const pendingEarnings = data.earnings.filter((e) => {
+    const t = parseDateUTC(e.date);
+    return t >= earningsCutoff && t <= today && !e.actualEps && !e.estimated;
+  });
 
   let changed = 0;
   if (pendingMacro.length === 0 && pendingEarnings.length === 0) {
@@ -357,22 +363,15 @@ async function main() {
     console.log('FRED_API_KEY missing, skipping macro events.');
   }
 
-  if (finnhubKey) {
-    for (const evt of pendingEarnings) {
-      try {
-        const result = await fetchEarningsActual(finnhubKey, evt, cutoff);
-        if (result) {
-          evt.actualEps = result.actualEps;
-          if (result.actualNote) evt.actualNote = result.actualNote;
-          changed++;
-          console.log(`  earnings: ${evt.id} -> ${result.actualEps} (${result.actualNote ?? 'ni ocene'})`);
-        }
-      } catch (err) {
-        console.warn(`  earnings: ${evt.id} failed: ${err.message}`);
-      }
-    }
-  } else if (pendingEarnings.length) {
-    console.log('FINNHUB_API_KEY missing, skipping earnings events.');
+  if (!finnhubKey && pendingEarnings.length) console.log('FINNHUB_API_KEY missing, earnings from Nasdaq only.');
+  const nasdaqDays = {};
+  for (const evt of pendingEarnings) {
+    const result = await fetchEarningsActual(finnhubKey, evt, nasdaqDays);
+    if (!result) continue;
+    evt.actualEps = result.actualEps;
+    if (result.actualNote) evt.actualNote = result.actualNote;
+    changed++;
+    console.log(`  earnings: ${evt.id} -> ${result.actualEps} (${result.actualNote ?? 'ni ocene'})`);
   }
 
   changed += await updateForecasts(data, today);

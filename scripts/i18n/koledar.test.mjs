@@ -31,6 +31,9 @@ test('predloge, ki jih piše robot', () => {
     'zaostal za pričakovanji (ocena 32,56 USD)': 'missed expectations (estimate $32.56)',
     // 31. 10. 2026: pri prilagojenem izidu opomba pove še dobiček po računovodskih pravilih (Tesla, Meta, Intel, Exxon).
     'presegel pričakovanja (ocena 0,44 USD); po računovodskih pravilih 0,22 USD': 'beat expectations (estimate $0.44); under accounting rules (GAAP) $0.22',
+    // 31. 10. 2026: vira se razlikujeta, obe številki z virom.
+    '0,48 USD (Finnhub), 0,20 USD (Nasdaq)': '$0.48 (Finnhub), $0.20 (Nasdaq)',
+    'ocena 0,44 USD (Finnhub); po računovodskih pravilih 0,22 USD': 'estimate $0.44 (Finnhub); under accounting rules (GAAP) $0.22',
     '33,42 USD': '$33.42',
     'izguba 0,09 USD': 'loss $0.09',
     '~0,53 USD': '~$0.53',

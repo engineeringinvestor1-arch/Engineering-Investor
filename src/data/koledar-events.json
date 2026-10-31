@@ -773,9 +773,9 @@
       "when": "po zaprtju",
       "quarter": 3,
       "year": 2026,
-      "actualEps": "0,48 USD",
+      "actualEps": "0,48 USD (Finnhub), 0,20 USD (Nasdaq)",
       "estEps": "0,44 USD",
-      "actualNote": "presegel pričakovanja (ocena 0,44 USD); po računovodskih pravilih 0,22 USD"
+      "actualNote": "ocena 0,44 USD (Finnhub); po računovodskih pravilih 0,22 USD"
     },
     {
       "id": "meta-q3-26",
@@ -845,7 +845,7 @@
       "when": "po zaprtju",
       "quarter": 3,
       "year": 2026,
-      "actualEps": "0,52 USD",
+      "actualEps": "0,52 USD (Intel), 0,41 USD (Nasdaq)",
       "actualNote": "po računovodskih pravilih 0,60 USD"
     },
     {
