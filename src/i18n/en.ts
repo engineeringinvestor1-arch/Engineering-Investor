@@ -76,6 +76,8 @@ export const en: Slovar = {
     vseAnalize: '← All analysis',
     preberi: 'Read',
     preberiAria: (naslov) => `Read: ${naslov}`,
+    graf: 'Chart',
+    zapriGraf: 'Close chart',
   },
 
   zavrnitev: {

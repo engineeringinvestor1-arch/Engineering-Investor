@@ -114,7 +114,42 @@ const formattedDate = new Intl.DateTimeFormat(INTL[lang], {
       </article>
     </div>
   </div>
+
+  <!-- Okno za graf, ki ga odpre oznaka [n] v besedilu (vtičnik remark-grafi). Slog je v global.css. -->
+  <dialog class="graf-okno" aria-label={t.graf}>
+    <div class="graf-okno__glava">
+      <span class="graf-okno__oznaka"></span>
+      <button type="button" class="graf-okno__zapri" aria-label={t.zapriGraf}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="graf-okno__vsebina"></div>
+  </dialog>
 </BaseLayout>
+
+<script>
+  // Avtor 31. 10. 2026: graf naj se odpre ob pritisku na [n], "tako da ne boš izgubil kje si ostal z branjem".
+  // Okno je nad besedilom, zato se stran ne premakne. Brez skripte povezava skoči na graf na koncu članka.
+  const okno = document.querySelector<HTMLDialogElement>('dialog.graf-okno');
+  if (okno && typeof okno.showModal === 'function') {
+    const vsebina = okno.querySelector('.graf-okno__vsebina')!;
+    const oznaka = okno.querySelector('.graf-okno__oznaka')!;
+    document.addEventListener('click', (e) => {
+      const povezava = (e.target as Element | null)?.closest?.('a.graf-ref') as HTMLAnchorElement | null;
+      if (!povezava) return;
+      const svg = document.getElementById(povezava.dataset.graf ?? '')?.querySelector('svg');
+      if (!svg) return;
+      e.preventDefault();
+      vsebina.replaceChildren(svg.cloneNode(true));
+      oznaka.textContent = povezava.textContent;
+      okno.setAttribute('aria-label', povezava.getAttribute('aria-label') ?? '');
+      okno.showModal();
+    });
+    // Klik na zatemnjeno ozadje zapre okno (ozadje je del elementa dialog, vsebina pa ne).
+    okno.addEventListener('click', (e) => { if (e.target === okno) okno.close(); });
+    okno.querySelector('.graf-okno__zapri')!.addEventListener('click', () => okno.close());
+  }
+</script>
 
 <style>
   .article-page {

@@ -346,6 +346,112 @@ h1, h2, h3, h4, h5, h6 {
    Brez tega se besedilo zacne tik pod grafom (avtor, 23. 9. 2026). */
 .prose figure.chart {
   margin: var(--space-xl) 0;
+  position: relative;
+  scroll-margin-top: 5rem;
+}
+
+/* Oznaka [n] v besedilu odpre graf v oknu nad besedilom (vtičnik remark-grafi, okno v ArticleLayout).
+   Avtor 31. 10. 2026: "samo označiš [1] na katero lahko pritisneš in ti prikaže graf". */
+.prose a.graf-ref,
+.chart__oznaka,
+.graf-okno__oznaka {
+  display: inline-block;
+  padding: 0 0.4em;
+  font-size: 0.8em;
+  font-weight: 600;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--color-accent);
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-sm);
+}
+
+/* Brez desnega roba, da se pika za oznako ne odmakne ("[5]."). */
+.prose a.graf-ref {
+  margin: 0 0 0 0.1em;
+  vertical-align: 0.1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.prose a.graf-ref:hover {
+  color: #fff;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Na koncu članka ima graf, na katerega kaže oznaka, isto številko v zgornjem desnem kotu. */
+.chart__oznaka {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: var(--text-xs);
+}
+
+/* margin: auto vrne sredinsko postavitev, ki jo splošna ponastavitev robov (margin: 0) odvzame. */
+dialog.graf-okno {
+  width: min(880px, calc(100vw - 16px));
+  max-width: none;
+  max-height: calc(100dvh - 16px);
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+dialog.graf-okno::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+html:has(dialog.graf-okno[open]) {
+  overflow: hidden;
+}
+
+.graf-okno__glava {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 0 14px;
+}
+
+.graf-okno__oznaka {
+  font-size: var(--text-sm);
+}
+
+.graf-okno__zapri {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.graf-okno__zapri:hover {
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+}
+
+/* Graf je ves viden in se pomanjša kot v besedilu; na telefonu ga bralec po potrebi poveča s prsti. */
+.graf-okno__vsebina {
+  padding: 4px 8px 8px;
+}
+
+@media (min-width: 700px) {
+  .graf-okno__vsebina {
+    padding: 6px 14px 14px;
+  }
 }
 
 /* Highlight box za ključne ugotovitve */

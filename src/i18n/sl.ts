@@ -76,6 +76,8 @@ export const sl = {
     vseAnalize: '← Vse analize',
     preberi: 'Preberi',
     preberiAria: (naslov: string) => `Preberi: ${naslov}`,
+    graf: 'Graf',
+    zapriGraf: 'Zapri graf',
   },
 
   zavrnitev: {

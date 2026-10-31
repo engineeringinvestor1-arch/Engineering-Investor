@@ -6,9 +6,11 @@
 // in se ob pritisku na gumb prebarva takoj, brez ponovnega nalaganja.
 //
 // Velja samo za .svg v mapi public/. Datoteke .png in zunanje slike ostanejo slike, kot so bile.
+// Vsak graf dobi id `graf-<ime datoteke>`, da nanj lahko kažejo oznake [n] (vtičnik remark-grafi, ki teče prej).
 
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { idGrafa } from './remark-grafi.mjs';
 
 const PUBLIC = new URL('../../public/', import.meta.url);
 
@@ -36,7 +38,8 @@ export function remarkInlineSvg() {
           const file = fileURLToPath(new URL(`.${image.url}`, PUBLIC));
           if (existsSync(file)) {
             const svg = responsive(readFileSync(file, 'utf8'), image.alt ?? '');
-            node.children[i] = { type: 'html', value: `<figure class="chart">${svg}</figure>` };
+            const oznaka = image.data?.oznaka ? `<span class="chart__oznaka" aria-hidden="true">${image.data.oznaka}</span>` : '';
+            node.children[i] = { type: 'html', value: `<figure class="chart" id="${idGrafa(image.url)}">${oznaka}${svg}</figure>` };
             return;
           }
         }
