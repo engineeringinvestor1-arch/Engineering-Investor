@@ -433,6 +433,23 @@
       "importance": "LOW"
     },
     {
+      "id": "us-praznik-nov26",
+      "date": "2026-11-26",
+      "title": "Zahvalni dan: borza v New Yorku zaprta",
+      "category": "Praznik",
+      "region": "US",
+      "importance": "LOW"
+    },
+    {
+      "id": "us-skrajsano-nov26",
+      "date": "2026-11-27",
+      "time": "19:00",
+      "title": "Skrajšano trgovanje v New Yorku (dan po zahvalnem dnevu)",
+      "category": "Praznik",
+      "region": "US",
+      "importance": "LOW"
+    },
+    {
       "id": "us-ism-dec26",
       "date": "2026-12-01",
       "title": "US ISM predelovalne dejavnosti (nov 2026)",
@@ -475,6 +492,31 @@
       "title": "Seja ECB - obrestne mere",
       "category": "Centralna banka",
       "region": "EU",
+      "importance": "LOW"
+    },
+    {
+      "id": "us-skrajsano-dec26",
+      "date": "2026-12-24",
+      "time": "19:00",
+      "title": "Skrajšano trgovanje v New Yorku (božični večer)",
+      "category": "Praznik",
+      "region": "US",
+      "importance": "LOW"
+    },
+    {
+      "id": "us-praznik-dec26",
+      "date": "2026-12-25",
+      "title": "Božič: borza v New Yorku zaprta",
+      "category": "Praznik",
+      "region": "US",
+      "importance": "LOW"
+    },
+    {
+      "id": "us-praznik-jan27",
+      "date": "2027-01-01",
+      "title": "Novo leto: borza v New Yorku zaprta",
+      "category": "Praznik",
+      "region": "US",
       "importance": "LOW"
     },
     {

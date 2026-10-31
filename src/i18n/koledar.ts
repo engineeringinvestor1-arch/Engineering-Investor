@@ -68,6 +68,12 @@ const NATANCNO_EN: Record<string, string> = {
   'Vmesne volitve v ZDA (kongres)': 'US midterm elections (Congress)',
   'predstavniški dom: republikanci 218, demokrati 214, neodvisni 1; senat: republikanci 53, demokrati 45, neodvisna 2':
     'House: Republicans 218, Democrats 214, independent 1; Senate: Republicans 53, Democrats 45, independents 2',
+  // Prazniki newyorške borze (avtor 31. 10. 2026: "lahko dodaš tudi Praznikov borze"), datumi po NYSE.
+  'Zahvalni dan: borza v New Yorku zaprta': 'Thanksgiving: New York Stock Exchange closed',
+  'Skrajšano trgovanje v New Yorku (dan po zahvalnem dnevu)': 'Early close in New York (day after Thanksgiving)',
+  'Skrajšano trgovanje v New Yorku (božični večer)': 'Early close in New York (Christmas Eve)',
+  'Božič: borza v New Yorku zaprta': 'Christmas: New York Stock Exchange closed',
+  'Novo leto: borza v New Yorku zaprta': 'New Year’s Day: New York Stock Exchange closed',
 };
 
 // Zapis števil: 1.234,5 -> 1,234.5 in "3,4 %" -> "3.4%". Datum "30. 9." in razmerje "9:3" ostaneta.

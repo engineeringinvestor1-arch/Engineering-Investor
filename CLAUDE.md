@@ -29,7 +29,7 @@ Tedenski pregled pred objavo prestane še preizkus slike tedna (avtor 24. 10. 20
 
 Ob vsakem tedenskem pregledu se posodobi tudi koledar (avtor 31. 10. 2026), za naprej in za nazaj. Za naprej: dogodki in objave rezultatov naslednjih dveh tednov z uro, prejšnjo vrednostjo in pričakovanjem. Za nazaj: vsak dogodek in vsaka objava rezultatov preteklega tedna ima izid, uradno naslovno številko ob prvi objavi, preverjeno pri izdajatelju (BLS, BEA, Fed, ECB, sporočilo podjetja na SEC) in primerjano z investing.com. Kar robot ni vpisal, se vpiše ročno, vzrok pa se popravi. Vse samo iz brezplačnih virov, brez modela.
 
-V koledar sodijo tudi politični dogodki z uradno razpisanim datumom, ki premaknejo trg, kategorija Politika (avtor 31. 10. 2026, ko vmesnih volitev v ZDA 3. 11. ni bilo v koledarju). Sobotni paket agenta opozori na dogodek, o katerem piše veliko virov, a ga v koledarju ni.
+V koledar sodijo tudi politični dogodki z uradno razpisanim datumom, ki premaknejo trg, kategorija Politika (avtor 31. 10. 2026, ko vmesnih volitev v ZDA 3. 11. ni bilo v koledarju). Sobotni paket agenta opozori na dogodek, o katerem piše veliko virov, a ga v koledarju ni. V koledarju so tudi prazniki in skrajšani dnevi newyorške borze, kategorija Praznik, datumi po NYSE (avtor 31. 10. 2026).
 
 Remote mora v naslovu vsebovati `engineeringinvestor1-arch@github.com`, sicer GitHub zapis zavrne (na računalniku sta shranjena dva računa).
 

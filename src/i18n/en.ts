@@ -166,6 +166,7 @@ export const en: Slovar = {
       GDP: 'GDP',
       'Trg dela': 'Labour market',
       Politika: 'Politics',
+      Praznik: 'Holiday',
     },
     opisi: {
       'us-cpi': 'The Consumer Price Index (CPI), published by the US Bureau of Labor Statistics (BLS). It shows how much the goods and services bought by households have risen in price over a year. Core inflation leaves out food and energy, whose prices swing widely, so it shows the trend better. Inflation above expectations lowers the chance that the Fed cuts interest rates, which usually lifts bond yields and weighs on stocks.',
@@ -183,6 +184,8 @@ export const en: Slovar = {
       ecb: 'The ECB’s decision on interest rates in the euro area. The most important one is the deposit rate, at which banks keep money at the ECB. The decision is released at 14:15 CET, and the press conference starts at 14:45. Four times a year the ECB also publishes projections for inflation and growth.',
       'us-jackson': 'The annual symposium hosted by the Kansas City Fed in Jackson Hole. Leading central bankers often use it to signal the direction of monetary policy.',
       'us-volitve': 'Midterm elections halfway through the presidential term. Voters elect all 435 members of the House of Representatives and 35 of the 100 senators (33 regular seats and two special elections), as well as governors in 36 states. The result shows whether the president’s party keeps its majority in Congress, which decides on the budget, taxes and the debt ceiling. Results come in overnight into Wednesday, Slovenian time; close races can take several days to count.',
+      'us-praznik': 'The New York Stock Exchange (NYSE) is closed.',
+      'us-skrajsano': 'The New York Stock Exchange (NYSE) closes at 1 pm New York time, which is 7 pm Slovenian time.',
     },
     opisiKategorij: {
       Inflacija: 'Measures the change in prices compared with a year earlier. Inflation above expectations raises the chance that the central bank keeps interest rates higher for longer, which usually weighs on stocks; inflation below expectations works the other way.',
@@ -192,6 +195,7 @@ export const en: Slovar = {
       GDP: 'Gross domestic product measures total economic growth in the quarter. The first release (advance) is an early estimate that is revised later, when more complete data is available.',
       'Trg dela': 'The report on new jobs (NFP) or jobless claims. A strong labour market is good news for economic growth, but it can also mean more pressure on inflation, which prolongs the period of higher interest rates.',
       Politika: 'Elections and other political events that can move markets because they change expectations about taxes, spending, tariffs or regulation.',
+      Praznik: 'A day when the New York Stock Exchange is closed or closes early.',
     },
     opisRezultatov:
       'A company’s quarterly earnings report. Markets compare the actual results (earnings per share, revenue) with analysts’ expectations (the consensus), and a deviation from the consensus often moves the share price more than the absolute results themselves.',
