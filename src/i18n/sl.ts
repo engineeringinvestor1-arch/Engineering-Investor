@@ -165,6 +165,7 @@ export const sl = {
       PMI: 'PMI',
       GDP: 'GDP',
       'Trg dela': 'Trg dela',
+      Politika: 'Politika',
     } as Record<string, string>,
     // Opis za vsako vrsto dogodka. Ključ je začetek oznake dogodka (us-cpi-oct26 -> us-cpi).
     opisi: {
@@ -182,6 +183,7 @@ export const sl = {
       fomc: 'Odločitev Feda o ciljnem razponu ključne obrestne mere (federal funds). Izjava izide ob 14.00 po newyorškem času, pol ure pozneje sledi novinarska konferenca. Štirikrat na leto Fed objavi tudi napovedi članov za obrestne mere in gospodarstvo. Trg poleg odločitve pozorno bere namige o naslednjih korakih.',
       ecb: 'Odločitev ECB o obrestnih merah v evrskem območju. Najpomembnejša je depozitna mera, po kateri banke hranijo denar pri ECB. Odločitev izide ob 14.15, novinarska konferenca se začne ob 14.45. Štirikrat na leto ECB objavi tudi napovedi za inflacijo in rast.',
       'us-jackson': 'Letni simpozij, ki ga Fed iz Kansas Cityja pripravi v Jackson Holu. Vodilni centralni bankirji tam pogosto nakažejo smer denarne politike.',
+      'us-volitve': 'Vmesne volitve na polovici predsedniškega mandata. Volijo vseh 435 članov predstavniškega doma in 35 od 100 senatorjev (33 rednih mest in dve izredni volitvi), poleg tega guvernerje v 36 zveznih državah. Izid pove, ali bo predsednikova stranka še imela večino v kongresu, ki odloča o proračunu, davkih in zgornji meji zadolževanja. Izidi prihajajo v noči na sredo po našem času, pri tesnih izidih štetje traja tudi več dni.',
     } as Record<string, string>,
     // Rezerva po kategoriji za vrste dogodkov, ki še nimajo svojega opisa.
     opisiKategorij: {
@@ -191,6 +193,7 @@ export const sl = {
       'Centralna banka': 'Odločitev osrednje banke (Fed ali ECB) o obrestnih merah. Dvig ali jastrebji ton (napoved prihodnjih dvigov) navadno okrepi valuto in pritisne na delnice; znižanje ali golobji ton deluje v obratno smer.',
       GDP: 'Bruto domači proizvod meri skupno gospodarsko rast v četrtletju. Prva objava (advance) je zgodnja ocena, ki se kasneje revidira, ko so na voljo popolnejši podatki.',
       'Trg dela': 'Poročilo o novih delovnih mestih (NFP) oz. prijavah brezposelnih. Močan trg dela je dobra novica za gospodarsko rast, a lahko pomeni tudi več pritiska na inflacijo, kar podaljša obdobje višjih obrestnih mer.',
+      Politika: 'Volitve in drugi politični dogodki, ki lahko premaknejo trg, ker spremenijo pričakovanja o davkih, porabi, carinah ali predpisih.',
     } as Record<string, string>,
     opisRezultatov:
       'Četrtletno poročilo o poslovanju podjetja. Trg primerja dejanske rezultate (dobiček na delnico, prihodki) s pričakovanji analitikov (konsenz) - odstopanje od konsenza pogosto premakne ceno delnice bolj kot sami absolutni rezultati.',

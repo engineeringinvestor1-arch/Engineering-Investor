@@ -395,6 +395,15 @@
       "importance": "LOW"
     },
     {
+      "id": "us-volitve-nov26",
+      "date": "2026-11-03",
+      "title": "Vmesne volitve v ZDA (kongres)",
+      "category": "Politika",
+      "region": "US",
+      "importance": "HIGH",
+      "previous": "predstavniški dom: republikanci 218, demokrati 214, neodvisni 1; senat: republikanci 53, demokrati 45, neodvisna 2"
+    },
+    {
       "id": "us-nfp-nov26",
       "date": "2026-11-06",
       "time": "14:30",

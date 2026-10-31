@@ -64,6 +64,10 @@ const NATANCNO_EN: Record<string, string> = {
     'fiscal Q4; adjusted earnings and revenue above expectations with raised guidance, shares +35%',
   'Seja ECB - obrestne mere': 'ECB meeting: interest rates',
   'Seja FOMC - obrestne mere': 'FOMC meeting: interest rates',
+  // Politični dogodki (avtor, 31. 10. 2026: "Hočem da so res pomembni dogodki prikazani na koledarju").
+  'Vmesne volitve v ZDA (kongres)': 'US midterm elections (Congress)',
+  'predstavniški dom: republikanci 218, demokrati 214, neodvisni 1; senat: republikanci 53, demokrati 45, neodvisna 2':
+    'House: Republicans 218, Democrats 214, independent 1; Senate: Republicans 53, Democrats 45, independents 2',
 };
 
 // Zapis števil: 1.234,5 -> 1,234.5 in "3,4 %" -> "3.4%". Datum "30. 9." in razmerje "9:3" ostaneta.

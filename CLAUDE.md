@@ -17,6 +17,7 @@ Preberi na začetku vsakega pogovora o strani. Kaj je kje, je v [README.md](READ
 - Stari objavljeni članki se ne popravljajo.
 - Dolgih pomišljajev ne uporabljaj nikjer.
 - Nobena številka v članku ne izvira iz modela; vsaka ima vir.
+- Viri so samo za urednika (avtor 31. 10. 2026). V datoteki članka ostanejo zapisani kot doslej (vrstice Viri, Številke, povezave pri drugih novicah, Vir v grafih); `src/plugins/remark-viri.mjs` jih pri gradnji odstrani, predogled `npm run dev` jih pokaže označene. `npm run build` pade, če kak vir ostane na strani (`scripts/clanki/preveri-vire.mjs`); nova oblika vira gre v vtičnik s preizkusom. Omembe v besedilu ("po poročanju Bloomberga") ostanejo.
 
 ## Pred objavo
 
@@ -27,6 +28,8 @@ Preberi na začetku vsakega pogovora o strani. Kaj je kje, je v [README.md](READ
 Tedenski pregled pred objavo prestane še preizkus slike tedna (avtor 24. 10. 2026): članek preberi kot bralec, ki o tednu ne ve ničesar, sliko primerjaj z dejanskim tednom iz izmerjenih podatkov in vseh zgodb ter avtorju povej, kje je napačen vtis in kaj manjka. Postopek je v `engineering-investor-agent/CLAUDE.md`.
 
 Ob vsakem tedenskem pregledu se posodobi tudi koledar (avtor 31. 10. 2026), za naprej in za nazaj. Za naprej: dogodki in objave rezultatov naslednjih dveh tednov z uro, prejšnjo vrednostjo in pričakovanjem. Za nazaj: vsak dogodek in vsaka objava rezultatov preteklega tedna ima izid, uradno naslovno številko ob prvi objavi, preverjeno pri izdajatelju (BLS, BEA, Fed, ECB, sporočilo podjetja na SEC) in primerjano z investing.com. Kar robot ni vpisal, se vpiše ročno, vzrok pa se popravi. Vse samo iz brezplačnih virov, brez modela.
+
+V koledar sodijo tudi politični dogodki z uradno razpisanim datumom, ki premaknejo trg, kategorija Politika (avtor 31. 10. 2026, ko vmesnih volitev v ZDA 3. 11. ni bilo v koledarju). Sobotni paket agenta opozori na dogodek, o katerem piše veliko virov, a ga v koledarju ni.
 
 Remote mora v naslovu vsebovati `engineeringinvestor1-arch@github.com`, sicer GitHub zapis zavrne (na računalniku sta shranjena dva računa).
 
