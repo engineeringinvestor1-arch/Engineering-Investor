@@ -13,7 +13,7 @@ Kljub temu je delnica naslednji dan padla za 12,6 %. Zaprla je pri 283,82 dolarj
 
 Padec takšne velikosti je za dolgoročnega vlagatelja znak, da je treba preveriti, ali se je spremenilo kaj od tega, zaradi česar ima podjetje. Analiza zato išče odgovor na eno vprašanje: **ali je padec znak, da umetna inteligenca načenja Googlovo iskanje, ali le prehodno obdobje, ko Google veliko vlaga in sadove šele čaka?**
 
-*Oznaka v oglatem oklepaju, na primer [1], odpre graf. Vsi grafi so zbrani tudi na koncu članka.*
+*Oznaka v oglatem oklepaju, na primer [1], pokaže graf, ko se nanjo ustaviš z miško; s klikom ali dotikom se odpre večji. Vsi grafi so zbrani tudi na koncu članka.*
 
 ## Kaj je Alphabet povedal
 

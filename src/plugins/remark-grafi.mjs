@@ -9,7 +9,8 @@
 // Ta vtičnik:
 // 1. vsakemu grafu .svg da oznako `graf-<ime datoteke>` (vtičnik remark-inline-svg jo zapiše kot id slike);
 // 2. grafe, na katere kaže vsaj ena oznaka, oštevilči po vrstnem redu v članku;
-// 3. povezavo zamenja z gumbom "[n]", ki ga skripta v ArticleLayout odpre v oknu nad besedilom.
+// 3. povezavo zamenja z gumbom "[n]"; skripta v ArticleLayout pokaže graf, ko se miška ustavi na njem, s klikom
+//    pa ga odpre v oknu nad besedilom. Brez naslova (title), da se brskalnikov namig ne prekriva s predogledom.
 //    Brez skripte povezava skoči na graf.
 // Oznaka brez grafa ustavi gradnjo, da se pokvarjena povezava ne objavi.
 
@@ -64,7 +65,7 @@ export function remarkGrafi() {
       const opis = `${beseda} ${slika.data.stevilka}: ${slika.alt ?? ''}`.trim();
       stars.children[i] = {
         type: 'html',
-        value: `<a class="graf-ref" href="#${id}" data-graf="${id}" aria-label="${escAttr(opis)}" title="${escAttr(slika.alt ?? '')}">${slika.data.oznaka}</a>`,
+        value: `<a class="graf-ref" href="#${id}" data-graf="${id}" aria-label="${escAttr(opis)}">${slika.data.oznaka}</a>`,
       };
     });
   };

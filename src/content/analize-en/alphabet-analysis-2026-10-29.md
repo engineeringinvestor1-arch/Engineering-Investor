@@ -14,7 +14,7 @@ Even so, the stock fell 12.6% the next day. It closed at $283.82, against $324.8
 
 For a long-term investor, a drop of this size is a signal to check whether anything has changed in the reasons for owning the company. The analysis therefore looks for the answer to one question: **is the drop a sign that artificial intelligence is eating into Google Search, or just a transitional period in which Google invests heavily and is still waiting for the payoff?**
 
-*A number in square brackets, such as [1], opens a chart. All charts are also collected at the end of the article.*
+*A number in square brackets, such as [1], shows a chart when you rest the mouse on it; a click or tap opens a larger one. All charts are also collected at the end of the article.*
 
 ## What Alphabet said
 
