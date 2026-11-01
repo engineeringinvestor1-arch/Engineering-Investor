@@ -392,7 +392,9 @@
       "time": "16:00",
       "category": "PMI",
       "region": "US",
-      "importance": "LOW"
+      "importance": "LOW",
+      "forecast": "indeks 54,7",
+      "forecastSource": "Forex Factory"
     },
     {
       "id": "us-volitve-nov26",
@@ -411,7 +413,9 @@
       "category": "Trg dela",
       "region": "US",
       "importance": "HIGH",
-      "previous": "+29 tisoč delovnih mest (sep 2026); brezposelnost 4,2 %"
+      "previous": "+29 tisoč delovnih mest (sep 2026); brezposelnost 4,2 %",
+      "forecast": "+63.000 delovnih mest; brezposelnost 4,2 %",
+      "forecastSource": "Forex Factory"
     },
     {
       "id": "us-cpi-nov26",
