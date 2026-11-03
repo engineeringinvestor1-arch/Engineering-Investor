@@ -959,7 +959,9 @@
       "when": "po zaprtju",
       "quarter": 3,
       "year": 2026,
-      "estEps": "2,02 USD"
+      "estEps": "2,02 USD",
+      "actualEps": "2,05 USD",
+      "actualNote": "presegel pričakovanja (ocena 2,03 USD)"
     },
     {
       "id": "amd-q3-26",
