@@ -346,13 +346,22 @@ function VnosVsebina({ state, dispatch, onClose, onAdded }) {
   const today = todayIso();
   const yesterday = yesterdayIso();
   const account = v.accounts.find((a) => a.id === v.accountId);
+  const vrstaRef = useRef(null);
+
+  // Okno ostane enako visoko, ko preklopiš na Prihodek, ki ima manj kategorij (avtor, 4. 11. 2026: "ne da se
+  // spusti"). Najmanjša višina je zdajšnja, a največ toliko kot okno sme biti, da ostane nad tipkovnico.
+  function zamenjajVrsto(type) {
+    const okno = vrstaRef.current?.closest('.sl-dialog');
+    if (okno) okno.style.minHeight = `min(${okno.offsetHeight}px, 94dvh)`;
+    v.switchType(type);
+  }
 
   return (
     <>
         <div className="sl-dialog-head" style={{ marginBottom: 0 }}>
-          <div className="sl-seg" role="group" aria-label="Vrsta vnosa" style={{ display: 'flex', flex: 1 }}>
-            <button type="button" aria-pressed={v.type === 'expense'} onClick={() => v.switchType('expense')}>Odhodek</button>
-            <button type="button" aria-pressed={v.type === 'income'} onClick={() => v.switchType('income')}>Prihodek</button>
+          <div ref={vrstaRef} className="sl-seg" role="group" aria-label="Vrsta vnosa" style={{ display: 'flex', flex: 1 }}>
+            <button type="button" aria-pressed={v.type === 'expense'} onClick={() => zamenjajVrsto('expense')}>Odhodek</button>
+            <button type="button" aria-pressed={v.type === 'income'} onClick={() => zamenjajVrsto('income')}>Prihodek</button>
           </div>
           <button type="button" className="sl-iconbtn" onClick={onClose} aria-label="Zapri">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12" /><path d="M18 6 6 18" /></svg>

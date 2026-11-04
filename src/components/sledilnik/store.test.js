@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, excelSheets, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, BARVA_TEME, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
-  accountBalance, parseStanje, uskladitevStanja, zacetnoZaStanje,
+  accountBalance, parseStanje, uskladitevStanja, zacetnoZaStanje, kopijaSSlikami, nepotrebneSlike, oznakeSlik, razdeliKopijo, velikostSlike,
   categoryBreakdown, cumulativeSpend, denarniTok, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
@@ -384,7 +384,9 @@ test('svetla tema aplikacije je bela, ne kremasta kot stran', () => {
   assert.match(css, /html\[data-theme='light'\] \{[^}]*--color-bg: #FFFFFF;/, 'podlaga aplikacije');
   assert.match(css, /html\[data-theme='light'\] \{[^}]*--color-surface: #FFFFFF;/, 'ploskve aplikacije');
   assert.ok(beri('../../pages/aplikacija/index.astro').includes(`<meta name="theme-color" content="${BARVA_TEME.light}" media="(prefers-color-scheme: light)" />`), 'vrstica telefona ob odprtju');
-  assert.equal(JSON.parse(beri('../../../public/aplikacija/manifest.webmanifest')).background_color, BARVA_TEME.light, 'zaslon ob zagonu');
+  // Zaslon ob zagonu je temen (avtor, 4. 11. 2026: belo ozadje ob odpiranju je "prevec intenzivno za oci").
+  const manifest = JSON.parse(beri('../../../public/aplikacija/manifest.webmanifest'));
+  assert.deepEqual([manifest.background_color, manifest.theme_color], [BARVA_TEME.dark, BARVA_TEME.dark], 'zaslon ob zagonu');
 });
 
 test('denarni tok: prihodki, odhodki od največjega navzdol kot koraki, na koncu kar ostane', () => {
@@ -483,4 +485,30 @@ test('Drugo dobi močnejšo barvo, če ima še staro privzeto sivo; barva, ki jo
   assert.equal(nalozi('#64748b').transactions.length, 1, 'vnosi ostanejo');
   assert.equal(nalozi('#e11d48').categories[0].color, '#e11d48', 'izbrana barva ostane');
   assert.equal(freshState().categories.find((c) => c.name === 'Drugo').color, '#0891b2', 'tudi nov uporabnik');
+});
+
+test('slike računov: pomanjšanje na 1600 točk po daljši stranici, manjše ostanejo', () => {
+  // Avtor, 4. 11. 2026: slika računa za pomembne nakupe, "za npr uveljavljanje garancije".
+  assert.deepEqual(velikostSlike(4000, 3000), { w: 1600, h: 1200 });
+  assert.deepEqual(velikostSlike(3000, 4000), { w: 1200, h: 1600 });
+  assert.deepEqual(velikostSlike(800, 600), { w: 800, h: 600 });
+});
+
+test('slike računov: odvečne so samo slike, ki jih ne uporablja nobena transakcija', () => {
+  const vnosi = [tx({ id: 'a', slike: ['s1', 's2'] }), tx({ id: 'b' }), tx({ id: 'c', slike: ['s3'] })];
+  assert.deepEqual(oznakeSlik({ transactions: vnosi }), ['s1', 's2', 's3']);
+  assert.deepEqual(nepotrebneSlike(['s1', 's2', 's3', 's9'], vnosi), ['s9']);
+  assert.deepEqual(nepotrebneSlike([], vnosi), []);
+});
+
+test('slike računov: varnostna kopija jih vsebuje, uvoz jih loči od vnosov', () => {
+  const state = { ...freshState(), transactions: [tx({ id: 'a', slike: ['s1'] })] };
+  assert.equal(kopijaSSlikami(state, {}), state, 'brez slik je kopija enaka kot doslej');
+  const kopija = JSON.parse(JSON.stringify(kopijaSSlikami(state, { s1: 'data:image/jpeg;base64,AAAA' })));
+  assert.equal(kopija.version, 1);
+  const { stanje, slike } = razdeliKopijo(kopija);
+  assert.deepEqual(slike, { s1: 'data:image/jpeg;base64,AAAA' });
+  assert.equal('slike' in stanje, false, 'slike ne gredo v shrambo vnosov');
+  assert.deepEqual(stanje.transactions[0].slike, ['s1']);
+  assert.deepEqual(razdeliKopijo(JSON.parse(JSON.stringify(state))).slike, {}, 'stara kopija brez slik');
 });

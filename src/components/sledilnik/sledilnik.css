@@ -507,3 +507,16 @@ button.sl-row[aria-expanded] { transition: background 0.12s; }
   .sl *, .sl *::before, .sl *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
   .sl-toast { animation: none !important; }
 }
+
+/* ---------- slike računa pri transakciji (avtor, 4. 11. 2026) ---------- */
+
+.sl-slike { display: flex; flex-wrap: wrap; gap: 8px; }
+.sl-slika {
+  width: 72px; height: 72px; padding: 0; border-radius: 12px; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--sl-line); background: var(--sl-field); color: var(--sl-muted);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  font-size: 0.68rem; font-weight: 500;
+}
+.sl-slika img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sl-slika--dodaj { border: 1px dashed var(--sl-line-strong); background: transparent; }
+.sl-slika:disabled { opacity: 0.6; cursor: default; }

@@ -3,6 +3,9 @@ import { Card, Button, Input, Select, Field, Modal, PageHeader, Empty } from '..
 import { CatIcon } from '../ikone.jsx';
 import { fmtEur, findPayee, todayIso, uid } from '../store.js';
 import QuickAdd from '../QuickAdd.jsx';
+import SlikeRacuna from '../SlikeRacuna.jsx';
+
+const slik = (n) => (n === 1 ? 'slika računa' : n === 2 ? '2 sliki računa' : n <= 4 ? `${n} slike računa` : `${n} slik računa`);
 
 const TYPES = [
   { id: 'expense',  label: 'Odhodek' },
@@ -159,6 +162,7 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
                 t.type === 'transfer' ? 'Prenos' : cat && t.payee ? cat.name : null,
                 `${acc?.name || '-'}${t.type === 'transfer' && dst ? ` → ${dst.name}` : ''}`,
                 t.notes || null,
+                t.slike?.length ? slik(t.slike.length) : null,
               ].filter(Boolean).join(' · ');
               return (
                 <Fragment key={t.id}>
@@ -247,6 +251,13 @@ export default function Transactions({ state, dispatch, quickAdd = true }) {
               <Input value={editing.notes}
                 onChange={(e) => setEditing({ ...editing, notes: e.target.value })} />
             </Field>
+
+            {editing.type !== 'transfer' && (
+              <Field label="Slike računa" hint="Za garancijo ali vračilo. Slike so na tem telefonu in v varnostni kopiji (.json).">
+                <SlikeRacuna oznake={editing.slike || []} ime={editing.payee} datum={editing.date}
+                  onChange={(slike) => setEditing((e) => ({ ...e, slike }))} />
+              </Field>
+            )}
 
             <div className="sl-form-actions">
               {editing.id ? (

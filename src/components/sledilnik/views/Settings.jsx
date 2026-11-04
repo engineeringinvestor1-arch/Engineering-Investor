@@ -2,7 +2,8 @@ import { useRef, useState } from 'react';
 import { Card, Button, Input, Select, Field, Modal, PageHeader, SectionHeader } from '../ui.jsx';
 import { CatIcon } from '../ikone.jsx';
 import { Swatches } from '../QuickAdd.jsx';
-import { cistoIme, fmtEur, importJson, freshState, PALETTE, todayIso, uid } from '../store.js';
+import { cistoIme, fmtEur, importJson, freshState, PALETTE, razdeliKopijo, todayIso, uid } from '../store.js';
+import { obnoviSlike } from '../slike.js';
 import { hasDemo } from '../demo.js';
 import { izbranaTema, nastaviTemo } from '../tema.js';
 
@@ -11,7 +12,7 @@ function emptyCategory(type = 'expense') {
 }
 
 // Različica aplikacije: ob vsaki objavi enaka številki predpomnilnika v public/aplikacija/sw.js.
-const RAZLICICA = '10 (4. 11. 2026)';
+const RAZLICICA = '11 (4. 11. 2026)';
 
 // Brskalnik, v katerem teče aplikacija. Samsung Internet in Edge se predstavita tudi kot Chrome, zato najprej.
 function brskalnik() {
@@ -40,7 +41,10 @@ export default function Settings({ state, dispatch, onKopija }) {
     try {
       const data = await importJson(file);
       if (!confirm('Uvoz prepiše vse trenutne podatke. Nadaljujem?')) return;
-      dispatch({ type: 'state/replace', state: data });
+      // Slike računov iz kopije gredo v svojo shrambo, vnosi kot doslej.
+      const { stanje, slike } = razdeliKopijo(data);
+      await obnoviSlike(slike);
+      dispatch({ type: 'state/replace', state: stanje });
     } catch (err) {
       alert('Napaka pri uvozu: ' + err.message);
     }
@@ -128,7 +132,7 @@ export default function Settings({ state, dispatch, onKopija }) {
           {hasDemo(state)
             ? <Button variant="secondary" onClick={() => dispatch({ type: 'demo/remove' })}>Odstrani testne podatke</Button>
             : <Button variant="secondary" onClick={() => dispatch({ type: 'demo/load', today: todayIso() })}>Naloži testne podatke</Button>}
-          <input ref={fileRef} type="file" accept="application/json" onChange={handleImportFile} style={{ display: 'none' }} />
+          <input ref={fileRef} type="file" accept="application/json,.json" onChange={handleImportFile} style={{ display: 'none' }} />
         </div>
         <div style={{ marginTop: 14, display: 'flex', flexWrap: 'wrap', gap: '6px 16px', fontSize: '0.8rem', color: 'var(--sl-muted)' }}>
           {[['Računi', state.accounts.length], ['Kategorije', state.categories.length], ['Transakcije', state.transactions.length], ['Cilji', state.goals.length], ['Pravila', state.recurring.length]].map(([k, v]) => (

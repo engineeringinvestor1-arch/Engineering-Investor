@@ -127,8 +127,9 @@ export function temaZaPrikaz(izbira, temaStrani, sistemTemna) {
   return sistemTemna ? 'dark' : 'light';
 }
 
-// Barva podlage v vsaki temi: vrstica telefona nad aplikacijo (tema.js) in zaslon ob zagonu (manifest).
-// Svetla je bela, ne kremasta kot stran (avtor, 21. 10. 2026: "ko dam na svetlo temo je aplikacija sivkasta").
+// Barva podlage v vsaki temi: vrstica telefona nad aplikacijo (tema.js). Svetla je bela, ne kremasta kot stran
+// (avtor, 21. 10. 2026: "ko dam na svetlo temo je aplikacija sivkasta"). Zaslon ob zagonu (manifest) ima temno,
+// ker je belo ozadje ob odpiranju "prevec intenzivno za oci" (avtor, 4. 11. 2026).
 export const BARVA_TEME = { light: '#FFFFFF', dark: '#0E0E0E' };
 
 export function preklopiPripomocek(izbira, id) {
@@ -231,9 +232,36 @@ export function exportXlsx(state) {
   return null;
 }
 
-export function exportJson(state) {
-  prenesi(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }), `sledilnik-${todayIso()}.json`);
+// slike: { oznaka: slika kot besedilo } iz slike.js; brez slik je kopija enaka kot doslej.
+export function exportJson(state, slike = {}) {
+  prenesi(new Blob([JSON.stringify(kopijaSSlikami(state, slike), null, 2)], { type: 'application/json' }), `sledilnik-${todayIso()}.json`);
   zapisiKopijo();
+}
+
+/* ---------- slike računov (avtor, 4. 11. 2026: "sliko računa za pomembne nakupe ... za npr uveljavljanje
+   garancije"). Shramba slik je v slike.js; tu so izračuni s preizkusi. ---------- */
+
+// Fotografija s kamere ima lahko 4000 točk in več; za berljiv račun zadošča 1600 po daljši stranici.
+export function velikostSlike(w, h, najvec = 1600) {
+  const k = Math.min(1, najvec / Math.max(w, h));
+  return { w: Math.round(w * k), h: Math.round(h * k) };
+}
+
+// Oznake vseh slik, ki jih uporabljajo transakcije (t.slike).
+export const oznakeSlik = (state) => [...new Set(state.transactions.flatMap((t) => t.slike ?? []))];
+
+// Slike, ki jih ne uporablja nobena transakcija: ostanejo po izbrisu vnosa ali preklicanem urejanju.
+export function nepotrebneSlike(oznake, transactions) {
+  const rabljene = new Set(transactions.flatMap((t) => t.slike ?? []));
+  return oznake.filter((id) => !rabljene.has(id));
+}
+
+// Varnostna kopija s slikami (zapisanimi kot besedilo) in nazaj: slike gredo ob uvozu v svojo shrambo, ne med vnose.
+export const kopijaSSlikami = (state, slike) => (Object.keys(slike).length ? { ...state, slike } : state);
+
+export function razdeliKopijo(data) {
+  const { slike, ...stanje } = data;
+  return { stanje, slike: slike && typeof slike === 'object' ? slike : {} };
 }
 
 // Varnostna kopija. V aplikaciji na telefonu so podatki samo na napravi: izbrisani podatki brskalnika ali

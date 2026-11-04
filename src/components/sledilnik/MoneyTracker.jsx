@@ -16,6 +16,7 @@ import Recurring from './views/Recurring.jsx';
 import Insights from './views/Insights.jsx';
 import Settings from './views/Settings.jsx';
 import { spremljajSistem } from './tema.js';
+import { pocistiSlike, slikeZaKopijo } from './slike.js';
 
 // Vsakdanji pogledi so spredaj, redkeje rabljeni pod "Več" (avtor, 3. 10. 2026: sledilnik naj bo enostaven;
 // devet enakovrednih pogledov je bilo preveč). Nič ni odstranjeno, samo razvrščeno.
@@ -85,14 +86,25 @@ function MoneyTrackerInner() {
   // Tema po izbiri v Nastavitvah; pri sistemski sledi telefonu tudi med uporabo (tema.js).
   useEffect(() => spremljajSistem(), []);
 
+  // Slike računov, ki jih ne uporablja več noben vnos (izbrisan vnos, preklicano urejanje), se pobrišejo ob odprtju.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { pocistiSlike(state).catch(() => {}); }, []);
+
   // "Shrani kopijo" ponudi izbiro: Excel za pregled ali JSON za obnovo (avtor, 21. 10. 2026).
   function shraniKopijo() {
     setMoreOpen(false);
     setKopijaOpen(true);
   }
 
-  function shraniJson() {
-    exportJson(state);
+  // Varnostna kopija vsebuje tudi slike računov (avtor, 4. 11. 2026). Če jih ni mogoče prebrati, gre kopija brez njih.
+  async function shraniJson() {
+    let slike = {};
+    try {
+      slike = await slikeZaKopijo(state);
+    } catch {
+      alert('Slik računov ni bilo mogoče dodati v kopijo. Kopija vsebuje vse vnose brez slik.');
+    }
+    exportJson(state, slike);
     setKopija(zadnjaKopija());
     setKopijaOpen(false);
   }

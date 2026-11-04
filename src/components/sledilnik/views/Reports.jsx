@@ -28,18 +28,48 @@ function Legend({ items }) {
   );
 }
 
-// Seznam delov ob tortnem grafu: ikona kategorije, ime, znesek in delež.
-function Breakdown({ items, total }) {
+const danMesec = (iso) => `${Number(iso.slice(8, 10))}. ${Number(iso.slice(5, 7))}.`;
+
+// Seznam delov ob tortnem grafu: ikona kategorije, ime, znesek in delež. Dotik kategorije razpre njene vnose
+// v izbranem obdobju (avtor, 4. 11. 2026: "ko pritisnem na npr oblacila da mi pokaze kaj vse je bilo").
+function Breakdown({ items, total, vnosi }) {
+  const [odprta, setOdprta] = useState(null);
+  const poKategoriji = useMemo(() => {
+    const out = {};
+    for (const t of vnosi) (out[`${t.type}:${t.categoryId || ''}`] ||= []).push(t);
+    for (const k of Object.keys(out)) out[k].sort((a, b) => b.date.localeCompare(a.date));
+    return out;
+  }, [vnosi]);
   return (
-    <div style={{ flex: 1, minWidth: 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {items.map((c) => (
-        <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.86rem' }}>
-          <CatIcon category={{ name: c.label, color: c.color }} type={c.type} size={28} />
-          <span className="sl-row-title" style={{ flex: 1 }}>{c.label}</span>
-          <span className="sl-row-amount" style={{ fontSize: '0.86rem' }}>{fmtEur(c.value)}</span>
-          <span className="sl-subtle" style={{ width: 38, textAlign: 'right', fontSize: '0.78rem' }}>{total > 0 ? ((c.value / total) * 100).toFixed(0) : 0} %</span>
-        </div>
-      ))}
+    <div className="sl-list" style={{ flex: 1, minWidth: 220 }}>
+      {items.map((c) => {
+        const kljuc = `${c.type}:${c.id || ''}`;
+        const open = odprta === kljuc;
+        return (
+          <div key={kljuc} className="sl-row-wrap">
+            <button type="button" className="sl-row" aria-expanded={open} onClick={() => setOdprta(open ? null : kljuc)} style={{ padding: '0.5rem 0' }}>
+              <CatIcon category={{ name: c.label, color: c.color }} type={c.type} size={28} />
+              <span className="sl-row-title">{c.label}</span>
+              <span style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span className="sl-row-amount" style={{ fontSize: '0.86rem' }}>{fmtEur(c.value)}</span>
+                <span className="sl-subtle" style={{ width: 38, textAlign: 'right', fontSize: '0.78rem' }}>{total > 0 ? ((c.value / total) * 100).toFixed(0) : 0} %</span>
+              </span>
+            </button>
+            <div className="sl-expand" data-open={open}>
+              <div>
+                <div style={{ padding: '0 0 0.6rem 38px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {(poKategoriji[kljuc] || []).map((t) => (
+                    <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontSize: '0.82rem', color: 'var(--sl-muted)' }}>
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{danMesec(t.date)} {t.payee || t.notes || 'brez opisa'}</span>
+                      <span className="sl-row-amount" style={{ color: 'var(--sl-ink)', fontSize: '0.82rem' }}>{fmtEur(t.amount, true)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -183,7 +213,7 @@ export default function Reports({ state }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <PieChart data={categorySpend.map((c) => ({ value: c.value, color: c.color }))}
                 size={180} thickness={22} centerValue={fmtEur(totalExpense)} centerLabel="skupaj" />
-              <Breakdown items={categorySpend.slice(0, 10)} total={totalExpense} />
+              <Breakdown items={categorySpend.slice(0, 10)} total={totalExpense} vnosi={allTx} />
             </div>
           )}
         </Card>
@@ -196,7 +226,7 @@ export default function Reports({ state }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <PieChart data={incomeBreakdown.map((c) => ({ value: c.value, color: c.color }))}
                 size={180} thickness={22} centerValue={fmtEur(totalIncome)} centerLabel="skupaj" />
-              <Breakdown items={incomeBreakdown} total={totalIncome} />
+              <Breakdown items={incomeBreakdown} total={totalIncome} vnosi={allTx} />
             </div>
           )}
         </Card>
