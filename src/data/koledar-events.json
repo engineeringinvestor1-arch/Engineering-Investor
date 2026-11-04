@@ -971,7 +971,9 @@
       "when": "po zaprtju",
       "quarter": 3,
       "year": 2026,
-      "estEps": "1,97 USD"
+      "estEps": "1,97 USD",
+      "actualEps": "2,09 USD (Finnhub), 1,84 USD (Nasdaq)",
+      "actualNote": "ocena 1,97 USD (Finnhub)"
     },
     {
       "id": "brkb-q3-26",
@@ -1001,6 +1003,14 @@
       "quarter": 3,
       "year": 2027,
       "estEps": "0,64 USD"
+    },
+    {
+      "id": "avgo-2026-12-09",
+      "date": "2026-12-09",
+      "ticker": "AVGO",
+      "name": "Broadcom",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance"
     }
   ]
 }
