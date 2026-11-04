@@ -187,7 +187,9 @@ function PayeeInput({ v }) {
   );
 }
 
-function PayeeChips({ v, withAmount = false }) {
+// Pogoste trgovine samo z imenom, brez zadnjega zneska (avtor, 4. 11. 2026): najprej znesek, nato dotik
+// trgovine shrani vnos z njeno kategorijo.
+function PayeeChips({ v }) {
   if (!v.top.length) return null;
   return (
     <div className="sl-scrollrow">
@@ -195,10 +197,9 @@ function PayeeChips({ v, withAmount = false }) {
         <button key={p.id} type="button" onClick={() => v.pickPayee(p)} data-payee={p.name} className="sl-chip sl-chip--plain"
           aria-pressed={v.known?.id === p.id}
           aria-label={`${p.name}, ${v.catById[p.categoryId]?.name || 'brez kategorije'}`}
-          title={`${v.catById[p.categoryId]?.name || 'Brez kategorije'}, zadnjič ${fmtEur(p.lastAmount, true)}`}>
+          title={v.catById[p.categoryId]?.name || 'Brez kategorije'}>
           <span className="sl-dot" style={{ background: v.catById[p.categoryId]?.color || 'var(--sl-subtle)' }} />
           {p.name}
-          {withAmount && <span className="sl-subtle sl-num" style={{ fontSize: '0.78rem' }}>{fmtEur(p.lastAmount, true)}</span>}
         </button>
       ))}
     </div>
@@ -368,7 +369,7 @@ function VnosVsebina({ state, dispatch, onClose, onAdded }) {
         </div>
 
         <PayeeInput v={v} />
-        <PayeeChips v={v} withAmount />
+        <PayeeChips v={v} />
 
         <div className="sl-vnos-cats">
           {v.cats.map((c) => (

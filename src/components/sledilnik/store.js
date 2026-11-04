@@ -658,6 +658,26 @@ export function accountBalance(state, accountId) {
   return bal;
 }
 
+// Trenutno stanje računa (avtor, 4. 11. 2026: "bolje bi bilo da bi to bilo trenutno stanje in od danes naprej
+// odšteva stroške"). Uporabnik vpiše stanje danes; shrani se začetno stanje, ki skupaj z že vpisanimi vnosi
+// da prav ta znesek. Vsak nov vnos ga od tu naprej spremeni. Račun, ki ga še ni, nima vnosov.
+export function zacetnoZaStanje(state, accountId, trenutno) {
+  const acc = state.accounts.find((a) => a.id === accountId);
+  if (!acc) return round2(trenutno);
+  return round2((Number(acc.startingBalance) || 0) + trenutno - accountBalance(state, accountId));
+}
+
+// Znesek stanja kot parseAmount, a dovoli nič in minus (prekoračen račun). Prazno je nič, neveljavno null.
+export function parseStanje(text) {
+  let t = String(text ?? '').replace(/[\s€]/g, '').replace(/^−/, '-');
+  if (!t) return 0;
+  const minus = t.startsWith('-');
+  if (minus) t = t.slice(1);
+  if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+  if (!/^\d+(\.\d{1,2})?$/.test(t)) return null;
+  return (minus ? -1 : 1) * Number(t) || 0;
+}
+
 export function totalBalance(state) {
   return state.accounts
     .filter((a) => !a.archived && a.type !== 'loan' && a.type !== 'card')

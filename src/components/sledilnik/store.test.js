@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, excelSheets, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, BARVA_TEME, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
+  accountBalance, parseStanje, zacetnoZaStanje,
   categoryBreakdown, cumulativeSpend, denarniTok, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
@@ -418,4 +419,33 @@ test('denarni tok: ko so odhodki višji od prihodkov ali prihodkov ni, gre os po
   const brez = denarniTok([], [kat('a', 50)]);
   assert.deepEqual([brez.prihodki, brez.ostane, brez.min, brez.max], [0, -50, -50, 0]);
   assert.equal(denarniTok([], []), null, 'brez podatkov ni grafa');
+});
+
+test('trenutno stanje računa: vpisano stanje velja danes, vnosi od zdaj naprej ga spreminjajo', () => {
+  // Avtor, 4. 11. 2026: "bolje bi bilo da bi to bilo trenutno stanje in od danes naprej odsteva stroske".
+  let state = { ...freshState(), accounts: [{ id: 'trr', name: 'TRR', type: 'checking', startingBalance: 1900 }, { id: 'var', name: 'Varčevanje', type: 'savings', startingBalance: 0 }], transactions: [
+    tx({ id: 'a', amount: 300 }),
+    tx({ id: 'b', type: 'income', amount: 100, categoryId: 'placa' }),
+    tx({ id: 'c', type: 'transfer', amount: 50, transferToAccountId: 'var' }),
+  ] };
+  assert.equal(accountBalance(state, 'trr'), 1650);
+  const zacetno = zacetnoZaStanje(state, 'trr', 1569.04);
+  assert.equal(zacetno, 1819.04);
+  state = reducer(state, { type: 'account/update', account: { ...state.accounts[0], startingBalance: zacetno } });
+  assert.equal(Math.round(accountBalance(state, 'trr') * 100) / 100, 1569.04, 'stanje je točno vpisani znesek');
+  state = reducer(state, { type: 'tx/add', tx: tx({ id: 'd', amount: 13.23 }) });
+  assert.equal(Math.round(accountBalance(state, 'trr') * 100) / 100, 1555.81, 'nov odhodek ga zmanjša');
+  assert.equal(zacetnoZaStanje(state, 'trr', 1555.81), zacetno, 'nespremenjeno stanje ne premakne začetnega');
+  assert.equal(zacetnoZaStanje(state, 'nov', 250), 250, 'nov račun brez vnosov');
+});
+
+test('trenutno stanje računa: vejica, ločilo tisočic, nič in minus (prekoračen račun)', () => {
+  assert.equal(parseStanje('1.569,04'), 1569.04);
+  assert.equal(parseStanje('1569.04 €'), 1569.04);
+  assert.equal(parseStanje('-25,5'), -25.5);
+  assert.equal(parseStanje('−25,5'), -25.5);
+  assert.equal(parseStanje(''), 0);
+  assert.equal(parseStanje('0'), 0);
+  assert.equal(parseStanje('abc'), null);
+  assert.equal(parseStanje('12,345'), null);
 });

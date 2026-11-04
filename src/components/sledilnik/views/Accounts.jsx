@@ -1,18 +1,28 @@
 import { useState } from 'react';
 import { Card, Button, Input, Select, Field, Modal, PageHeader, Empty } from '../ui.jsx';
 import { Swatches } from '../QuickAdd.jsx';
-import { fmtEur, accountBalance, ACCOUNT_TYPES, ACCOUNT_TYPE_LABEL, PALETTE, uid, todayIso } from '../store.js';
+import { fmtEur, accountBalance, parseStanje, zacetnoZaStanje, ACCOUNT_TYPES, ACCOUNT_TYPE_LABEL, PALETTE, uid, todayIso } from '../store.js';
 
 function emptyAccount() {
   return {
     id: '',
     name: '',
     type: 'checking',
-    startingBalance: '0',
+    startingBalance: 0,
+    stanje: '0',
     color: PALETTE[0],
     archived: false,
     notes: '',
   };
+}
+
+// Kartica in posojilo se vpišeta kot dolg (pozitiven znesek), shranita pa kot negativno stanje.
+const jeDolg = (type) => type === 'loan' || type === 'card';
+
+// V oknu se vpiše trenutno stanje, ne začetno (avtor, 4. 11. 2026); prikazano z decimalno vejico.
+function stanjeZaVnos(state, a) {
+  const bal = Math.round(accountBalance(state, a.id) * 100) / 100;
+  return String(jeDolg(a.type) ? Math.abs(bal) : bal).replace('.', ',');
 }
 
 // Ikona vrste računa v barvi računa.
@@ -31,10 +41,13 @@ export default function Accounts({ state, dispatch }) {
   function save(e) {
     e.preventDefault();
     if (!editing.name) return;
+    const { stanje, napaka, ...racun } = editing;
+    const vpisano = parseStanje(stanje);
+    if (vpisano === null) return setEditing({ ...editing, napaka: 'Znesek ni veljaven. Primer: 1569,04' });
     const acc = {
-      ...editing,
+      ...racun,
       id: editing.id || uid(),
-      startingBalance: Number(editing.startingBalance) || 0,
+      startingBalance: zacetnoZaStanje(state, editing.id, jeDolg(editing.type) ? -Math.abs(vpisano) : vpisano),
       createdAt: editing.createdAt || todayIso(),
     };
     if (editing.id) dispatch({ type: 'account/update', account: acc });
@@ -75,7 +88,7 @@ export default function Accounts({ state, dispatch }) {
           const txCount = state.transactions.filter((t) => t.accountId === a.id || t.transferToAccountId === a.id).length;
           const isDebt = a.type === 'loan' || a.type === 'card';
           return (
-            <button key={a.id} type="button" className="sl-card" onClick={() => setEditing({ ...a, startingBalance: String(a.startingBalance) })}
+            <button key={a.id} type="button" className="sl-card" onClick={() => setEditing({ ...a, stanje: stanjeZaVnos(state, a) })}
               style={{ padding: '1.05rem', textAlign: 'left', cursor: 'pointer', color: 'inherit', display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span className="sl-ico sl-ico--tint" style={{ '--c': a.color }}>
@@ -90,7 +103,7 @@ export default function Accounts({ state, dispatch }) {
                 <div className="sl-num" style={{ fontSize: '1.5rem', fontWeight: 500, color: isDebt ? 'var(--sl-warn)' : bal >= 0 ? 'var(--sl-ink)' : 'var(--sl-bad)' }}>
                   {fmtEur(isDebt ? -Math.abs(bal) : bal)}
                 </div>
-                <div className="sl-row-sub">{txCount} transakcij · začetno stanje {fmtEur(a.startingBalance || 0)}</div>
+                <div className="sl-row-sub">{txCount} transakcij</div>
               </div>
             </button>
           );
@@ -130,9 +143,10 @@ export default function Accounts({ state, dispatch }) {
                   {ACCOUNT_TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
                 </Select>
               </Field>
-              <Field label="Začetno stanje (€)" hint="Stanje na dan začetka uporabe">
-                <Input type="number" step="0.01" inputMode="decimal" className="sl-num" value={editing.startingBalance}
-                  onChange={(e) => setEditing({ ...editing, startingBalance: e.target.value })} />
+              <Field label={jeDolg(editing.type) ? 'Trenutni dolg (€)' : 'Trenutno stanje (€)'}
+                hint={editing.napaka || `${jeDolg(editing.type) ? 'Dolg' : 'Stanje'} danes. Vsak nov vnos ga od zdaj spremeni.`}>
+                <Input inputMode="decimal" autoComplete="off" className="sl-num" value={editing.stanje} placeholder="0,00"
+                  onChange={(e) => setEditing({ ...editing, stanje: e.target.value, napaka: '' })} />
               </Field>
             </div>
             <Field label="Barva">
