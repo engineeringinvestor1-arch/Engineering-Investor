@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Button, Input, Select, Field, Modal, PageHeader, Empty } from '../ui.jsx';
+import { Card, Button, Input, Select, Field, Modal, Notice, PageHeader, Empty } from '../ui.jsx';
 import { Swatches } from '../QuickAdd.jsx';
 import { fmtEur, accountBalance, parseStanje, uskladitevStanja, zacetnoZaStanje, ACCOUNT_TYPES, ACCOUNT_TYPE_LABEL, PALETTE, uid, todayIso } from '../store.js';
 
@@ -163,6 +163,13 @@ export default function Accounts({ state, dispatch }) {
                   onChange={(e) => setEditing({ ...editing, stanje: e.target.value, napaka: '' })} />
               </Field>
             </div>
+            {/* Da je jasno, da popravek stanja ne spremeni vpisanega (avtor, 4. 11. 2026). */}
+            {editing.id && imaVnose(editing.id) && razlika === 0 && (
+              <Notice tone="info">
+                <strong>Se stanje ne ujema z banko?</strong> V Trenutno stanje vpiši znesek z banke. Vnosi ostanejo, kot so,
+                razliko pa zapišeš kot uskladitev.
+              </Notice>
+            )}
             {razlika !== 0 && (
               <Field label={`Razlika ${razlika > 0 ? '+' : '−'}${fmtEur(Math.abs(razlika), true)} glede na aplikacijo`}
                 hint={nacin === 'uskladitev'

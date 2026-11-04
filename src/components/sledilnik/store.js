@@ -43,8 +43,13 @@ const DEFAULT_EXPENSE_CATEGORIES = [
   { name: 'Izobraževanje',      color: '#4f46e5' },
   { name: 'Davki & prispevki',  color: '#e11d48' },
   { name: 'Naložbe',            color: '#059669' },
-  { name: 'Drugo',              color: '#64748b' },
+  { name: 'Drugo',              color: '#0891b2' },
 ];
+
+// Drugo je imelo do 4. 11. 2026 sivo, ki se v temni temi skoraj ne vidi (avtor: "se res slabo vidi").
+// Ob nalaganju se zamenja samo ta stara privzeta siva; barva, ki jo je uporabnik izbral sam, ostane.
+const STARA_SIVA_DRUGO = '#64748b';
+const novaBarvaDrugo = (c) => (c.name === 'Drugo' && c.color === STARA_SIVA_DRUGO ? { ...c, color: '#0891b2' } : c);
 
 export function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -95,11 +100,12 @@ export function stanjeIzShrambe(raw) {
   let parsed;
   try { parsed = JSON.parse(raw); } catch { return freshState(); }
   if (!parsed || parsed.version !== 1) return freshState();
-  return withPayees({
+  const stanje = {
     ...freshState(),
     ...parsed,
     settings: { ...freshState().settings, ...(parsed.settings || {}) },
-  }, parsed.payees);
+  };
+  return withPayees({ ...stanje, categories: stanje.categories.map(novaBarvaDrugo) }, parsed.payees);
 }
 
 // Pripomočki na pregledu (avtor, 19. 10. 2026: "kot widgeti na Androidu"). Vrstni red na pregledu je ta;

@@ -11,7 +11,7 @@ function emptyCategory(type = 'expense') {
 }
 
 // Različica aplikacije: ob vsaki objavi enaka številki predpomnilnika v public/aplikacija/sw.js.
-const RAZLICICA = '9 (4. 11. 2026)';
+const RAZLICICA = '10 (4. 11. 2026)';
 
 // Brskalnik, v katerem teče aplikacija. Samsung Internet in Edge se predstavita tudi kot Chrome, zato najprej.
 function brskalnik() {

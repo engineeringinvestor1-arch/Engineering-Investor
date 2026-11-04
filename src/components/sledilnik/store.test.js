@@ -471,3 +471,16 @@ test('uskladitev s stanjem na banki: razlika postane vnos v kategoriji Uskladite
   const vec = uskladitevStanja(state, 'trr', 900, '2026-12-31');
   assert.deepEqual([vec.razlika, vec.tx.type, vec.tx.amount, vec.tx.categoryId, vec.kategorija.type], [23.4, 'income', 23.4, 'uskladitev-prihodek', 'income']);
 });
+
+test('Drugo dobi močnejšo barvo, če ima še staro privzeto sivo; barva, ki jo je izbral uporabnik, ostane', () => {
+  // Avtor, 4. 11. 2026: "dodaš malo močnejšo barvo za drugo ker se res slabo vidi".
+  const nalozi = (barva) => stanjeIzShrambe(JSON.stringify({ ...freshState(), transactions: [tx()], categories: [
+    { id: 'd', name: 'Drugo', type: 'expense', color: barva, archived: false },
+    { id: 'h', name: 'Hrana', type: 'expense', color: '#64748b', archived: false },
+  ] }));
+  assert.equal(nalozi('#64748b').categories[0].color, '#0891b2');
+  assert.equal(nalozi('#64748b').categories[1].color, '#64748b', 'druge kategorije ostanejo');
+  assert.equal(nalozi('#64748b').transactions.length, 1, 'vnosi ostanejo');
+  assert.equal(nalozi('#e11d48').categories[0].color, '#e11d48', 'izbrana barva ostane');
+  assert.equal(freshState().categories.find((c) => c.name === 'Drugo').color, '#0891b2', 'tudi nov uporabnik');
+});
