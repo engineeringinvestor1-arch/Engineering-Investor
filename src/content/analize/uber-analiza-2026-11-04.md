@@ -5,7 +5,6 @@ pubDate: 2026-11-04
 category: Delnice
 readingTime: 15
 featured: false
-skrivnost: xnmtlxq4dmz4k5uqg7s
 ---
 
 Uber je 4. novembra pred odprtjem ameriške borze objavil rezultate za tretje četrtletje 2026 (Q3, julij do september). Potniki in naročniki so prek aplikacije plačali 59,8 milijarde dolarjev, rast je bila 20 %. Prosti denarni tok zadnjih štirih četrtletij je z 10,4 milijarde dolarjev dosegel rekord [graf](#graf-kazalnik-fcf).
@@ -23,7 +22,7 @@ Delnica je dan pred objavo zaprla pri 66,60 dolarja, 18,5 % niže kot konec leta
 | Prilagojeni dobiček na delnico [graf](#graf-kazalnik-eps) | 0,87 USD | 0,88 USD |
 | Prilagojeni EBITDA [graf](#graf-kazalnik-ebitda) | 2,93 mrd USD | 2,96 mrd USD |
 
-Izid je bil v okviru pričakovanj. **Prilagojeni dobiček na delnico** ne upošteva prevrednotenja naložb in pravnih rezervacij. Po računovodskih pravilih je bil le 0,25 dolarja, ker je Uber izgubil pri prevrednotenju naložb v druga podjetja. **Prilagojeni EBITDA** je dobiček pred obrestmi, davki, amortizacijo in plačili zaposlenim v delnicah.
+Izid je bil v okviru pričakovanj. **Prilagojeni dobiček na delnico** ne upošteva prevrednotenja naložb in pravnih rezervacij (denarja, ki ga Uber odloži za pričakovane izgube v tožbah in sporih z oblastmi). Po računovodskih pravilih je bil le 0,25 dolarja, ker je Uber izgubil pri prevrednotenju naložb v druga podjetja. **Prilagojeni EBITDA** je dobiček pred obrestmi, davki, amortizacijo in plačili zaposlenim v delnicah.
 
 Rast rezervacij gledamo **brez vpliva tečajev**. Uber velik del posla opravi v tujih valutah, poroča pa v dolarjih, zato bi močan ali šibek dolar popačil sliko. Brez vpliva tečajev je rast rezervacij od Q2 2023 med 18 in 22 % [graf](#graf-kazalnik-rezervacije), torej se ne upočasnjuje. Prilagojeni EBITDA se je od konca leta 2021 povečal z 0,09 na 2,96 milijarde dolarjev na četrtletje [graf](#graf-kazalnik-ebitda). Od vsakih 100 dolarjev rezervacij zdaj ostane 5,0 dolarja. Konec leta 2021 je ostalo le 0,3 dolarja. Prilagojeni dobiček na delnico se je od Q4 2024 povečal z 0,56 na 0,88 dolarja [graf](#graf-kazalnik-eps). Prihodki so dosegli 14,8 milijarde dolarjev [graf](#graf-kazalnik-prihodki), njihova rast pa se je znižala na 10 %, predvsem zaradi računovodske spremembe, ki jo razložimo spodaj. Posel in dobiček torej ne izgubljata zagona. Drugače je pri vožnjah.
 
@@ -53,9 +52,9 @@ Na robu je najpomembnejše merilo: rast mobilnosti brez vpliva tečajev je zdrsn
 
 ## Od kod prihaja rast
 
-Rezervacije nastanejo iz števila voženj in vrednosti ene vožnje. Voženj in dostav je bilo v Q3 2026 4,06 milijarde. Rast je bila 16 %, najnižja v zadnjih petih letih [graf](#graf-uporabniki-voznje). Mesečno aktivnih uporabnikov je bilo 215 milijonov. Rast uporabnikov je bila 14 % in se znižuje že tri četrtletja zapored; v Q4 2025 je bila še 18 %.
+Rezervacije nastanejo iz števila voženj in vrednosti ene vožnje. Voženj in dostav je bilo v Q3 2026 4,06 milijarde. Rast je bila 16 %, najnižja v zadnjih petih letih [graf](#graf-kazalnik-voznje). Po navedbi finančnega direktorja je polovica upočasnitve glede na Q2 posledica pomanjkanja voznikov, polovica pa računska. Obe razložimo spodaj.
 
-Povprečna vrednost vožnje se je povečala, a po navedbi finančnega direktorja ne zaradi višjih cen, ampak zaradi sestave posla. Posel zunaj ZDA se je upočasnil bolj kot v ZDA, zato imajo ZDA večji delež. Ker so vožnje v ZDA v povprečju dražje, to dvigne povprečno vrednost vožnje. Podobno deluje dostava, ki je rasla hitreje od prevozov, in dražji prevozi, kot sta Uber Black in Comfort, katerih rast je bila okoli 35 %.
+Mesečno aktivnih uporabnikov, torej ljudi, ki so v mesecu vsaj enkrat opravili vožnjo ali prejeli dostavo, je bilo 215 milijonov [graf](#graf-kazalnik-uporabniki). Rast uporabnikov je bila 14 % in se znižuje že tri četrtletja zapored; v Q4 2025 je bila še 18 %. Zakaj, Uber ne pojasni. V pripravljenih izjavah poudari le, da je bilo uporabnikov rekordno veliko, celoten pogovor z analitiki pa ob pisanju še ni bil objavljen.
 
 ![Mobilnost se je upočasnila na 17 %, dostava ostaja nad 20 %](/images/articles/uber-analiza-2026-11-04/rast-rezervacij.svg)
 
@@ -63,7 +62,9 @@ V dolarjih je bila rast rezervacij mobilnosti (prevozov) v Q1 2026 25 %, v Q3 18
 
 Vodstvo jo razlaga z vozniki, ne s potniki. Večina upočasnitve je bila zunaj ZDA, kjer je povpraševanja dovolj, voznikov pa premalo: zaradi dražjega goriva, tesnejšega trga dela in konkurence za voznike, predvsem v Indiji, Braziliji in Kanadi. Vojna na Bližnjem vzhodu je rast znižala za 0,75 odstotne točke. V ZDA se je rast upočasnila precej manj. Uber zdaj plačuje dodatne spodbude voznikom, oktobra je bilo bolje, zato vodstvo za Q4 pričakuje podobno rast mobilnosti kot v Q3.
 
-Dostava (hrana, trgovine, pošiljke) ostaja nad 20 %, rast rezervacij je bila 23 %. Del upočasnitve voženj je posledica primerjave: turški Trendyol Go, ki ga je Uber kupil lani, rasti ne dviguje več.
+Pri dostavi (hrana, trgovine, pošiljke) upočasnitve ni: rast rezervacij je bila 23 %, že pet četrtletij zapored nad 20 %. Upočasnitev voženj pa je deloma računska. Uber je pred letom dni kupil turško podjetje za dostavo Trendyol Go. Njegova naročila so bila za Uber prvo leto vsa nova in so dvigovala rast. Zdaj se primerjajo z lanskimi, ko jih je Uber že imel, zato rasti ne dvigujejo več.
+
+Povprečna vrednost vožnje se je povečala, a po navedbi finančnega direktorja ne zaradi višjih cen, ampak zaradi sestave posla. Ker je voznikov zmanjkovalo predvsem zunaj ZDA, se je posel tam upočasnil bolj, zato imajo ZDA večji delež. Vožnje v ZDA so v povprečju dražje, zato se je povprečna vrednost vožnje povečala. Podobno deluje dostava, ki raste hitreje od prevozov, in dražji prevozi, kot sta Uber Black in Comfort, katerih rast je bila okoli 35 %.
 
 ## Zakaj dobiček raste hitreje od posla
 
@@ -101,7 +102,7 @@ Večji del denarja gre zdaj v prevzeme. Uber ima 24,99 % nemškega Delivery Hero
 
 ## Vodstvo in smer
 
-Vodstvo smer kaže z dejanji. Pri robotaksijih Uber ne razvija lastne tehnologije, ampak povezuje druge: do konca leta naj bi na Uberju vozilo okoli 700 vozil brez voznika, do konca 2027 več kot 2.000. Z Delivery Hero bi še povečal dostavo, ki je manj donosna od prevozov. Septembra je po poročanju medijev napovedal ukinitev okoli 3.300 delovnih mest. Konec novembra odhaja Jill Hazelbaker, predsednica in vodja korporativnih zadev, ki je pri Uberju od leta 2015.
+Vodstvo smer kaže z dejanji. Pri robotaksijih Uber ne razvija lastne tehnologije, ampak povezuje druge: do konca leta naj bi na Uberju vozilo okoli 700 vozil brez voznika, do konca 2027 več kot 2.000. Z Delivery Hero bi še povečal dostavo, ki je manj donosna od prevozov. Septembra je po poročanju medijev napovedal ukinitev okoli 3.300 delovnih mest. Konec novembra odhaja Jill Hazelbaker, predsednica in vodja korporativnih zadev, ki je pri Uberju od leta 2015. Po navedbi podjetja odhaja zaradi priložnosti zunaj Uberja; za katero gre, ni objavljeno.
 
 ## Medvedja teza: robotaksiji in drag prevzem
 
@@ -109,7 +110,7 @@ Vodstvo smer kaže z dejanji. Pri robotaksijih Uber ne razvija lastne tehnologij
 
 **Upočasnitev se je že začela.** Rast mobilnosti je padla na 17 %, rast voženj je najnižja v petih letih. Pomanjkanje voznikov pomeni višja plačila in nižjo maržo.
 
-**Denar gre v prevzeme na dolg.** Delivery Hero stane 14,8 milijarde dolarjev, dostava pa na 100 dolarjev rezervacij prinese manj kot pol dobička prevozov. Pravne rezervacije vsako leto znižajo dobiček za več sto milijonov dolarjev, česar prilagojeni dobiček ne pokaže.
+**Denar gre v prevzeme na dolg.** Delivery Hero stane 14,8 milijarde dolarjev, dostava pa na 100 dolarjev rezervacij prinese manj kot pol dobička prevozov. Uber vsako leto odloži več sto milijonov dolarjev za tožbe in spore z oblastmi, leta 2025 564 milijonov. To je pravi strošek, a ga prilagojeni dobiček, ki ga vodstvo poudarja, ne upošteva. Dobiček po računovodskih pravilih je zato nižji.
 
 **Preizkus ponarejanja.** Če bi robotaksiji jemali potnike, bi se rast upočasnila predvsem v ameriških mestih z robotaksiji. Vodstvo trdi nasprotno: upočasnitev je bila večinoma zunaj ZDA, v mestih z robotaksiji pa so Uberjeve vožnje rasle hitreje kot v ZDA nasploh. Tega ne moremo preveriti, ker Uber rasti po mestih ne objavlja. Preverimo lahko, da je bila rast voženj mobilnosti 16 %, rast njenega dobička 27 %. To se s hitro izgubo potnikov ne ujema.
 
@@ -136,17 +137,13 @@ Ciljna cena je cena, ki jo analitik pričakuje čez leto dni. Cilji so večinoma
 
 Pri 66,60 dolarja so vse delnice vredne okoli 136,6 milijarde dolarjev. **Razmerje med ceno in dobičkom (P/E)** pove, koliko let dobička plača kupec delnice: na prilagojeni dobiček zadnjih štirih četrtletij je 21,3. Prosti denarni tok je 7,6 % tržne vrednosti.
 
-**Obratni DCF** vzame današnjo ceno in izračuna, kakšno rast prihodkov ta cena že vključuje, pri čemer upošteva, da rast zahteva naložbe. **Zahtevani donos** je donos, ki ga vlagatelj želi na leto. Borzni indeks S&P 500 je od leta 1928 do 2025 prinašal okoli 10 % na leto.
+**Obratni DCF** vzame današnjo ceno in izračuna, kakšno rast prihodkov na leto v naslednjih desetih letih ta cena že vključuje, pri čemer upošteva, da rast zahteva naložbe. **Zahtevani donos** je donos, ki ga vlagatelj želi na leto. Borzni indeks S&P 500 je od leta 1928 do 2025 prinašal okoli 10 % na leto.
 
 | Zahtevani donos | Marža ostane 12,4 % (po pravilih) | Marža ostane 14,6 % (prilagojena) | Marža se dvigne na 20 % |
 |---|---|---|---|
 | 8 % | 6,9 % | 5,1 % | 1,6 % |
 | 9 % | 9,6 % | 7,7 % | 4,0 % |
 | 10 % | **12,1 %** | **10,1 %** | 6,3 % |
-
-V preglednici je rast prihodkov na leto v naslednjih desetih letih, ki jo cena vključuje. Nato se v petih letih spusti na 2,5 %.
-
-![Cena pričakuje počasnejšo rast od dosedanje](/images/articles/uber-analiza-2026-11-04/obratni-dcf.svg)
 
 **Kaj to pomeni.** Če od delnice pričakuješ toliko kot borza, mora biti rast prihodkov 10 do 12 % na leto. V letih 2024 in 2025 je bila 18 %. Cena torej pričakuje pol do dve tretjini dosedanje rasti.
 
@@ -158,17 +155,9 @@ V preglednici je rast prihodkov na leto v naslednjih desetih letih, ki jo cena v
 
 Scenariji so ponazoritev, ne napoved. Previdni ima rast manj kot pol dosedanje in maržo brez izboljšanja, ugodni rast blizu pričakovanj analitikov za leto 2027. Navzdol je donos okoli 8 % na leto, malo pod borzo, navzgor okoli 14 %. Prevzema Delivery Hero izračun ne zajema. Izid, v katerem robotaksiji Uberju vzamejo največja mesta, bi dal manj od previdnega scenarija.
 
-## Kaj spremljati, da se bo vedelo, kdo ima prav
-
-1. **Rast mobilnosti brez vpliva tečajev.** Vodstvo za Q4 napoveduje okoli 17 %. Če bo nižja, se upočasnitev nadaljuje kljub spodbudam za voznike.
-2. **Prihodki v ZDA in drugod** (poročilo 10-Q). Če robotaksiji jemljejo posel, se bo to najprej videlo v ZDA.
-3. **Marža mobilnosti**, ki bo pokazala, koliko stanejo spodbude za voznike.
-4. **Delivery Hero:** odobritev regulatorjev in koliko dolga bo na koncu.
-5. **Januar 2028**, ko Waymo v Austinu in Atlanti zažene lastno aplikacijo.
-
 ## Sklep, ki si ga mora vsak narediti sam
 
-Uber še vedno raste petino na leto, dobiček pa povečuje skoraj dvakrat hitreje. Prevozi so se brez vpliva tečajev upočasnili za tri odstotne točke. Vodstvo krivi pomanjkanje voznikov zunaj ZDA, kjer robotaksijev skoraj ni. Hkrati Uber denar preusmerja z odkupov delnic v drag prevzem na dolg.
+Posel Uberja še vedno raste okoli 20 % na leto, dobiček pa skoraj dvakrat hitreje. Prevozi so se brez vpliva tečajev upočasnili za tri odstotne točke. Vodstvo krivi pomanjkanje voznikov zunaj ZDA, kjer robotaksijev skoraj ni. Hkrati Uber denar preusmerja z odkupov delnic v drag prevzem na dolg.
 
 Kdor meni, da je upočasnitev začasna, dobi podjetje, katerega cena predpostavlja manj rasti, kot jo je imelo doslej. Kdor meni, da robotaksiji šele prihajajo, vidi podjetje brez lastne tehnologije, ki prihodnost veže na partnerje. Prvi odgovor bo dala rast mobilnosti v naslednjih dveh četrtletjih, pravega januar 2028.
 
@@ -201,7 +190,9 @@ Grafi, na katere kažejo oznake v besedilu. Prihodki, dobiček iz poslovanja, pr
 
 ![Prilagojeni EBITDA po četrtletjih](/images/articles/uber-analiza-2026-11-04/kazalnik-ebitda.svg)
 
-![Uporabnikov in voženj je več, a rast se umirja](/images/articles/uber-analiza-2026-11-04/uporabniki-voznje.svg)
+![Vožnje in dostave po četrtletjih](/images/articles/uber-analiza-2026-11-04/kazalnik-voznje.svg)
+
+![Mesečno aktivni uporabniki](/images/articles/uber-analiza-2026-11-04/kazalnik-uporabniki.svg)
 
 ![Dobiček iz poslovanja po četrtletjih](/images/articles/uber-analiza-2026-11-04/kazalnik-dobicek.svg)
 
