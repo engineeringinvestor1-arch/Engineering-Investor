@@ -25,4 +25,12 @@ const analizeEn = defineCollection({
   schema: clanek.extend({ izvirnik: z.string() }),
 });
 
-export const collections = { analize, 'analize-en': analizeEn };
+// Osnutki analiz za avtorjev pregled pred objavo, na skritem naslovu /osnutek/<ime>-<skrivnost>/ (noindex, izven
+// zemljevida strani, RSS in seznamov). Avtor 4. 11. 2026: "objaviš na spletni strani ampak pod takšnim linkom da ga bom lahko
+// vedel le jaz". Ko je analiza dokončana, se datoteka premakne v analize/ in osnutek izbriše.
+const osnutki = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/osnutki' }),
+  schema: clanek.extend({ skrivnost: z.string().regex(/^[a-z0-9]{16,}$/) }),
+});
+
+export const collections = { analize, 'analize-en': analizeEn, osnutki };

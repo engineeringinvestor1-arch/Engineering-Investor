@@ -17,9 +17,11 @@ interface Props {
   image?: string;
   // Naslovi tega članka v jezikih, v katerih obstaja (za gumb za jezik in iskalnike).
   alternates?: Partial<Record<Lang, string>>;
+  // Osnutek na skritem naslovu (src/pages/osnutek/[pot].astro).
+  skrita?: boolean;
 }
 
-const { title, description, pubDate, readingTime, category, image, alternates } = Astro.props;
+const { title, description, pubDate, readingTime, category, image, alternates, skrita = false } = Astro.props;
 
 const lang = getLang(Astro.url.pathname);
 const s = slovar(lang);
@@ -32,7 +34,7 @@ const formattedDate = new Intl.DateTimeFormat(INTL[lang], {
 }).format(pubDate);
 ---
 
-<BaseLayout title={title} description={description} article={true} alternates={alternates}>
+<BaseLayout title={title} description={description} article={true} alternates={alternates} skrita={skrita}>
   <div class="article-page">
     <div class="container">
 

@@ -1,0 +1,30 @@
+---
+// Osnutek analize na skritem naslovu /osnutek/<ime>-<skrivnost>/ za avtorjev pregled pred objavo (avtor 4. 11. 2026:
+// "na ta link bi objavil analizo preden bi na njej naredil še vse popravke"). Stran ima noindex, ni v zemljevidu strani,
+// RSS ali seznamih; to preveri scripts/clanki/preveri-osnutke.mjs ob vsaki gradnji.
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const osnutki = await getCollection('osnutki');
+  return osnutki.map((osnutek) => ({
+    params: { pot: `${osnutek.id}-${osnutek.data.skrivnost}` },
+    props: { osnutek },
+  }));
+}
+
+const { osnutek } = Astro.props;
+const { Content } = await render(osnutek);
+---
+
+<ArticleLayout
+  title={osnutek.data.title}
+  description={osnutek.data.description}
+  pubDate={osnutek.data.pubDate}
+  readingTime={osnutek.data.readingTime}
+  category={osnutek.data.category}
+  image={osnutek.data.image}
+  skrita={true}
+>
+  <Content />
+</ArticleLayout>

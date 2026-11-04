@@ -14,8 +14,8 @@ const predogled = process.argv.includes('dev');
 // https://astro.build/config
 export default defineConfig({
   site: 'https://engineering-investor.com',
-  // Aplikacija Sledilnik financ (/aplikacija/) je skrita in ne gre v zemljevid strani; teče na Reactu.
-  integrations: [sitemap({ filter: (stran) => !stran.includes('/aplikacija/') }), react()],
+  // Aplikacija Sledilnik financ (/aplikacija/) in osnutki analiz (/osnutek/) so skriti in ne gredo v zemljevid strani.
+  integrations: [sitemap({ filter: (stran) => !stran.includes('/aplikacija/') && !stran.includes('/osnutek/') }), react()],
   // Grafi .svg se vstavijo naravnost v stran, da sledijo gumbu za svetlo/temno temo.
   // Oznake [n] v besedilu odprejo graf; remarkGrafi teče pred remarkInlineSvg, ker potrebuje slike.
   // Vrednosti v preglednicah in znak % ob številu se ne lomijo v novo vrstico.

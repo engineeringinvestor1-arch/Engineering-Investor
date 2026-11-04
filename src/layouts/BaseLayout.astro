@@ -13,6 +13,8 @@ interface Props {
   // Naslovi iste strani v drugih jezikih. Stalne strani jih najdejo same; članek jih poda,
   // ker je njegov prevod ločena datoteka (in ga pri starejših člankih ni).
   alternates?: Partial<Record<Lang, string>>;
+  // Skrita stran (osnutek analize): iskalniki je ne zajamejo.
+  skrita?: boolean;
 }
 
 const lang = getLang(Astro.url.pathname);
@@ -23,6 +25,7 @@ const {
   description = t.site.description,
   article = false,
   alternates,
+  skrita = false,
 } = Astro.props;
 
 const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${t.site.tagline}`;
@@ -49,6 +52,7 @@ const hreflang = Object.keys(prevodi).length > 1 ? (Object.entries(prevodi) as [
     <meta name="title" content={fullTitle} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    {skrita && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Ista stran v drugih jezikih: iskalnik tujemu bralcu pokaže pravo različico. -->
     {hreflang.map(([l, href]) => <link rel="alternate" hreflang={l} href={new URL(href, SITE.url)} />)}

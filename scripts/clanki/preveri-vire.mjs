@@ -14,7 +14,7 @@ import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const DIST = fileURLToPath(new URL('../../dist/', import.meta.url));
-const MAPE = ['analize', 'en/analysis'];
+const MAPE = ['analize', 'en/analysis', 'osnutek'];
 const OZNAKA = /(?:^|[\s>(.;])((?:Viri|Vir|Sources|Source|Številke|Figures)(?:\s+\p{L}+)?\s*:)/u;
 const DELJENJE = /^https:\/\/x\.com\/intent\//;
 // Shranjeni izrisi člankov: Astro jih ne izriše znova, dokler se članek ne spremeni, tudi če se je spremenil vtičnik.
