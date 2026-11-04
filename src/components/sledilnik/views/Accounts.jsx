@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Input, Select, Field, Modal, PageHeader, Empty } from '../ui.jsx';
 import { Swatches } from '../QuickAdd.jsx';
-import { fmtEur, accountBalance, parseStanje, zacetnoZaStanje, ACCOUNT_TYPES, ACCOUNT_TYPE_LABEL, PALETTE, uid, todayIso } from '../store.js';
+import { fmtEur, accountBalance, parseStanje, uskladitevStanja, zacetnoZaStanje, ACCOUNT_TYPES, ACCOUNT_TYPE_LABEL, PALETTE, uid, todayIso } from '../store.js';
 
 function emptyAccount() {
   return {
@@ -41,19 +41,33 @@ export default function Accounts({ state, dispatch }) {
   function save(e) {
     e.preventDefault();
     if (!editing.name) return;
-    const { stanje, napaka, ...racun } = editing;
+    const { stanje, napaka, nacin, ...racun } = editing;
     const vpisano = parseStanje(stanje);
     if (vpisano === null) return setEditing({ ...editing, napaka: 'Znesek ni veljaven. Primer: 1569,04' });
+    const trenutno = jeDolg(editing.type) ? -Math.abs(vpisano) : vpisano;
+    // Razlika pri računu z vnosi je privzeto uskladitev (vnos v kategoriji Uskladitev), ne novo začetno stanje.
+    const uskladitev = editing.id && imaVnose(editing.id) && nacin !== 'zacetno' ? uskladitevStanja(state, editing.id, trenutno, todayIso()) : null;
     const acc = {
       ...racun,
       id: editing.id || uid(),
-      startingBalance: zacetnoZaStanje(state, editing.id, jeDolg(editing.type) ? -Math.abs(vpisano) : vpisano),
+      startingBalance: uskladitev ? Number(racun.startingBalance) || 0 : zacetnoZaStanje(state, editing.id, trenutno),
       createdAt: editing.createdAt || todayIso(),
     };
     if (editing.id) dispatch({ type: 'account/update', account: acc });
     else dispatch({ type: 'account/add', account: acc });
+    if (uskladitev?.kategorija) dispatch({ type: 'category/add', category: uskladitev.kategorija });
+    if (uskladitev) dispatch({ type: 'tx/add', tx: uskladitev.tx });
     setEditing(null);
   }
+
+  const imaVnose = (id) => state.transactions.some((t) => t.accountId === id || t.transferToAccountId === id);
+
+  // Razlika med vpisanim stanjem in stanjem v aplikaciji, ko okno ureja račun z vnosi.
+  const vpisanoZdaj = editing ? parseStanje(editing.stanje) : null;
+  const razlika = editing?.id && vpisanoZdaj !== null && imaVnose(editing.id)
+    ? Math.round(((jeDolg(editing.type) ? -Math.abs(vpisanoZdaj) : vpisanoZdaj) - accountBalance(state, editing.id)) * 100) / 100
+    : 0;
+  const nacin = editing?.nacin === 'zacetno' ? 'zacetno' : 'uskladitev';
 
   function remove(id) {
     const used = state.transactions.some((t) => t.accountId === id || t.transferToAccountId === id);
@@ -149,6 +163,18 @@ export default function Accounts({ state, dispatch }) {
                   onChange={(e) => setEditing({ ...editing, stanje: e.target.value, napaka: '' })} />
               </Field>
             </div>
+            {razlika !== 0 && (
+              <Field label={`Razlika ${razlika > 0 ? '+' : '−'}${fmtEur(Math.abs(razlika), true)} glede na aplikacijo`}
+                hint={nacin === 'uskladitev'
+                  ? 'Razlika se zapiše kot vnos v kategoriji Uskladitev (pozabljen račun, zaokrožen znesek) in šteje v porabo.'
+                  : 'Razlika se ne zapiše kot vnos. Izberi, če je bilo narobe že začetno stanje.'}>
+                <div className="sl-seg" role="group" aria-label="Kaj naj bo z razliko" style={{ display: 'flex' }}>
+                  {[['uskladitev', 'Kot uskladitev'], ['zacetno', 'Kot začetno stanje']].map(([id, ime]) => (
+                    <button key={id} type="button" aria-pressed={nacin === id} onClick={() => setEditing({ ...editing, nacin: id })}>{ime}</button>
+                  ))}
+                </div>
+              </Field>
+            )}
             <Field label="Barva">
               <Swatches value={editing.color} onChange={(color) => setEditing({ ...editing, color })} />
             </Field>

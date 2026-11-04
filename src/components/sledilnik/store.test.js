@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import {
   blockedRecurring, cistoIme, findPayee, freshState, potrebnaKopija, excelSheets, MAX_CATCH_UP, nextOccurrence, parseAmount, payeesFromTransactions,
   postDueRecurring, rememberPayee, suggestPayees, topPayees, temaZaPrikaz, BARVA_TEME, stanjeIzShrambe, pregledPripomockov, preklopiPripomocek, PRIPOMOCKI, PRIVZETI_PREGLED,
-  accountBalance, parseStanje, zacetnoZaStanje,
+  accountBalance, parseStanje, uskladitevStanja, zacetnoZaStanje,
   categoryBreakdown, cumulativeSpend, denarniTok, dnevnaPoraba, mesecnaPoraba, stopnjePorabe, tedenskaPoraba, monthName, monthOverview, monthTotals, payeeBreakdown, shiftMonth, upcomingRecurring,
 } from './store.js';
 import { reducer } from './reducer.js';
@@ -448,4 +448,26 @@ test('trenutno stanje računa: vejica, ločilo tisočic, nič in minus (prekora�
   assert.equal(parseStanje('0'), 0);
   assert.equal(parseStanje('abc'), null);
   assert.equal(parseStanje('12,345'), null);
+});
+
+test('uskladitev s stanjem na banki: razlika postane vnos v kategoriji Uskladitev in stanje se ujema', () => {
+  // Avtor, 4. 11. 2026: razliko, ko pozabiš račun ali zaokrožiš znesek, "nekako drugače označil".
+  let state = { ...freshState(), accounts: [{ id: 'trr', name: 'TRR', type: 'checking', startingBalance: 1000 }], payees: [], transactions: [tx({ id: 'a', amount: 100 })] };
+  assert.equal(uskladitevStanja(state, 'trr', 900, '2026-11-30'), null, 'brez razlike ni vnosa');
+
+  const manjka = uskladitevStanja(state, 'trr', 876.6, '2026-11-30');
+  assert.equal(manjka.razlika, -23.4);
+  assert.deepEqual({ ...manjka.tx, id: 'x' }, {
+    id: 'x', date: '2026-11-30', type: 'expense', amount: 23.4, accountId: 'trr', transferToAccountId: '',
+    categoryId: 'uskladitev-odhodek', payee: '', notes: 'Razlika ob uskladitvi s stanjem na banki', tags: [],
+  });
+  assert.deepEqual(manjka.kategorija, { id: 'uskladitev-odhodek', name: 'Uskladitev', type: 'expense', color: '#78716c', archived: false });
+  state = reducer(state, { type: 'category/add', category: manjka.kategorija });
+  state = reducer(state, { type: 'tx/add', tx: manjka.tx });
+  assert.equal(Math.round(accountBalance(state, 'trr') * 100) / 100, 876.6, 'stanje je zdaj dejansko');
+  assert.deepEqual(state.payees, [], 'uskladitev ni trgovina za hitri vnos');
+  assert.equal(uskladitevStanja(state, 'trr', 800, '2026-12-31').kategorija, null, 'kategorija že obstaja');
+
+  const vec = uskladitevStanja(state, 'trr', 900, '2026-12-31');
+  assert.deepEqual([vec.razlika, vec.tx.type, vec.tx.amount, vec.tx.categoryId, vec.kategorija.type], [23.4, 'income', 23.4, 'uskladitev-prihodek', 'income']);
 });

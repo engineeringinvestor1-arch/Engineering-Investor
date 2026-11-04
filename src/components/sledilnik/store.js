@@ -667,6 +667,25 @@ export function zacetnoZaStanje(state, accountId, trenutno) {
   return round2((Number(acc.startingBalance) || 0) + trenutno - accountBalance(state, accountId));
 }
 
+// Uskladitev s stanjem na banki (avtor, 4. 11. 2026: ko se čez mesec stanje ne ujema, ker si pozabil račun ali
+// znesek zaokrožil, naj se razlika "nekako drugače označi"). Razlika postane vnos v svoji kategoriji Uskladitev:
+// manjko kot odhodek, presežek kot prihodek. Šteje v porabo, ker je manjko večinoma denar, ki je res odšel.
+// Brez imena trgovine, da se ne pojavi med pogostimi trgovinami pri vnosu.
+export const USKLADITEV = { expense: 'uskladitev-odhodek', income: 'uskladitev-prihodek' };
+
+export function uskladitevStanja(state, accountId, dejansko, datum) {
+  const razlika = round2(dejansko - accountBalance(state, accountId));
+  if (!razlika) return null;
+  const type = razlika < 0 ? 'expense' : 'income';
+  const id = USKLADITEV[type];
+  const kategorija = state.categories.some((c) => c.id === id) ? null : { id, name: 'Uskladitev', type, color: '#78716c', archived: false };
+  const tx = {
+    id: uid(), date: datum, type, amount: Math.abs(razlika), accountId, transferToAccountId: '',
+    categoryId: id, payee: '', notes: 'Razlika ob uskladitvi s stanjem na banki', tags: [],
+  };
+  return { razlika, tx, kategorija };
+}
+
 // Znesek stanja kot parseAmount, a dovoli nič in minus (prekoračen račun). Prazno je nič, neveljavno null.
 export function parseStanje(text) {
   let t = String(text ?? '').replace(/[\s€]/g, '').replace(/^−/, '-');

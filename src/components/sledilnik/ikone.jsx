@@ -20,6 +20,7 @@ const P = {
   kovanci: <><circle cx="9" cy="9" r="5.5" /><path d="M18.3 10.6a5.5 5.5 0 1 1-7.7 7.7" /></>,
   prihodek: <><path d="M12 19V5" /><path d="m6 11 6-6 6 6" /></>,
   prenos: <><path d="M5 8h13l-3.5-3.5" /><path d="M19 16H6l3.5 3.5" /></>,
+  tehtnica: <><path d="M12 4v16" /><path d="M8 20h8" /><path d="M5 7h14" /><path d="M5 7 2.5 13a2.5 2.5 0 0 0 5 0z" /><path d="m19 7-2.5 6a2.5 2.5 0 0 0 5 0z" /></>,
   drugo: <><circle cx="6" cy="12" r="1.3" /><circle cx="12" cy="12" r="1.3" /><circle cx="18" cy="12" r="1.3" /></>,
 };
 
@@ -31,6 +32,7 @@ const PRIHODKI = [
   [['najem'], 'kljuc'],
 ];
 const ODHODKI = [
+  [['usklad'], 'tehtnica'],
   [['stanovan', 'najem', 'dom', 'elektr', 'ogrev', 'komunal'], 'dom'],
   [['hrana', 'gospodinj', 'živil', 'trgovin', 'restavr'], 'kosarica'],
   [['promet', 'gorivo', 'avto', 'prevoz', 'bencin'], 'avto'],
