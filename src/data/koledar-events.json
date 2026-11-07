@@ -394,7 +394,8 @@
       "region": "US",
       "importance": "LOW",
       "forecast": "indeks 54,5",
-      "forecastSource": "Nasdaq, Forex Factory"
+      "forecastSource": "Nasdaq, Forex Factory",
+      "actual": "indeks 55,5, nad pričakovanji; proizvodnja 59,0, najvišje od novembra 2021; cene 75,2"
     },
     {
       "id": "us-volitve-nov26",
@@ -403,7 +404,8 @@
       "category": "Politika",
       "region": "US",
       "importance": "HIGH",
-      "previous": "predstavniški dom: republikanci 218, demokrati 214, neodvisni 1; senat: republikanci 53, demokrati 45, neodvisna 2"
+      "previous": "predstavniški dom: republikanci 218, demokrati 214, neodvisni 1; senat: republikanci 53, demokrati 45, neodvisna 2",
+      "actual": "demokrati so osvojili večino v predstavniškem domu in senatu; nekateri izidi 7. 11. še niso znani"
     },
     {
       "id": "us-nfp-nov26",
@@ -416,7 +418,7 @@
       "previous": "+29 tisoč delovnih mest (sep 2026); brezposelnost 4,2 %",
       "forecast": "+65.000 delovnih mest; brezposelnost 4,2 %",
       "forecastSource": "Nasdaq, Forex Factory",
-      "actual": "+165.000 delovnih mest"
+      "actual": "+165.000 delovnih mest, nad pričakovanji; brezposelnost 4,1 %; september popravljen na +60.000"
     },
     {
       "id": "us-cpi-nov26",
@@ -427,6 +429,16 @@
       "region": "US",
       "importance": "HIGH",
       "previous": "3,7 % medletno (sep 2026); jedrna 2,6 %"
+    },
+    {
+      "id": "us-retail-nov26",
+      "date": "2026-11-17",
+      "time": "14:30",
+      "title": "US maloprodaja (okt 2026)",
+      "category": "Poraba",
+      "region": "US",
+      "importance": "LOW",
+      "previous": "+0,8 % mesečno (sep 2026)"
     },
     {
       "id": "us-pce-nov26",
@@ -961,8 +973,8 @@
       "quarter": 3,
       "year": 2026,
       "estEps": "2,02 USD",
-      "actualEps": "2,05 USD",
-      "actualNote": "presegel pričakovanja (ocena 2,03 USD)"
+      "actualEps": "2,10 USD (Apple), 2,05 USD (Finnhub, Nasdaq)",
+      "actualNote": "presegel pričakovanja (ocena 2,03 USD, Finnhub); razlika med viroma je enkratno vračilo carin, 0,05 USD na delnico"
     },
     {
       "id": "amd-q3-26",
@@ -973,18 +985,19 @@
       "quarter": 3,
       "year": 2026,
       "estEps": "1,97 USD",
-      "actualEps": "2,09 USD (Finnhub), 1,84 USD (Nasdaq)",
-      "actualNote": "ocena 1,97 USD (Finnhub)"
+      "actualEps": "2,09 USD (AMD), 1,84 USD (Nasdaq)",
+      "actualNote": "prilagojeno, presegel pričakovanja (ocena 1,97 USD, Finnhub); po računovodskih pravilih 1,46 USD"
     },
     {
       "id": "brkb-q3-26",
       "date": "2026-11-07",
       "ticker": "BRK.B",
       "name": "Berkshire Hathaway",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance",
+      "when": "pred odprtjem",
       "quarter": 3,
-      "year": 2026
+      "year": 2026,
+      "actualEps": "10,33 USD",
+      "actualNote": "čisti dobiček na delnico razreda B; operativni dobiček 12,7 mrd USD, 6 % manj kot leto prej"
     },
     {
       "id": "nvda-q4-26",

@@ -68,6 +68,17 @@ const NATANCNO_EN: Record<string, string> = {
   'Vmesne volitve v ZDA (kongres)': 'US midterm elections (Congress)',
   'predstavniški dom: republikanci 218, demokrati 214, neodvisni 1; senat: republikanci 53, demokrati 45, neodvisna 2':
     'House: Republicans 218, Democrats 214, independent 1; Senate: Republicans 53, Democrats 45, independents 2',
+  'demokrati so osvojili večino v predstavniškem domu in senatu; nekateri izidi 7. 11. še niso znani':
+    'Democrats won majorities in the House and the Senate; some races were still uncalled on 7 Nov',
+  // Izidi tedna 2. do 6. 11. 2026, preverjeni pri izdajatelju (ISM, BLS, sporočila podjetij).
+  'indeks 55,5, nad pričakovanji; proizvodnja 59,0, najvišje od novembra 2021; cene 75,2':
+    'index 55.5, above expectations; production 59.0, highest since November 2021; prices 75.2',
+  '+165.000 delovnih mest, nad pričakovanji; brezposelnost 4,1 %; september popravljen na +60.000':
+    '+165,000 jobs, above expectations; unemployment 4.1%; September revised to +60,000',
+  'presegel pričakovanja (ocena 2,03 USD, Finnhub); razlika med viroma je enkratno vračilo carin, 0,05 USD na delnico':
+    'beat expectations (estimate $2.03, Finnhub); the gap between the sources is a one-off tariff refund of $0.05 per share',
+  'čisti dobiček na delnico razreda B; operativni dobiček 12,7 mrd USD, 6 % manj kot leto prej':
+    'net earnings per Class B share; operating earnings $12.7bn, 6% lower than a year earlier',
   // Prazniki newyorške borze (avtor 31. 10. 2026: "lahko dodaš tudi Praznikov borze"), datumi po NYSE.
   'Zahvalni dan: borza v New Yorku zaprta': 'Thanksgiving: New York Stock Exchange closed',
   'Skrajšano trgovanje v New Yorku (dan po zahvalnem dnevu)': 'Early close in New York (day after Thanksgiving)',
