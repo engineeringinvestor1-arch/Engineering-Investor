@@ -415,7 +415,8 @@
       "importance": "HIGH",
       "previous": "+29 tisoč delovnih mest (sep 2026); brezposelnost 4,2 %",
       "forecast": "+65.000 delovnih mest; brezposelnost 4,2 %",
-      "forecastSource": "Nasdaq, Forex Factory"
+      "forecastSource": "Nasdaq, Forex Factory",
+      "actual": "+165.000 delovnih mest"
     },
     {
       "id": "us-cpi-nov26",
