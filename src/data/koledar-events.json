@@ -428,7 +428,9 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "HIGH",
-      "previous": "3,7 % medletno (sep 2026); jedrna 2,6 %"
+      "previous": "3,7 % medletno (sep 2026); jedrna 2,6 %",
+      "forecast": "3,9 % medletno; jedrna 2,8 %",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "us-retail-nov26",
