@@ -1021,12 +1021,13 @@
       "estEps": "0,64 USD"
     },
     {
-      "id": "avgo-2026-12-09",
+      "id": "avgo-q4-26",
       "date": "2026-12-09",
       "ticker": "AVGO",
       "name": "Broadcom",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance"
+      "when": "po zaprtju",
+      "quarter": 4,
+      "year": 2026
     }
   ]
 }
