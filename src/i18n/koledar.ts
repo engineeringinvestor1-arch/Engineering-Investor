@@ -79,6 +79,10 @@ const NATANCNO_EN: Record<string, string> = {
     'beat expectations (estimate $2.03, Finnhub); the gap between the sources is a one-off tariff refund of $0.05 per share',
   'čisti dobiček na delnico razreda B; operativni dobiček 12,7 mrd USD, 6 % manj kot leto prej':
     'net earnings per Class B share; operating earnings $12.7bn, 6% lower than a year earlier',
+  // CPI za oktober 2026 (BLS, 10. 11. 2026): medletnih stopenj ni, ker oktobra 2025 ni bilo zbiranja podatkov.
+  '+0,4 % mesečno, nad pričakovanji; jedrna +0,3 %; medletnih stopenj BLS ne objavi, ker oktobra 2025 ni zbiral podatkov':
+    '+0.4% m/m, above expectations; core +0.3%; the BLS does not publish year-on-year rates because it did not collect data in October 2025',
+  '+0,3 % mesečno; jedrna +0,2 %': '+0.3% m/m; core +0.2%',
   // Prazniki newyorške borze (avtor 31. 10. 2026: "lahko dodaš tudi Praznikov borze"), datumi po NYSE.
   'Zahvalni dan: borza v New Yorku zaprta': 'Thanksgiving: New York Stock Exchange closed',
   'Skrajšano trgovanje v New Yorku (dan po zahvalnem dnevu)': 'Early close in New York (day after Thanksgiving)',

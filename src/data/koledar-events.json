@@ -429,8 +429,9 @@
       "region": "US",
       "importance": "HIGH",
       "previous": "3,7 % medletno (sep 2026); jedrna 2,6 %",
-      "forecast": "3,9 % medletno; jedrna 2,8 %",
-      "forecastSource": "Nasdaq"
+      "forecast": "+0,3 % mesečno; jedrna +0,2 %",
+      "forecastSource": "CNBC",
+      "actual": "+0,4 % mesečno, nad pričakovanji; jedrna +0,3 %; medletnih stopenj BLS ne objavi, ker oktobra 2025 ni zbiral podatkov"
     },
     {
       "id": "us-retail-nov26",
@@ -451,7 +452,8 @@
       "title": "US PCE (okt 2026)",
       "category": "Inflacija",
       "region": "US",
-      "importance": "LOW"
+      "importance": "LOW",
+      "previous": "3,6 % medletno (sep 2026); jedrni 3,1 %"
     },
     {
       "id": "us-praznik-nov26",
@@ -1010,7 +1012,8 @@
       "name": "NVIDIA",
       "when": "po zaprtju",
       "quarter": 4,
-      "year": 2026
+      "year": 2026,
+      "estEps": "2,52 USD"
     },
     {
       "id": "wmt-q3-27",
