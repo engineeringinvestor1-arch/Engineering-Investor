@@ -442,8 +442,8 @@
       "region": "US",
       "importance": "LOW",
       "previous": "+0,8 % mesečno (sep 2026)",
-      "forecast": "0,0 % mesečno",
-      "forecastSource": "Nasdaq"
+      "forecast": "0,2 % mesečno",
+      "forecastSource": "Nasdaq, Forex Factory"
     },
     {
       "id": "us-pce-nov26",
