@@ -15,6 +15,8 @@ test('slovenščina ostane nespremenjena', () => {
 test('predloge, ki jih piše robot', () => {
   const primeri = {
     'CPI 3,4 % medletno; jedrna 2,5 %': 'CPI 3.4% y/y; core 2.5%',
+    // 14. 11. 2026: CPI brez medletne stopnje (oktober 2026), robot vpiše mesečno spremembo.
+    'CPI +0,4 % mesečno; jedrna +0,3 %; medletne stopnje BLS ni objavil': 'CPI +0.4% m/m; core +0.3%; the BLS did not publish the year-on-year rate',
     'PCE 3,4 % medletno; jedrni 3,0 %': 'PCE 3.4% y/y; core 3.0%',
     'PPI 4,7 % medletno': 'PPI 4.7% y/y',
     'Fed obrestna mera: 3,50-3,75 %': 'Fed funds rate: 3.50-3.75%',

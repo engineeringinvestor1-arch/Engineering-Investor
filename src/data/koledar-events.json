@@ -447,6 +447,16 @@
       "actual": "0,2 % mesečno"
     },
     {
+      "id": "anthropic-ipo-nov26",
+      "date": "2026-11-19",
+      "title": "Anthropic: začetek trgovanja z delnicami (predvideno)",
+      "category": "Vstop na borzo",
+      "region": "US",
+      "importance": "HIGH",
+      "forecast": "cenovni razpon 70 do 78 USD na delnico; vrednost okoli 1,4 bilijona USD",
+      "forecastSource": "CNBC, New York Times"
+    },
+    {
       "id": "us-pce-nov26",
       "date": "2026-11-25",
       "time": "14:30",

@@ -83,6 +83,9 @@ const NATANCNO_EN: Record<string, string> = {
   '+0,4 % mesečno, nad pričakovanji; jedrna +0,3 %; medletnih stopenj BLS ne objavi, ker oktobra 2025 ni zbiral podatkov':
     '+0.4% m/m, above expectations; core +0.3%; the BLS does not publish year-on-year rates because it did not collect data in October 2025',
   '+0,3 % mesečno; jedrna +0,2 %': '+0.3% m/m; core +0.2%',
+  // Anthropicov vstop na borzo (avtor 14. 11. 2026: "dodaj anthropic"); datum po Bloombergu in CNBC.
+  'Anthropic: začetek trgovanja z delnicami (predvideno)': 'Anthropic: first day of trading (expected)',
+  'cenovni razpon 70 do 78 USD na delnico; vrednost okoli 1,4 bilijona USD': 'price range $70 to $78 per share; valuation about $1.4 trillion',
   // Prazniki newyorške borze (avtor 31. 10. 2026: "lahko dodaš tudi Praznikov borze"), datumi po NYSE.
   'Zahvalni dan: borza v New Yorku zaprta': 'Thanksgiving: New York Stock Exchange closed',
   'Skrajšano trgovanje v New Yorku (dan po zahvalnem dnevu)': 'Early close in New York (day after Thanksgiving)',
@@ -108,6 +111,8 @@ const STEVILO = '[+\\-−~]?\\d[\\d.,]*(?:-\\d[\\d.,]*)?';
 // in pogostih ročnih zapisov. Vrstni red je pomemben: daljši izrazi so pred krajšimi.
 const VZORCI_EN: [RegExp, string | ((...m: string[]) => string)][] = [
   [/po reviziji BEA 30\. 9\./g, 'after the BEA revision of 30 Sep'],
+  // 14. 11. 2026: CPI brez medletne stopnje (scripts/koledar/cpi.mjs).
+  [beseda('medletne stopnje BLS ni objavil'), 'the BLS did not publish the year-on-year rate'],
   [beseda('letna stopnja rasti'), 'annualised growth rate'],
   [beseda('Fed obrestna mera'), 'Fed funds rate'],
   [beseda('depozitna mera'), 'deposit rate'],

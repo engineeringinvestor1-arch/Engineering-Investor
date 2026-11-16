@@ -42,6 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchForexFactory, fetchNasdaqDay, forecastFor, ruleFor } from './koledar/pricakovanja.mjs';
 import { DNI_NAPREJ, dopolniObjave, dopolniPredvidene, fetchNasdaqEarningsDay, fetchYahooEarnings, izberiPredvidene, ocenjeneObjave, razpisaneObjave, yahooObjave } from './koledar/objave.mjs';
 import { fetchFinnhubEarnings, izberiFinnhub, izidRezultata } from './koledar/izidi.mjs';
+import { izidCpi } from './koledar/cpi.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_PATH = path.join(__dirname, '../src/data/koledar-events.json');
@@ -169,9 +170,15 @@ async function fetchMacroActual(apiKey, evt) {
     }
     if (t.includes('CPI')) {
       const obs = await fredForEvent(apiKey, 'CPIAUCNS', evt, 'pc1');
-      if (!obs) return null;
-      const core = await fredForEvent(apiKey, 'CPILFENS', evt, 'pc1');
-      return `CPI ${fmtNum(obs.value)} % medletno${core ? `; jedrna ${fmtNum(core.value)} %` : ''}`;
+      if (obs) {
+        const core = await fredForEvent(apiKey, 'CPILFENS', evt, 'pc1');
+        return izidCpi({ medletno: obs.value, jedrnaMedletno: core?.value });
+      }
+      // Brez medletne stopnje (oktober 2026) mesečna sprememba prilagojenih indeksov (scripts/koledar/cpi.mjs).
+      const mesecno = await fredForEvent(apiKey, 'CPIAUCSL', evt, 'pch');
+      if (!mesecno) return null;
+      const jedrna = await fredForEvent(apiKey, 'CPILFESL', evt, 'pch');
+      return izidCpi({ mesecno: mesecno.value, jedrnaMesecno: jedrna?.value });
     }
     return null; // unknown inflation measure: leave for manual entry rather than guess
   }
