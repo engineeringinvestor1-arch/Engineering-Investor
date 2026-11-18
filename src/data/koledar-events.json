@@ -1014,7 +1014,9 @@
       "when": "po zaprtju",
       "quarter": 4,
       "year": 2026,
-      "estEps": "2,52 USD"
+      "estEps": "2,52 USD",
+      "actualEps": "2,68 USD",
+      "actualNote": "presegel pričakovanja (ocena 2,53 USD)"
     },
     {
       "id": "wmt-q3-27",
@@ -1032,6 +1034,16 @@
       "ticker": "AVGO",
       "name": "Broadcom",
       "when": "po zaprtju",
+      "quarter": 4,
+      "year": 2026
+    },
+    {
+      "id": "mu-q4-26-2026-12-23",
+      "date": "2026-12-23",
+      "ticker": "MU",
+      "name": "Micron",
+      "estimated": true,
+      "estimateSource": "Yahoo Finance",
       "quarter": 4,
       "year": 2026
     }
