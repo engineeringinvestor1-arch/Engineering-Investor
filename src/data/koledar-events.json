@@ -1026,7 +1026,9 @@
       "when": "pred odprtjem",
       "quarter": 3,
       "year": 2027,
-      "estEps": "0,64 USD"
+      "estEps": "0,64 USD",
+      "actualEps": "0,65 USD (Finnhub)",
+      "actualNote": "ocena 0,64 USD (Finnhub)"
     },
     {
       "id": "avgo-q4-26",
