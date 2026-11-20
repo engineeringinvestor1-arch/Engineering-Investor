@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ei-chart" width="720" height="452" viewBox="0 0 720 452" font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" role="img" aria-label="Anthropic share price on its first trading day, 19 November 2026">
+<style>
+  .ei-chart {
+    --ei-surface: var(--color-surface, #FCFAF5);
+    --ei-border: var(--color-border, #D8D3C5);
+    --ei-grid: var(--color-border, #E6E2D6);
+    --ei-axis: var(--color-border-strong, #BDB7A8);
+    --ei-ink: var(--color-text, #1A1A1A);
+    --ei-muted: var(--color-text-muted, #6B6B6B);
+    --ei-rise: var(--chart-rise, #2a78d6);
+    --ei-fall: var(--chart-fall, #e34948);
+    --ei-a: var(--chart-rise, #2a78d6);
+    --ei-b: var(--chart-vlozki, #0d9488);
+    --ei-c: var(--chart-obresti, #c4531d);
+    --ei-benchmark: var(--color-text-muted, #6B6B6B);
+  }
+  @media (prefers-color-scheme: dark) {
+    .ei-chart {
+    --ei-surface: var(--color-surface, #181818);
+    --ei-border: var(--color-border, #2A2A2A);
+    --ei-grid: var(--color-border, #232323);
+    --ei-axis: var(--color-border-strong, #3A3A3A);
+    --ei-ink: var(--color-text, #F0F0EE);
+    --ei-muted: var(--color-text-muted, #888888);
+      --ei-benchmark: var(--color-text-muted, #888888);
+    }
+  }
+</style>
+<rect x="0.5" y="0.5" width="719" height="451" rx="10" style="fill:var(--ei-surface);stroke:var(--ei-border)"/>
+<text x="24" y="38" font-size="19" font-weight="600" style="fill:var(--ei-ink)">Anthropic: first day of trading</text>
+<text x="24" y="62" font-size="13.5" style="fill:var(--ei-muted)">Share price in USD, 19 November 2026</text>
+<line x1="52" x2="596" y1="378" y2="378" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="382" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">75</text><line x1="52" x2="596" y1="286.7" y2="286.7" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="290.7" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">90</text><line x1="52" x2="596" y1="195.3" y2="195.3" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="199.3" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">105</text><line x1="52" x2="596" y1="104" y2="104" style="stroke:var(--ei-grid)" stroke-width="1"/><text x="42" y="108" font-size="11" text-anchor="end" style="fill:var(--ei-muted);font-variant-numeric:tabular-nums">120</text><line x1="52" x2="596" y1="329.3" y2="329.3" style="stroke:var(--ei-muted)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="58" y="323.3" font-size="12.5" style="fill:var(--ei-ink)">offer price $83.00</text><polyline points="52,155.8 52,154.7 62.7,155.7 73.3,195.2 84,218.3 94.7,211.4 105.3,229.5 116,249.4 126.7,220.2 137.3,220.5 148,216.8 158.7,232.6 169.3,241.7 180,231.4 190.7,233.2 201.3,245.9 212,251.1 222.7,252.9 233.3,262 244,261.9 254.7,255.1 265.3,245 276,240.8 286.7,243.9 297.3,246.5 308,251 318.7,254 329.3,251.7 340,259.3 350.7,259.9 361.3,255.8 372,258 382.7,248 393.3,245.3 404,244.8 414.7,240.1 425.3,234 436,231.6 446.7,237 457.3,248.1 468,251.7 478.7,253.2 489.3,248.6 500,253.6 510.7,256.1 521.3,255.7 532,253.7 542.7,255.2 553.3,254.6 564,242.9 574.7,246.7 585.3,244.6 596,243" fill="none" style="stroke:var(--ei-a)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="52" cy="155.8" r="4.5" style="fill:var(--ei-surface);stroke:var(--ei-a)" stroke-width="2.5"/><text x="62" y="147.8" font-size="12.5" text-anchor="start" style="fill:var(--ei-ink)">open $111.50</text><circle cx="596" cy="243" r="4.5" style="fill:var(--ei-rise);stroke:var(--ei-surface)" stroke-width="2"/><text x="606" y="238" font-size="12.5" font-weight="600" style="fill:var(--ei-ink)">$97.17</text><text x="606" y="255" font-size="11" style="fill:var(--ei-rise)">+17.1% above</text><text x="606" y="269" font-size="11" style="fill:var(--ei-rise)">offer price</text><text x="84" y="400" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">18:00</text><text x="212" y="400" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">19:00</text><text x="340" y="400" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">20:00</text><text x="468" y="400" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">21:00</text><text x="596" y="400" font-size="11" text-anchor="middle" style="fill:var(--ei-muted)">22:00</text>
+<text x="24" y="440" font-size="11.5" style="fill:var(--ei-muted)">Source: Yahoo Finance, 5-minute data, 19 Nov 2026; Central European time. Trading began at 17:45.</text>
+</svg>

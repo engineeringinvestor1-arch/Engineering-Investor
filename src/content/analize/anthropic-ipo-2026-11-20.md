@@ -5,7 +5,6 @@ pubDate: 2026-11-20
 category: Delnice
 readingTime: 14
 featured: false
-skrivnost: "egmfwrcadnznoqf7hyip"
 ---
 
 Anthropic, podjetje, ki razvija modele umetne inteligence Claude, je 19. novembra začel trgovati na borzi Nasdaq pod oznako ANT. Delnice je prodal po 83 dolarjev in z njimi ter z vzporedno zasebno prodajo zbral 107,3 milijarde dolarjev. Po poročanju The National je to največji vstop na borzo doslej; prejšnji rekord je junija postavil SpaceX s 86 milijardami.
