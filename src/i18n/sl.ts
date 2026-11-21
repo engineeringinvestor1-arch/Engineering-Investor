@@ -188,7 +188,7 @@ export const sl = {
       'us-volitve': 'Vmesne volitve na polovici predsedniškega mandata. Volijo vseh 435 članov predstavniškega doma in 35 od 100 senatorjev (33 rednih mest in dve izredni volitvi), poleg tega guvernerje v 36 zveznih državah. Izid pove, ali bo predsednikova stranka še imela večino v kongresu, ki odloča o proračunu, davkih in zgornji meji zadolževanja. Izidi prihajajo v noči na sredo po našem času, pri tesnih izidih štetje traja tudi več dni.',
       'us-praznik': 'Newyorška borza (NYSE) je zaprta.',
       'us-skrajsano': 'Newyorška borza (NYSE) konča trgovanje ob 13. uri po newyorškem času, to je ob 19. uri po našem.',
-      'anthropic-ipo': 'Prva javna ponudba delnic podjetja Anthropic, razvijalca modela Claude, na borzi Nasdaq. Ceno delnic naj bi določili v sredo, 18. 11. (Bloomberg), trgovanje naj bi se začelo v četrtek, 19. 11. (CNBC po neimenovanih virih); podjetje datumov ni uradno potrdilo. Po Bloombergu je ponudba preizkus zaupanja v delnice umetne inteligence.',
+      'anthropic-ipo': 'Prva javna ponudba delnic podjetja Anthropic, razvijalca modela Claude, na borzi Nasdaq. Ceno 83 USD na delnico je določil v sredo, 18. 11., nad napovedanim razponom od 70 do 78 USD, trgovanje se je začelo v četrtek, 19. 11. Po Bloombergu je bila ponudba preizkus zaupanja v delnice umetne inteligence.',
     } as Record<string, string>,
     // Rezerva po kategoriji za vrste dogodkov, ki še nimajo svojega opisa.
     opisiKategorij: {

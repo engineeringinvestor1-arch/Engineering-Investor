@@ -449,12 +449,13 @@
     {
       "id": "anthropic-ipo-nov26",
       "date": "2026-11-19",
-      "title": "Anthropic: začetek trgovanja z delnicami (predvideno)",
+      "title": "Anthropic: začetek trgovanja z delnicami",
       "category": "Vstop na borzo",
       "region": "US",
       "importance": "HIGH",
       "forecast": "cenovni razpon 70 do 78 USD na delnico; vrednost okoli 1,4 bilijona USD",
-      "forecastSource": "CNBC, New York Times"
+      "forecastSource": "CNBC, New York Times",
+      "actual": "cena ponudbe 83 USD; prvi dan zaprtje 97,17 USD (+17 %)"
     },
     {
       "id": "us-pce-nov26",
@@ -484,13 +485,23 @@
       "importance": "LOW"
     },
     {
+      "id": "eu-cpi-nov26",
+      "date": "2026-12-01",
+      "time": "11:00",
+      "title": "EU CPI Flash (nov 2026)",
+      "category": "Inflacija",
+      "region": "EU",
+      "importance": "LOW"
+    },
+    {
       "id": "us-ism-dec26",
       "date": "2026-12-01",
       "title": "US ISM predelovalne dejavnosti (nov 2026)",
       "time": "16:00",
       "category": "PMI",
       "region": "US",
-      "importance": "LOW"
+      "importance": "LOW",
+      "previous": "indeks 55,5 (okt 2026)"
     },
     {
       "id": "us-nfp-dec26",
@@ -499,7 +510,8 @@
       "title": "US NFP (nov 2026)",
       "category": "Trg dela",
       "region": "US",
-      "importance": "HIGH"
+      "importance": "HIGH",
+      "previous": "+165 tisoč delovnih mest (okt 2026); brezposelnost 4,1 %"
     },
     {
       "id": "fomc-dec26",

@@ -86,6 +86,9 @@ const NATANCNO_EN: Record<string, string> = {
   // Anthropicov vstop na borzo (avtor 14. 11. 2026: "dodaj anthropic"); datum po Bloombergu in CNBC.
   'Anthropic: začetek trgovanja z delnicami (predvideno)': 'Anthropic: first day of trading (expected)',
   'cenovni razpon 70 do 78 USD na delnico; vrednost okoli 1,4 bilijona USD': 'price range $70 to $78 per share; valuation about $1.4 trillion',
+  // Izid 19. 11. 2026 (Nasdaq; analiza /analize/anthropic-ipo-2026-11-20/); oznaka (predvideno) odstranjena 21. 11. 2026.
+  'Anthropic: začetek trgovanja z delnicami': 'Anthropic: first day of trading',
+  'cena ponudbe 83 USD; prvi dan zaprtje 97,17 USD (+17 %)': 'offer price $83; first-day close $97.17 (+17%)',
   // Prazniki newyorške borze (avtor 31. 10. 2026: "lahko dodaš tudi Praznikov borze"), datumi po NYSE.
   'Zahvalni dan: borza v New Yorku zaprta': 'Thanksgiving: New York Stock Exchange closed',
   'Skrajšano trgovanje v New Yorku (dan po zahvalnem dnevu)': 'Early close in New York (day after Thanksgiving)',

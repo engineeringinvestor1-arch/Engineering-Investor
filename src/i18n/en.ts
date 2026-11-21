@@ -187,7 +187,7 @@ export const en: Slovar = {
       'us-volitve': 'Midterm elections halfway through the presidential term. Voters elect all 435 members of the House of Representatives and 35 of the 100 senators (33 regular seats and two special elections), as well as governors in 36 states. The result shows whether the president’s party keeps its majority in Congress, which decides on the budget, taxes and the debt ceiling. Results come in overnight into Wednesday, Slovenian time; close races can take several days to count.',
       'us-praznik': 'The New York Stock Exchange (NYSE) is closed.',
       'us-skrajsano': 'The New York Stock Exchange (NYSE) closes at 1 pm New York time, which is 7 pm Slovenian time.',
-      'anthropic-ipo': 'The initial public offering of Anthropic, the developer of the Claude model, on the Nasdaq exchange. The share price is expected to be set on Wednesday, 18 November (Bloomberg), and trading to start on Thursday, 19 November (CNBC, citing unnamed sources); the company has not officially confirmed the dates. According to Bloomberg, the offering is a test of confidence in AI stocks.',
+      'anthropic-ipo': 'The initial public offering of Anthropic, the developer of the Claude model, on the Nasdaq exchange. The company set the price at $83 per share on Wednesday, 18 November, above the marketed range of $70 to $78, and trading started on Thursday, 19 November. According to Bloomberg, the offering was a test of confidence in AI stocks.',
     },
     opisiKategorij: {
       Inflacija: 'Measures the change in prices compared with a year earlier. Inflation above expectations raises the chance that the central bank keeps interest rates higher for longer, which usually weighs on stocks; inflation below expectations works the other way.',
