@@ -1066,8 +1066,7 @@
       "date": "2026-12-17",
       "ticker": "MU",
       "name": "Micron",
-      "estimated": true,
-      "estimateSource": "Yahoo Finance",
+      "when": "po zaprtju",
       "quarter": 4,
       "year": 2026
     }
