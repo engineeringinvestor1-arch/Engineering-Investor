@@ -465,7 +465,9 @@
       "category": "Inflacija",
       "region": "US",
       "importance": "LOW",
-      "previous": "3,6 % medletno (sep 2026); jedrni 3,1 %"
+      "previous": "3,6 % medletno (sep 2026); jedrni 3,1 %",
+      "forecast": "3,8 % medletno; jedrni 3,2 %",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "us-praznik-nov26",
