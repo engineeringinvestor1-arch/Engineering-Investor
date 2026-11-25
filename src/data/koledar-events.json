@@ -467,7 +467,8 @@
       "importance": "LOW",
       "previous": "3,6 % medletno (sep 2026); jedrni 3,1 %",
       "forecast": "3,8 % medletno; jedrni 3,2 %",
-      "forecastSource": "Nasdaq"
+      "forecastSource": "Nasdaq",
+      "actual": "PCE 3,8 % medletno; jedrni 3,3 %"
     },
     {
       "id": "us-praznik-nov26",
