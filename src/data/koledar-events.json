@@ -504,7 +504,9 @@
       "category": "PMI",
       "region": "US",
       "importance": "LOW",
-      "previous": "indeks 55,5 (okt 2026)"
+      "previous": "indeks 55,5 (okt 2026)",
+      "forecast": "indeks 55,2",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "us-nfp-dec26",
@@ -514,7 +516,9 @@
       "category": "Trg dela",
       "region": "US",
       "importance": "HIGH",
-      "previous": "+165 tisoč delovnih mest (okt 2026); brezposelnost 4,1 %"
+      "previous": "+165 tisoč delovnih mest (okt 2026); brezposelnost 4,1 %",
+      "forecast": "+90.000 delovnih mest; brezposelnost 4,1 %",
+      "forecastSource": "Nasdaq"
     },
     {
       "id": "fomc-dec26",
